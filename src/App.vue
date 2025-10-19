@@ -1,25 +1,74 @@
 <template>
-  <div id="app">
-    <!-- <h1>基于AI的肌肉骨骼系统疾病智能诊断系统</h1> -->
-    <router-view />
+  <div id="app" class="min-h-screen bg-slate-50">
+    <!-- 全局消息提示组件 -->
+    <el-config-provider :locale="zhCn">
+      <router-view />
+    </el-config-provider>
   </div>
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import 'element-plus/theme-chalk/display.css'
+
+const authStore = useAuthStore()
+
+onMounted(() => {
+  // 在组件挂载后初始化认证状态
+  const authStore = useAuthStore()
+  authStore.initialize()
+})
 </script>
 
 <style>
+/* 全局样式重置 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8fafc;
+  color: #334155;
+}
+
 #app {
-  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
-    'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
-  height: 100vh;
-  background: #f5f7fa;
-  padding: 20px;
+  min-height: 100vh;
+}
+
+/* 全局动画 */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+/* 全局滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 </style>

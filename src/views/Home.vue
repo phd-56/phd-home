@@ -1,453 +1,500 @@
 <template>
-  <div class="home-container">
-    <!-- 简约导航栏 -->
-    <nav class="navbar">
-      <div class="nav-content">
-        <div class="logo">
-          <div class="logo-icon"></div>
-          <span class="logo-text">医学影像处理模块</span>
+  <div class="home-page">
+    <!-- 导航栏 -->
+    <header class="home-header">
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">
+            <span>AI肌肉骨骼诊断系统</span>
+          </div>
+          <nav class="nav-menu">
+            <a href="#features" class="nav-link">核心功能</a>
+            <a href="#advantages" class="nav-link">系统优势</a>
+            <a href="#about" class="nav-link">关于我们</a>
+          </nav>
+          <div class="user-actions">
+            <el-button type="primary" @click="navigateToLogin" class="login-btn">登录</el-button>
+            <el-button @click="navigateToRegister" class="register-btn">注册</el-button>
+          </div>
         </div>
-        <div class="nav-actions">
-          <el-button link @click="scrollToSection('features')">系统详情</el-button>
-          <el-button type="primary" @click="$router.push('/upload')">
-            <el-icon><Upload /></el-icon>
-            开始诊断
+      </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title">AI肌肉骨骼系统疾病智能诊断系统</h1>
+          <p class="hero-subtitle">
+            基于先进人工智能技术，为医生和患者提供精准、高效的肌肉骨骼系统疾病诊断服务
+          </p>
+          <div class="hero-actions">
+            <el-button type="primary" size="large" @click="navigateToRegister" class="cta-button">
+              立即体验
+            </el-button>
+            <el-button size="large" @click="navigateToLogin" class="secondary-button">
+              已有账号登录
+            </el-button>
+          </div>
+        </div>
+        <div class="hero-image">
+          <!-- 这里可以放置医疗相关的插图 -->
+          <div class="medical-illustration">🩺</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 核心功能区域 -->
+    <section id="features" class="features-section">
+      <div class="container">
+        <h2 class="section-title">核心功能</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🩻</div>
+            <h3 class="feature-title">多格式影像支持</h3>
+            <p class="feature-desc">全面支持DICOM、NIfTI、JPG、PNG等多种医疗影像格式</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <h3 class="feature-title">AI智能分析</h3>
+            <p class="feature-desc">基于深度学习算法的精准疾病诊断与辅助决策</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="feature-title">三维重建</h3>
+            <p class="feature-desc">先进的医学影像三维重建与可视化技术</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-title">快速诊断</h3>
+            <p class="feature-desc">分钟级完成影像分析，大幅提升诊断效率</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">📋</div>
+            <h3 class="feature-title">智能报告</h3>
+            <p class="feature-desc">自动生成结构化诊断报告，支持个性化定制</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <h3 class="feature-title">多角色协作</h3>
+            <p class="feature-desc">患者、医生、管理员协同工作的完整平台生态</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 系统优势 -->
+    <section id="advantages" class="advantages-section">
+      <div class="container">
+        <h2 class="section-title">为什么选择我们</h2>
+        <div class="advantages-content">
+          <div class="advantage-item">
+            <div class="advantage-icon">🎯</div>
+            <div class="advantage-text">
+              <h3>精准诊断</h3>
+              <p>基于百万级医学影像数据训练，诊断准确率超过95%</p>
+            </div>
+          </div>
+          <div class="advantage-item">
+            <div class="advantage-icon">🚀</div>
+            <div class="advantage-text">
+              <h3>高效便捷</h3>
+              <p>简化诊断流程，大幅提升医疗工作效率</p>
+            </div>
+          </div>
+          <div class="advantage-item">
+            <div class="advantage-icon">🛡️</div>
+            <div class="advantage-text">
+              <h3>安全可靠</h3>
+              <p>医疗级数据加密，确保患者隐私安全</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA区域 -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-content">
+          <h2>立即体验智能诊断</h2>
+          <p>注册账号，开启高效的医疗影像诊断之旅</p>
+          <el-button type="primary" size="large" @click="navigateToRegister" class="cta-button">
+            免费注册体验
           </el-button>
         </div>
       </div>
-    </nav>
+    </section>
 
-    <!-- 主要内容 -->
-    <main class="main-content">
-      <!-- 英雄区域 -->
-      <section class="hero-section">
-        <div class="hero-background"></div>
-        <div class="hero-content">
-          <!-- <div class="hero-badge">AI驱动的医疗诊断</div> -->
-          <h1 class="hero-title">
-            智能骨骼疾病
-            <span class="gradient-text">诊断系统</span>
-          </h1>
-          <p class="hero-description">
-            基于深度学习的先进AI技术，为肌肉骨骼影像提供精准、高效的智能分析解决方案
-          </p>
-          <div class="hero-actions">
-            <el-button type="primary" size="large" @click="$router.push('/upload')" class="primary-btn">
-              <el-icon><Magic /></el-icon>
-              立即体验
-            </el-button>
-            <!-- <el-button size="large" @click="scrollToSection('features')" class="outline-btn">
-              <el-icon><View /></el-icon>
-              了解详情
-            </el-button> -->
+    <!-- 页脚 -->
+    <footer class="home-footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3>AI肌肉骨骼诊断系统</h3>
+            <p>智能医疗新时代，AI赋能健康未来</p>
           </div>
-          <div class="hero-stats">
-            <div class="stat">
-              <div class="stat-value">95.4%</div>
-              <div class="stat-label">诊断准确率</div>
-            </div>
-            <div class="stat">
-              <div class="stat-value">2.3min</div>
-              <div class="stat-label">平均分析时间</div>
-            </div>
-            <div class="stat">
-              <div class="stat-value">12.8k+</div>
-              <div class="stat-label">累计病例</div>
-            </div>
+          <div class="footer-section">
+            <h4>联系我们</h4>
+            <p>客服热线：400-123-4567</p>
+            <p>邮箱：ai@aimedical.com</p>
+          </div>
+          <div class="footer-section">
+            <h4>快速链接</h4>
+            <a href="#features" class="footer-link">核心功能</a>
+            <a href="#advantages" class="footer-link">系统优势</a>
+            <a href="#about" class="footer-link">关于我们</a>
           </div>
         </div>
-      </section>
-
-      <!-- 核心功能 -->
-      <section class="features-section" id="features">
-        <div class="section-header">
-          <h2 class="section-title">系统详情</h2>
-          <p class="section-subtitle">先进的人工智能技术，重塑医疗诊断体验</p>
+        <div class="footer-bottom">
+          <p>© 2024 基于AI的肌肉骨骼系统疾病智能诊断系统 保留所有权利</p>
         </div>
-        <div class="features-grid">
-          <div class="feature-card" v-for="feature in features" :key="feature.id">
-            <div class="feature-icon">{{ feature.icon }}</div>
-            <h3 class="feature-title">{{ feature.title }}</h3>
-            <p class="feature-description">{{ feature.description }}</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- CTA区域 -->
-      <section class="cta-section">
-        <div class="cta-content">
-          <h2>准备好开始智能诊断了吗？</h2>
-          <p>上传医学影像，体验AI驱动的精准诊断</p>
-          <el-button type="primary" size="large" @click="$router.push('/upload')" class="cta-btn">
-            <el-icon><UploadFilled /></el-icon>
-            上传影像开始诊断
-          </el-button>
-        </div>
-      </section>
-    </main>
-
-    <!-- 简约底部 -->
-    <footer class="footer">
-      <p>&copy; 2025 AI的肌肉骨骼系统疾病智能诊断系统 - 智能医疗的未来</p>
+      </div>
     </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Upload, Mic, View, UploadFilled } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
 
-const features = ref([
-  {
-    id: 1,
-    icon: '🧠',
-    title: '智能分析',
-    description: '深度学习算法精准识别骨骼疾病特征'
-  },
-  {
-    id: 2,
-    icon: '⚡',
-    title: '快速诊断',
-    description: '分钟级完成影像分析，提升诊断效率'
-  },
-  {
-    id: 3,
-    icon: '🎯',
-    title: '精准定位',
-    description: '精确识别病灶位置，提供详细分析'
-  },
-  {
-    id: 4,
-    icon: '🛡️',
-    title: '安全可靠',
-    description: '医疗级数据保护，确保隐私安全'
-  }
-])
+const router = useRouter()
 
-const scrollToSection = (sectionId: string) => {
-  const element = document.getElementById(sectionId)
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' })
-  }
+const navigateToLogin = () => {
+  router.push('/login')
+}
+
+const navigateToRegister = () => {
+  router.push('/register')
 }
 </script>
 
 <style scoped>
-.home-container {
+.home-page {
   min-height: 100vh;
-  background: #ffffff;
 }
 
-/* 导航栏 */
-.navbar {
+/* 导航栏样式 */
+.home-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   z-index: 1000;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.nav-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 72px;
+.header-content {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-}
-
-.logo {
-  display: flex;
   align-items: center;
-  gap: 12px;
+  padding: 1rem 0;
 }
 
-.logo-icon {
-  font-size: 28px;
+.logo span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1a73e8;
 }
 
-.logo-text {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1a1a1a;
-}
-
-.nav-actions {
+.nav-menu {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  gap: 2rem;
 }
 
-/* 英雄区域 */
+.nav-link {
+  text-decoration: none;
+  color: #666;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: #1a73e8;
+}
+
+.user-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.login-btn, .register-btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* 英雄区域样式 */
 .hero-section {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 120px 0 80px;
+  margin-top: 60px;
+}
+
+.hero-section .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
   align-items: center;
-  justify-content: center;
-  padding: 0 24px;
-  margin-top: 72px;
-}
-
-.hero-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.05) 0%, transparent 50%);
-}
-
-.hero-content {
-  position: relative;
-  text-align: center;
-  max-width: 800px;
-  z-index: 1;
-}
-
-.hero-badge {
-  display: inline-block;
-  background: rgba(99, 102, 241, 0.1);
-  color: #6366f1;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 32px;
-  border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 .hero-title {
-  font-size: 4rem;
-  font-weight: 800;
-  line-height: 1.1;
-  color: #1a1a1a;
-  margin-bottom: 24px;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-description {
+.hero-subtitle {
   font-size: 1.25rem;
-  color: #666;
+  margin-bottom: 2rem;
+  opacity: 0.9;
   line-height: 1.6;
-  margin-bottom: 48px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .hero-actions {
   display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin-bottom: 80px;
+  gap: 1rem;
 }
 
-.primary-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+.cta-button, .secondary-button {
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.cta-button {
+  background: white;
+  color: #667eea;
   border: none;
-  border-radius: 12px;
-  padding: 16px 32px;
-  font-size: 1.125rem;
-  font-weight: 600;
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
 }
 
-.outline-btn {
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 16px 32px;
-  font-size: 1.125rem;
-  font-weight: 600;
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.secondary-button {
   background: transparent;
-  color: #374151;
+  color: white;
+  border: 2px solid white;
 }
 
-.hero-stats {
-  display: flex;
-  justify-content: center;
-  gap: 64px;
+.secondary-button:hover {
+  background: white;
+  color: #667eea;
 }
 
-.stat {
+.medical-illustration {
+  font-size: 8rem;
   text-align: center;
 }
 
-.stat-value {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-}
-
-.stat-label {
-  color: #666;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-/* 功能区域 */
+/* 功能区域样式 */
 .features-section {
-  padding: 120px 24px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.section-header {
-  text-align: center;
-  margin-bottom: 80px;
+  padding: 80px 0;
+  background: #f8fafc;
 }
 
 .section-title {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #1a1a1a;
-  margin-bottom: 16px;
-}
-
-.section-subtitle {
-  font-size: 1.25rem;
-  color: #666;
-  max-width: 500px;
-  margin: 0 auto;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1a365d;
+  margin-bottom: 3rem;
 }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
 }
 
 .feature-card {
-  background: #fff;
-  padding: 48px 32px;
-  border-radius: 20px;
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s;
 }
 
 .feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
 }
 
 .feature-icon {
-  font-size: 4rem;
-  margin-bottom: 24px;
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
 }
 
 .feature-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
 }
 
-.feature-description {
-  color: #666;
+.feature-desc {
+  color: #718096;
   line-height: 1.6;
 }
 
-/* CTA区域 */
-.cta-section {
-  padding: 120px 24px;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  margin: 0 -24px;
+/* 优势区域样式 */
+.advantages-section {
+  padding: 80px 0;
+  background: white;
 }
 
-.cta-content {
-  max-width: 600px;
+.advantages-content {
+  max-width: 800px;
   margin: 0 auto;
-  text-align: center;
+}
+
+.advantage-item {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: #f7fafc;
+  border-radius: 12px;
+}
+
+.advantage-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.advantage-text h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.advantage-text p {
+  color: #718096;
+  line-height: 1.6;
+}
+
+/* CTA区域样式 */
+.cta-section {
+  background: linear-gradient(135deg, #1a73e8 0%, #6c8ef5 100%);
   color: white;
+  padding: 80px 0;
+  text-align: center;
 }
 
 .cta-content h2 {
   font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 16px;
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
 
 .cta-content p {
   font-size: 1.25rem;
-  margin-bottom: 48px;
+  margin-bottom: 2rem;
   opacity: 0.9;
 }
 
-.cta-btn {
-  background: white;
-  color: #6366f1;
-  border: none;
-  border-radius: 12px;
-  padding: 16px 40px;
-  font-size: 1.125rem;
-  font-weight: 700;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+/* 页脚样式 */
+.home-footer {
+  background: #1a365d;
+  color: white;
+  padding: 60px 0 20px;
 }
 
-.cta-btn:hover {
-  background: rgba(255, 255, 255, 0.95);
-  transform: translateY(-2px);
+.footer-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
 }
 
-/* 底部 */
-.footer {
-  padding: 40px 24px;
+.footer-section h3 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.footer-section h4 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.footer-section p {
+  color: #cbd5e0;
+  margin-bottom: 0.5rem;
+}
+
+.footer-link {
+  display: block;
+  color: #cbd5e0;
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s;
+}
+
+.footer-link:hover {
+  color: white;
+}
+
+.footer-bottom {
   text-align: center;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  color: #666;
+  padding-top: 2rem;
+  border-top: 1px solid #2d3748;
+  color: #a0aec0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
+  .hero-section .container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
   .hero-title {
-    font-size: 2.5rem;
-  }
-  
-  .hero-actions {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .primary-btn,
-  .outline-btn {
-    width: 100%;
-    max-width: 300px;
-  }
-  
-  .hero-stats {
-    gap: 32px;
-  }
-  
-  .stat-value {
     font-size: 2rem;
   }
   
-  .section-title {
-    font-size: 2rem;
+  .nav-menu {
+    display: none;
   }
   
   .features-grid {
     grid-template-columns: 1fr;
   }
   
-  .cta-content h2 {
-    font-size: 2rem;
+  .advantage-item {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
   }
 }
 </style>

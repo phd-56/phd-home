@@ -1,31 +1,36 @@
 <template>
-  <div class="upload-container">
-    <!-- 导航栏 -->
-    <div class="navbar">
+  <div class="upload-page">
+    <!-- 简单的导航栏 -->
+    <div class="simple-navbar">
       <div class="nav-content">
         <div class="nav-left">
           <div class="logo">
-            <span class="logo-icon"></span>
+            <span class="logo-icon">🩻</span>
             <span class="logo-text">医学影像处理系统</span>
           </div>
         </div>
         <div class="nav-right">
-          <el-button text @click="$router.push('/')">
+          <el-button @click="goToDashboard">
             <el-icon><HomeFilled /></el-icon>
-            返回首页
+            返回工作台
+          </el-button>
+          <el-button type="primary" @click="handleLogout">
+            <el-icon><SwitchButton /></el-icon>
+            退出登录
           </el-button>
         </div>
       </div>
     </div>
 
-    <!-- 主要内容 -->
-    <div class="main-content">
+    <!-- 主要内容区域 -->
+    <div class="upload-main-content">
       <div class="upload-hero">
         <h1 class="hero-title">医学影像上传与分析</h1>
         <p class="hero-description">上传您的医学影像文件，体验AI智能诊断的强大功能</p>
       </div>
 
       <el-card class="upload-main-card" shadow="hover">
+        <!-- 保持你原有的上传界面内容不变 -->
         <div class="upload-content">
           <el-row :gutter="40">
             <!-- 左侧上传区域 -->
@@ -241,19 +246,24 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { 
-  UploadFilled, 
-  HomeFilled, 
-  Delete, 
-  Picture, 
-  Document,
-  Monitor,
-  Setting,
-  View,
-  Mic,
-  Loading
-} from '@element-plus/icons-vue'
+// import {
+//   UploadFilled,
+//   HomeFilled,
+//   Delete,
+//   Picture,
+//   Document,
+//   Monitor,
+//   Setting,
+//   View,
+//   Loading,
+//   SwitchButton
+// } from '@element-plus/icons-vue'
+
+const router = useRouter()
+const authStore = useAuthStore()
 
 interface UploadFile {
   name: string
@@ -271,7 +281,7 @@ const generateReport = ref(true)
 const enable3DReconstruction = ref(false)
 const isAnalyzing = ref(false)
 
-// 支持的文件格式 - 修复类型定义
+// 支持的文件格式
 const supportedFormats = ref([
   { 
     type: 'dicom',
@@ -307,7 +317,31 @@ const estimatedTime = computed(() => {
   return `${totalTime.toFixed(1)} 分钟`
 })
 
-// 文件类型验证
+// 导航方法
+const goToDashboard = () => {
+  const role = authStore.user?.role
+  switch (role) {
+    case 'doctor':
+      router.push('/dashboard/doctor')
+      break
+    case 'patient':
+      router.push('/dashboard/patient')
+      break
+    case 'admin':
+      router.push('/dashboard/admin/upload')
+      break
+    default:
+      router.push('/')
+  }
+}
+
+const handleLogout = () => {
+  authStore.logout()
+  ElMessage.success('已退出登录')
+  router.push('/login')
+}
+
+// 保持你原有的文件处理方法不变
 const allowedExtensions = ['.dcm', '.dicom', '.nii', '.nii.gz', '.jpg', '.jpeg', '.png']
 const allowedMimeTypes = ['image/dicom', 'image/jpeg', 'image/png', 'application/octet-stream']
 
@@ -346,7 +380,6 @@ const isImageFile = (fileName: string): boolean => {
   return ['.jpg', '.jpeg', '.png'].includes(extension)
 }
 
-// 文件上传前验证
 const beforeUpload = (file: File) => {
   const isValid = isValidFileType(file.name, file.type)
   
@@ -357,7 +390,6 @@ const beforeUpload = (file: File) => {
       showClose: true
     })
     
-    // 显示支持的文件格式提示
     setTimeout(() => {
       ElMessageBox.alert(
         `请上传以下格式的医学影像文件：<br><br>
@@ -376,7 +408,6 @@ const beforeUpload = (file: File) => {
     return false
   }
   
-  // 文件大小验证 (50MB)
   const maxSize = 50 * 1024 * 1024
   if (file.size > maxSize) {
     ElMessage.error(`文件 "${file.name}" 大小超过 50MB 限制！`)
@@ -386,7 +417,6 @@ const beforeUpload = (file: File) => {
   return true
 }
 
-// 文件处理
 const handleFileChange = (file: any) => {
   if (!beforeUpload(file.raw)) {
     return false
@@ -438,15 +468,11 @@ const startAnalysis = async () => {
   
   try {
     ElMessage.success('开始分析影像数据，请稍候...')
-    
-    // 模拟分析过程
     await new Promise(resolve => setTimeout(resolve, 3000))
-    
     ElMessage.success({
       message: '分析完成！正在生成诊断报告...',
       duration: 3000
     })
-    
   } catch (error) {
     ElMessage.error('分析过程中出现错误，请重试')
   } finally {
