@@ -24,6 +24,7 @@ const router = createRouter({
       component: () => import('@/views/Upload.vue'),
       meta: { requiresAuth: true }
     },
+
     // 仪表板路由组
     {
       path: '/dashboard',
@@ -57,57 +58,26 @@ const router = createRouter({
               path: 'upload',
               name: 'AdminUpload',
               component: () => import('@/views/Upload.vue')
-            },
-            {
-              path: 'diagnosis',
-              name: 'AdminDiagnosis',
-              component: () => import('@/views/Diagnosis.vue')
-            },
-            {
-              path: 'cases',
-              name: 'AdminCases',
-              component: () => import('@/views/Cases.vue')
-            },
-            {
-              path: 'knowledge',
-              name: 'AdminKnowledge',
-              component: () => import('@/views/Knowledge.vue')
-            },
-            {
-              path: 'reports',
-              name: 'AdminReports',
-              component: () => import('@/views/Reports.vue')
-            },
-            {
-              path: 'system-monitor',
-              name: 'SystemMonitor',
-              component: () => import('@/views/SystemMonitor.vue')
-            },
-            {
-              path: 'data-backup',
-              name: 'DataBackup',
-              component: () => import('@/views/DataBackup.vue')
-            },
-            {
-              path: 'audit-logs',
-              name: 'AuditLogs',
-              component: () => import('@/views/AuditLogs.vue')
-            },
-            {
-              path: 'feedback',
-              name: 'AdminFeedback',
-              component: () => import('@/views/Feedback.vue')
-            },
-            {
-              path: 'model-optimization',
-              name: 'ModelOptimization',
-              component: () => import('@/views/ModelOptimization.vue')
             }
+            // 暂时只启用必要的路由组件
           ]
         }
       ]
+    },
+    // 病例管理路由
+    {
+      path: '/cases',
+      name: 'CaseManagement',
+      component: () => import('@/views/case-management/CaseList.vue'),
+      meta: { requiresAuth: true, role: 'doctor' }
+    },
+    {
+      path: '/cases/:caseId',
+      name: 'CaseDetail',
+      component: () => import('@/views/case-management/CaseDetail.vue'),
+      meta: { requiresAuth: true, role: 'doctor' },
+      props: true
     }
-    // 删除这里的重定向路由，因为有冲突
   ]
 })
 

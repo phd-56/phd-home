@@ -10,14 +10,14 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/theme-chalk/display.css'
 
 const authStore = useAuthStore()
 
 onMounted(() => {
   // 在组件挂载后初始化认证状态
-  const authStore = useAuthStore()
+  // 直接使用已创建的authStore实例
   authStore.initialize()
 })
 </script>

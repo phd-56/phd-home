@@ -1,6 +1,7 @@
-﻿@tailwind base;
+/* 暂时移除Tailwind指令，直接使用基本CSS */
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
 /* 其他全局样式 */
 body {
@@ -10,6 +11,50 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #333;
+  background-color: #fff;
+}
+
+/* 基本布局样式 */
+.home-page {
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* 基本文本样式 */
+h1, h2, h3, h4, h5, h6 {
+  color: #1a73e8;
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+/* 链接样式 */
+a {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 容器样式 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 /* 移除输入框内部边框 */

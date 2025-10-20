@@ -49,6 +49,13 @@
         <p>提供系统使用反馈和建议</p>
       </div>
     </div>
+    
+    <!-- 额外的仪表板内容 -->
+    <div class="dashboard">
+      <div class="card-container">
+        <!-- 这里可以添加更多卡片或内容 -->
+      </div>
+    </div>
   </div>
 </template>
 
@@ -62,7 +69,7 @@ const authStore = useAuthStore()
 
 const goToUpload = () => {
   // 医生使用简单的上传页面，不是管理员的上传页面
-  router.push('/Upload')
+  router.push('/upload') // 修改为小写，与路由配置保持一致
 }
 
 const goToDiagnosis = () => {
@@ -70,7 +77,14 @@ const goToDiagnosis = () => {
 }
 
 const goToCases = () => {
-  ElMessage.info('病例管理功能开发中...')
+  console.log('病例管理卡片被点击，准备跳转到/cases')
+  try {
+    // 使用name进行路由跳转，更可靠
+    router.push({ name: 'CaseManagement' })
+    console.log('路由跳转执行成功')
+  } catch (error) {
+    console.error('路由跳转失败:', error)
+  }
 }
 
 const goToKnowledge = () => {
