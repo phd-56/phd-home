@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>输入框调试页面</title>
+  <style>
+    /* 完全重置所有样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: white;
+      color: black;
+    }
+    
+    .test-container {
+      margin: 20px 0;
+      padding: 20px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+    }
+    
+    h2 {
+      margin-bottom: 15px;
+      color: black;
+    }
+    
+    /* 测试1: 基本输入框 */
+    .test1 input {
+      width: 300px;
+      height: 40px;
+      padding: 10px;
+      background-color: white;
+      color: black;
+    }
+    
+    /* 测试2: 明确设置边框 */
+    .test2 input {
+      width: 300px;
+      height: 40px;
+      padding: 10px;
+      border: 2px solid red;
+      background-color: white;
+      color: black;
+    }
+    
+    /* 测试3: 使用background-color和透明度 */
+    .test3 input {
+      width: 300px;
+      height: 40px;
+      padding: 10px;
+      border: 2px solid blue;
+      background-color: rgba(255, 255, 255, 1);
+      color: black;
+    }
+    
+    /* 测试4: 使用box-shadow模拟边框 */
+    .test4 input {
+      width: 300px;
+      height: 40px;
+      padding: 10px;
+      box-shadow: 0 0 0 2px green inset;
+      background-color: white;
+      color: black;
+    }
+    
+    /* 调试信息 */
+    .debug-info {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+    }
+    
+    .debug-item {
+      margin: 10px 0;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>输入框调试页面</h1>
+  
+  <div class="test-container">
+    <h2>测试1: 基本输入框</h2>
+    <div class="test1">
+      <input type="text" value="基本输入框" placeholder="请输入...">
+    </div>
+  </div>
+  
+  <div class="test-container">
+    <h2>测试2: 明确设置红色边框</h2>
+    <div class="test2">
+      <input type="text" value="红色边框输入框" placeholder="请输入...">
+    </div>
+  </div>
+  
+  <div class="test-container">
+    <h2>测试3: 蓝色边框带明确背景</h2>
+    <div class="test3">
+      <input type="text" value="蓝色边框输入框" placeholder="请输入...">
+    </div>
+  </div>
+  
+  <div class="test-container">
+    <h2>测试4: 使用box-shadow</h2>
+    <div class="test4">
+      <input type="text" value="使用box-shadow的输入框" placeholder="请输入...">
+    </div>
+  </div>
+  
+  <div class="debug-info">
+    <h2>调试信息</h2>
+    <div class="debug-item">时间戳: <span id="timestamp"></span></div>
+    <div class="debug-item">用户代理: <span id="userAgent"></span></div>
+  </div>
+  
+  <script>
+    // 显示调试信息
+    document.getElementById('timestamp').textContent = new Date().toString();
+    document.getElementById('userAgent').textContent = navigator.userAgent;
+    
+    // 监控输入框状态
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach((input, index) => {
+      console.log(`输入框${index + 1}样式:`, window.getComputedStyle(input));
+      console.log(`输入框${index + 1}内容:`, input.value);
+    });
+  </script>
+</body>
+</html>

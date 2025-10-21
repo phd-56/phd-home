@@ -148,7 +148,7 @@ const handleSubmit = async () => {
   try {
     await formRef.validate();
     // Emit the form data to parent component
-    emit('update:caseData', formData);
+    emit('update:case-data', formData);
     emit('next');
   } catch (error) {
     console.error('表单验证失败:', error);
@@ -157,8 +157,21 @@ const handleSubmit = async () => {
 
 // Initialize form data if provided
 onMounted(() => {
-  if (props.caseData && Object.keys(props.caseData).length > 0) {
-    Object.assign(formData, props.caseData);
+  // 检查并正确初始化表单数据
+  console.log('CaseForm props:', props.caseData);
+  // 无论props如何，确保表单数据有初始值以显示文本框
+  if (!formData.patientId) {
+    // 初始化空表单，确保文本框显示
+    Object.assign(formData, {
+      patientId: '',
+      patientName: '',
+      gender: '',
+      age: null,
+      admissionDate: '',
+      chiefComplaint: '',
+      presentIllness: '',
+      pastHistory: ''
+    });
   }
 });
 </script>

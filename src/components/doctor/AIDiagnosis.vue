@@ -2,74 +2,81 @@
   <div class="ai-diagnosis">
     <div class="diagnosis-header">
       <h2>AI智能诊断分析</h2>
-      <div class="header-actions">
-        <el-button type="primary" @click="runAIDiagnosis" :disabled="!selectedImage">
-          <el-icon><Magic /></el-icon>
-          开始AI诊断
-        </el-button>
-      </div>
+      <el-button 
+        type="primary" 
+        icon="el-icon-zoom-in" 
+        :loading="analyzing" 
+        @click="runAIDiagnosis"
+      >
+        开始AI诊断
+      </el-button>
     </div>
 
     <div class="diagnosis-content">
-      <!-- 左侧：影像选择和上传 -->
+      <!-- 左侧：影像选择区域 -->
       <div class="left-panel">
         <div class="upload-section">
           <h3>选择诊断影像</h3>
           <el-upload
             class="upload-area"
             drag
+            action="#"
             :before-upload="beforeImageUpload"
             :on-success="handleImageUpload"
+            :auto-upload="true"
           >
-            <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+            <el-icon class="upload-icon"><upload-filled /></el-icon>
             <div class="el-upload__text">
               拖拽影像文件到此处，或<em>点击上传</em>
             </div>
-            <template #tip>
-              <div class="el-upload__tip">
-                支持 DICOM、JPG、PNG 格式
-              </div>
-            </template>
+            <div class="el-upload__hint">支持 DICOM、JPG、PNG 格式</div>
           </el-upload>
         </div>
 
         <div class="image-selection">
           <h3>历史影像</h3>
           <div class="image-grid">
-            <div
-              v-for="image in availableImages"
-              :key="image.id"
-              :class="['image-card', { active: selectedImage?.id === image.id }]"
+            <div 
+              v-for="image in availableImages" 
+              :key="image.id" 
+              class="image-card" 
+              :class="{ active: selectedImage?.id === image.id }"
               @click="selectImage(image)"
             >
               <img :src="image.thumbnail" :alt="image.name" />
               <div class="image-info">
-                <span class="name">{{ image.name }}</span>
-                <span class="date">{{ formatDate(image.uploadTime) }}</span>
+                <div class="name">{{ image.name }}</div>
+                <div class="date">{{ formatDate(image.uploadTime) }}</div>
+                <div 
+                  v-for="detection in aiDetections" 
+                  :key="detection.x + detection.y"
+                  class="detection-tag"
+                  :style="{ backgroundColor: getConfidenceColor(detection.confidence) }"
+                >
+                  {{ detection.disease }} ({{ (detection.confidence * 100).toFixed(1) }}%)
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 中间：影像显示和AI分析结果 -->
+      <!-- 中间：影像显示区域 -->
       <div class="center-panel">
         <div class="image-display">
-          <div class="display-area" ref="displayArea">
+          <div ref="displayArea" class="display-area">
             <img 
               v-if="selectedImage" 
               :src="selectedImage.url" 
               :alt="selectedImage.name"
-              :style="{
-                transform: `scale(${imageScale})`,
-                transformOrigin: 'center center'
-              }"
+              :style="{ transform: `scale(${imageScale})` }"
             />
+            <div v-else class="placeholder">请选择或上传影像进行诊断</div>
             
             <!-- AI检测框 -->
-            <div
-              v-for="(detection, index) in aiDetections"
-              :key="index"
+            <div 
+              v-for="detection in aiDetections" 
+              :key="detection.x + detection.y"
               class="detection-box"
               :style="{
                 left: `${detection.x}%`,
@@ -79,7 +86,10 @@
                 borderColor: getConfidenceColor(detection.confidence)
               }"
             >
-              <div class="detection-label" :style="{ backgroundColor: getConfidenceColor(detection.confidence) }">
+              <div 
+                class="detection-label"
+                :style="{ backgroundColor: getConfidenceColor(detection.confidence) }"
+              >
                 {{ detection.disease }} ({{ (detection.confidence * 100).toFixed(1) }}%)
               </div>
             </div>
@@ -87,127 +97,148 @@
         </div>
 
         <div class="image-controls">
-          <el-slider
-            v-model="imageScale"
-            :min="0.1"
-            :max="3"
-            :step="0.1"
-            show-stops
-          />
           <div class="control-buttons">
-            <el-button-group>
-              <el-button @click="imageScale = Math.max(0.1, imageScale - 0.1)">
-                <el-icon><ZoomOut /></el-icon>
-              </el-button>
-              <el-button @click="imageScale = 1">
-                100%
-              </el-button>
-              <el-button @click="imageScale = Math.min(3, imageScale + 0.1)">
-                <el-icon><ZoomIn /></el-icon>
-              </el-button>
-            </el-button-group>
+            <el-button 
+              icon="el-icon-zoom-out" 
+              size="small" 
+              @click="imageScale = Math.max(0.5, imageScale - 0.1)"
+            />
+            <el-button 
+              icon="el-icon-zoom-in" 
+              size="small" 
+              @click="imageScale = Math.min(2, imageScale + 0.1)"
+            />
+          </div>
+          
+          <div class="zoom-level">
+            缩放: {{ (imageScale * 100).toFixed(0) }}%
           </div>
         </div>
       </div>
 
-      <!-- 右侧：诊断结果和分析 -->
+      <!-- 右侧：诊断结果区域 -->
       <div class="right-panel">
-        <div class="results-section" v-loading="analyzing">
+        <div class="results-section">
           <h3>AI诊断结果</h3>
           
-          <div v-if="diagnosisResult" class="diagnosis-results">
-            <!-- 疾病分类 -->
+          <div v-if="diagnosisResult" class="result-content">
             <div class="result-category">
               <h4>疾病分类</h4>
               <div class="disease-list">
-                <div
-                  v-for="disease in diagnosisResult.diseases"
-                  :key="disease.name"
-                  class="disease-item"
-                >
+                <div v-for="disease in diagnosisResult.diseases" :key="disease.name" class="disease-item">
                   <div class="disease-header">
                     <span class="disease-name">{{ disease.name }}</span>
                     <el-tag :type="getConfidenceTagType(disease.confidence)">
                       {{ (disease.confidence * 100).toFixed(1) }}%
                     </el-tag>
                   </div>
-                  <el-progress
-                    :percentage="disease.confidence * 100"
-                    :show-text="false"
-                    :color="getConfidenceColor(disease.confidence)"
-                  />
+                  <div class="description">{{ disease.description }}</div>
                 </div>
               </div>
             </div>
 
-            <!-- 病灶检测 -->
             <div class="result-category">
               <h4>病灶检测</h4>
               <div class="detection-list">
-                <div
-                  v-for="(detection, index) in diagnosisResult.detections"
-                  :key="index"
-                  class="detection-item"
-                >
+                <div v-for="detection in diagnosisResult.detections" :key="detection.location" class="detection-item">
                   <div class="detection-info">
                     <span class="location">{{ detection.location }}</span>
-                    <el-tag size="small" :type="getConfidenceTagType(detection.confidence)">
+                    <el-tag :type="getConfidenceTagType(detection.confidence)">
                       {{ (detection.confidence * 100).toFixed(1) }}%
                     </el-tag>
                   </div>
-                  <span class="description">{{ detection.description }}</span>
+                  <div class="description">{{ detection.description }}</div>
                 </div>
               </div>
             </div>
 
-            <!-- 可解释性分析 -->
             <div class="result-category">
               <h4>可解释性分析</h4>
-              <div class="explanation">
-                <p>{{ diagnosisResult.explanation }}</p>
-                <div class="heatmap-preview">
-                  <img :src="diagnosisResult.heatmap" alt="热力图" />
-                </div>
+              <div class="explanation">{{ diagnosisResult.explanation }}</div>
+              <div class="heatmap-preview">
+                <img :src="diagnosisResult.heatmap" alt="AI分析热力图" />
               </div>
             </div>
           </div>
 
           <div v-else class="no-results">
-            <el-empty description="请选择影像并开始AI诊断分析" />
+            <el-empty description="暂无诊断结果，请选择影像并点击开始AI诊断"></el-empty>
           </div>
         </div>
 
-        <!-- 诊断建议 -->
-        <div class="suggestions-section" v-if="diagnosisResult">
+        <div class="suggestions-section">
           <h3>诊断建议</h3>
           <div class="suggestions">
             <div class="suggestion-item">
-              <el-icon><InfoFilled /></el-icon>
+              <el-icon><warning-filled /></el-icon>
               <span>建议进行进一步检查确认诊断结果</span>
             </div>
             <div class="suggestion-item">
-              <el-icon><WarningFilled /></el-icon>
+              <el-icon><info-filled /></el-icon>
               <span>关注高风险病灶区域，及时制定治疗方案</span>
             </div>
+          </div>
+
+          <div class="report-section">
+            <el-button 
+              type="primary" 
+              icon="el-icon-document" 
+              @click="generateReport"
+            >
+              生成诊断报告
+            </el-button>
+          </div>
+
+          <!-- 新增：诊断反馈按钮 -->
+          <div class="feedback-section" v-if="diagnosisResult">
+            <el-button 
+              type="default" 
+              icon="el-icon-comment" 
+              class="feedback-button"
+              @click="showFeedbackForm = true"
+              style="width: 100%; margin-top: 15px;"
+            >
+              提交诊断反馈
+            </el-button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 诊断报告生成 -->
-    <div class="report-section" v-if="diagnosisResult">
-      <el-button type="success" @click="generateReport">
-        <el-icon><Document /></el-icon>
-        生成诊断报告
-      </el-button>
-    </div>
+    <!-- 新增：诊断反馈弹窗 -->
+    <el-dialog 
+      title="AI诊断反馈" 
+      v-model="showFeedbackForm" 
+      width="600px"
+      :close-on-click-modal="false"
+    >
+      <feedback-form 
+        :diagnosis-result="diagnosisResult"
+        :image-id="selectedImage?.id"
+        :loading="loading"
+        :success="feedbackSuccess"
+        @close="handleFeedbackClose"
+        @submit-success="handleFeedbackSubmitted"
+      />
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { ElMessage } from 'element-plus'
-import { ZoomIn, ZoomOut, UploadFilled, InfoFilled, WarningFilled, Document, Search as Magic } from '@element-plus/icons-vue'
+import { ref, reactive, computed } from 'vue'
+import { ElMessage, ElTag, ElEmpty, ElDialog } from 'element-plus'
+import { 
+  ZoomIn, 
+  ZoomOut, 
+  UploadFilled, 
+  InfoFilled, 
+  WarningFilled, 
+  Document, 
+  Comment 
+} from '@element-plus/icons-vue'
+// 新增：导入反馈表单组件
+import FeedbackForm from '@/components/doctor/FeedbackForm.vue'
+import { useFeedbackStore } from '@/stores/feedbackStore'
 
 interface MedicalImage {
   id: string
@@ -241,6 +272,14 @@ interface DiagnosisResult {
   explanation: string
   heatmap: string
 }
+
+// 新增：反馈表单显示状态
+const showFeedbackForm = ref(false)
+const feedbackSuccess = ref(false)
+const loading = ref(false)
+
+// 使用状态管理
+const feedbackStore = useFeedbackStore()
 
 const displayArea = ref<HTMLElement>()
 const selectedImage = ref<MedicalImage | null>(null)
@@ -287,7 +326,6 @@ const handleImageUpload = (response: any, file: File) => {
     type: file.type,
     uploadTime: new Date().toISOString()
   }
-  
   availableImages.value.push(newImage)
   selectImage(newImage)
   ElMessage.success('影像上传成功')
@@ -304,61 +342,26 @@ const runAIDiagnosis = async () => {
   if (!selectedImage.value) return
   
   analyzing.value = true
-  
   try {
     // 模拟AI诊断过程
     await new Promise(resolve => setTimeout(resolve, 3000))
     
     // 模拟AI检测结果
     aiDetections.value = [
-      {
-        x: 25,
-        y: 30,
-        width: 15,
-        height: 20,
-        disease: '骨关节炎',
-        confidence: 0.87
-      },
-      {
-        x: 60,
-        y: 45,
-        width: 12,
-        height: 15,
-        disease: '骨质增生',
-        confidence: 0.76
-      }
+      { x: 25, y: 30, width: 15, height: 20, disease: '骨关节炎', confidence: 0.87 },
+      { x: 60, y: 45, width: 12, height: 15, disease: '骨质增生', confidence: 0.76 }
     ]
     
     // 模拟诊断结果
     diagnosisResult.value = {
       diseases: [
-        {
-          name: '膝关节骨关节炎',
-          confidence: 0.87,
-          description: '中度骨关节炎，关节间隙变窄'
-        },
-        {
-          name: '骨质增生',
-          confidence: 0.76,
-          description: '关节边缘骨质增生'
-        },
-        {
-          name: '软骨损伤',
-          confidence: 0.63,
-          description: '轻度软骨磨损'
-        }
+        { name: '膝关节骨关节炎', confidence: 0.87, description: '中度骨关节炎，关节间隙变窄' },
+        { name: '骨质增生', confidence: 0.76, description: '关节边缘骨质增生' },
+        { name: '软骨损伤', confidence: 0.63, description: '轻度软骨磨损' }
       ],
       detections: [
-        {
-          location: '右膝关节内侧',
-          confidence: 0.87,
-          description: '关节间隙明显变窄'
-        },
-        {
-          location: '股骨髁',
-          confidence: 0.76,
-          description: '边缘骨质增生'
-        }
+        { location: '右膝关节内侧', confidence: 0.87, description: '关节间隙明显变窄' },
+        { location: '股骨髁', confidence: 0.76, description: '边缘骨质增生' }
       ],
       explanation: 'AI模型在膝关节区域检测到明显的骨关节炎特征，包括关节间隙变窄和边缘骨质增生。这些特征与中度骨关节炎的诊断一致。',
       heatmap: 'https://via.placeholder.com/300x200?text=Heatmap'
@@ -370,6 +373,39 @@ const runAIDiagnosis = async () => {
   } finally {
     analyzing.value = false
   }
+}
+
+// 新增：反馈提交成功处理
+const handleFeedbackSubmitted = async (feedbackData: any) => {
+  loading.value = true
+  try {
+    // 提交反馈到store
+    await feedbackStore.submitFeedback({
+      ...feedbackData,
+      caseId: selectedImage.value?.id || '',
+      submittedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+    })
+    
+    feedbackSuccess.value = true
+    ElMessage.success('感谢您的反馈！我们将认真分析您的意见。')
+    
+    // 延迟关闭对话框，让用户看到成功提示
+    setTimeout(() => {
+      showFeedbackForm.value = false
+      feedbackSuccess.value = false
+    }, 1500)
+  } catch (error) {
+    console.error('提交反馈失败:', error)
+    ElMessage.error('提交反馈失败，请重试')
+  } finally {
+    loading.value = false
+  }
+}
+
+// 处理反馈弹窗关闭
+const handleFeedbackClose = () => {
+  showFeedbackForm.value = false
+  feedbackSuccess.value = false
 }
 
 const getConfidenceColor = (confidence: number) => {
@@ -474,6 +510,14 @@ const formatDate = (dateString: string) => {
   color: #666;
 }
 
+.detection-tag {
+  font-size: 10px;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
 .center-panel {
   flex: 1;
   display: flex;
@@ -501,6 +545,11 @@ const formatDate = (dateString: string) => {
   max-width: 100%;
   max-height: 100%;
   transition: transform 0.3s;
+}
+
+.display-area .placeholder {
+  color: #fff;
+  font-size: 18px;
 }
 
 .detection-box {
@@ -533,6 +582,11 @@ const formatDate = (dateString: string) => {
 .control-buttons {
   display: flex;
   gap: 5px;
+}
+
+.zoom-level {
+  font-size: 14px;
+  color: #666;
 }
 
 .right-panel {
@@ -630,9 +684,9 @@ const formatDate = (dateString: string) => {
   background: white;
   border-radius: 4px;
   font-size: 14px;
-}  
+}
 
-.suggestion-item .e  l-icon {
+.suggestion-item .el-icon {
   color: #e6a23c;
 }
 
@@ -646,5 +700,14 @@ const formatDate = (dateString: string) => {
   align-items: center;
   justify-content: center;
   height: 200px;
+}
+
+/* 新增：反馈相关样式 */
+.feedback-section {
+  margin-top: 15px;
+}
+
+.feedback-button .el-icon-comment {
+  margin-right: 5px;
 }
 </style>

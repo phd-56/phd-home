@@ -1,10 +1,14 @@
-import html2pdf from 'html2pdf.js';
+// 动态导入html2pdf.js以避免类型错误
+let html2pdf: any = null;
+import('html2pdf.js').then(module => {
+  html2pdf = module.default;
+});
 
 /**
  * PDF生成工具类，提供HTML转PDF、文本转PDF等功能
  */
 export class PDFGenerator {
-  private static defaultOptions: html2pdf.Options = {
+  private static defaultOptions: any = {
     margin: 10,
     filename: 'document.pdf',
     image: { type: 'jpeg', quality: 0.98 },
@@ -70,7 +74,7 @@ export class PDFGenerator {
         worker.then(() => {
           document.body.removeChild(clonedElement);
           resolve();
-        }).catch(error => {
+        }).catch((error: Error) => {
           document.body.removeChild(clonedElement);
           reject(error);
         });
@@ -123,7 +127,7 @@ export class PDFGenerator {
         worker.then(() => {
           document.body.removeChild(reportElement);
           resolve();
-        }).catch(error => {
+        }).catch((error: Error) => {
           document.body.removeChild(reportElement);
           reject(error);
         });
@@ -479,7 +483,7 @@ export class PDFGenerator {
         worker.then(() => {
           document.body.removeChild(container);
           resolve();
-        }).catch(error => {
+        }).catch((error: Error) => {
           document.body.removeChild(container);
           reject(error);
         });

@@ -1,8 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
+import adminRoutes from './adminRoutes';
+import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    ...adminRoutes,
     {
       path: '/',
       name: 'Home',
@@ -24,7 +27,6 @@ const router = createRouter({
       component: () => import('@/views/Upload.vue'),
       meta: { requiresAuth: true }
     },
-
     // 仪表板路由组
     {
       path: '/dashboard',
@@ -58,63 +60,88 @@ const router = createRouter({
               path: 'upload',
               name: 'AdminUpload',
               component: () => import('@/views/Upload.vue')
-            }
-            // 暂时只启用必要的路由组件
+            },
+            {
+              path: 'diagnosis',
+              name: 'AdminDiagnosis',
+              component: () => import('@/views/Diagnosis.vue')
+            },
+            {
+              path: 'cases',
+              name: 'AdminCases',
+              component: () => import('@/views/Cases.vue')
+            },
+            {
+              path: 'knowledge',
+              name: 'AdminKnowledge',
+              component: () => import('@/views/Knowledge.vue')
+            },
+            {
+              path: 'reports',
+              name: 'AdminReports',
+              component: () => import('@/views/Reports.vue')
+            },
+            {
+              path: 'system-monitor',
+              name: 'SystemMonitor',
+              component: () => import('@/views/SystemMonitor.vue')
+            },
+            {
+              path: 'data-backup',
+              name: 'DataBackup',
+              component: () => import('@/views/DataBackup.vue')
+            },
+            {
+              path: 'audit-logs',
+              name: 'AuditLogs',
+              component: () => import('@/views/AuditLogs.vue')
+            },
+            {
+              path: 'feedback',
+              name: 'AdminFeedback',
+              component: () => import('@/views/Feedback.vue')
+            },
+            // 这些路由已在adminRoutes.ts中配置
           ]
         }
       ]
-    },
-    // 病例管理路由
-    {
-      path: '/cases',
-      name: 'CaseManagement',
-      component: () => import('@/views/case-management/CaseList.vue'),
-      meta: { requiresAuth: true, role: 'doctor' }
-    },
-    {
-      path: '/cases/:caseId',
-      name: 'CaseDetail',
-      component: () => import('@/views/case-management/CaseDetail.vue'),
-      meta: { requiresAuth: true, role: 'doctor' },
-      props: true
     }
   ]
-})
+});
 
-// 简化路由守卫 - 移除根路径重定向
-router.beforeEach(async (to, from, next) => {
-  const { useAuthStore } = await import('@/stores/auth')
-  const authStore = useAuthStore()
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
 
-  console.log('🚀 路由守卫调试信息:')
-  console.log('- 目标路由:', to.path)
-  console.log('- 认证状态:', authStore.isAuthenticated)
-  console.log('- 用户信息:', authStore.user)
+  console.log('🚀 路由守卫调试信息:');
+  console.log('- 目标路由:', to.path);
+  console.log('- 认证状态:', authStore.isAuthenticated);
+  console.log('- 用户信息:', authStore.user);
 
-  // 根路径 '/' 始终显示首页，不做重定向
+  // 根路径 '/' 始终显示首页
   if (to.path === '/') {
-    console.log('访问首页，直接显示')
-    next()
-    return
+    console.log('访问首页，直接显示');
+    next();
+    return;
   }
 
   // 如果需要认证但未认证，跳转到登录页
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    console.log('未认证，跳转到登录页')
-    next('/login')
-    return
+    console.log('未认证，跳转到登录页');
+    next('/login');
+    return;
   }
 
   // 检查角色权限
   if (to.meta.requiresAuth && to.meta.role && authStore.user?.role !== to.meta.role) {
-    console.log('角色权限不足，跳转到首页')
-    next('/')
-    return
+    console.log('角色权限不足，跳转到首页');
+    next('/');
+    return;
   }
 
   // 其他情况直接放行
-  console.log('允许访问:', to.path)
-  next()
-})
+  console.log('允许访问:', to.path);
+  next();
+});
 
 export default router

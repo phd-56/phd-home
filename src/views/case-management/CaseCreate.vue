@@ -1,149 +1,226 @@
 <template>
   <div class="case-create-page">
-    <el-card title="创建新病例">
-      <el-steps :active="currentStep" finish-status="success" class="mb-6">
-        <el-step title="基本信息"></el-step>
-        <el-step title="诊断记录"></el-step>
-        <el-step title="治疗方案"></el-step>
-        <el-step title="文档上传"></el-step>
-      </el-steps>
-
-      <component 
-        :is="currentComponent" 
-        @next="handleNext" 
-        @prev="handlePrev" 
-        @submit="handleSubmit"
-        :case-data="caseData"
-      ></component>
-
-      <div class="step-navigation mt-6">
-        <el-button 
-          v-if="currentStep > 0" 
-          @click="handlePrev"
-          icon="el-icon-arrow-left"
-        >
-          上一步
-        </el-button>
-        <div class="flex-1"></div>
-        <el-button 
-          v-if="currentStep < 3" 
-          type="primary" 
-          @click="handleNext"
-          icon="el-icon-arrow-right"
-        >
-          下一步
-        </el-button>
-        <el-button 
-          v-if="currentStep === 3" 
-          type="success" 
-          @click="handleSubmit"
-          icon="el-icon-check"
-        >
-          提交病例
-        </el-button>
-      </div>
-    </el-card>
+    <h1>创建新病例</h1>
+    
+    <div class="form-container">
+      <form @submit.prevent="handleSubmit">
+        <div class="form-group">
+          <label>患者ID:</label>
+          <input 
+            type="text" 
+            v-model="formData.patientId" 
+            placeholder="请输入患者ID"
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label>患者姓名:</label>
+          <input 
+            type="text" 
+            v-model="formData.patientName" 
+            placeholder="请输入患者姓名"
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label>性别:</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" v-model="formData.gender" value="male"> 男
+            </label>
+            <label>
+              <input type="radio" v-model="formData.gender" value="female"> 女
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>年龄:</label>
+          <input 
+            type="number" 
+            v-model.number="formData.age" 
+            placeholder="请输入年龄"
+            min="0"
+          >
+        </div>
+        
+        <div class="form-group">
+          <label>主诉:</label>
+          <textarea 
+            v-model="formData.chiefComplaint" 
+            rows="3"
+            placeholder="请输入患者主诉"
+          ></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>现病史:</label>
+          <textarea 
+            v-model="formData.presentIllness" 
+            rows="4"
+            placeholder="请输入现病史"
+          ></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>既往史:</label>
+          <textarea 
+            v-model="formData.pastHistory" 
+            rows="3"
+            placeholder="请输入既往史"
+          ></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" @click="handleCancel" class="btn-cancel">取消</button>
+          <button type="submit" class="btn-submit">创建病例</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
-import CaseForm from '@/components/case-management/CaseForm.vue';
-import DiagnosisForm from '@/components/case-management/DiagnosisForm.vue';
-import TreatmentForm from '@/components/case-management/TreatmentForm.vue';
-import DocumentUpload from '@/components/case-management/DocumentUpload.vue';
-import { useCaseStore } from '@/stores/caseStore';
+import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus';
 
-// 步骤管理
-const currentStep = ref(0);
-const caseData = reactive({
-  basicInfo: {},
-  diagnosis: [],
-  treatment: [],
-  documents: []
-});
-
-// 步骤对应的组件
-const components = [
-  CaseForm,
-  DiagnosisForm,
-  TreatmentForm,
-  DocumentUpload
-];
-
-const currentComponent = computed(() => components[currentStep.value]);
-
-// 状态管理和路由
-const caseStore = useCaseStore();
 const router = useRouter();
 
-// 步骤导航处理
-const handleNext = () => {
-  if (currentStep.value < 3) {
-    currentStep.value++;
+// 表单数据
+const formData = reactive({
+  patientId: '',
+  patientName: '',
+  gender: '',
+  age: null,
+  chiefComplaint: '',
+  presentIllness: '',
+  pastHistory: ''
+});
+
+// 提交方法
+const handleSubmit = () => {
+  // 简单验证
+  if (!formData.patientId || !formData.patientName) {
+    alert('请填写患者ID和姓名');
+    return;
   }
+  
+  console.log('提交病例数据:', formData);
+  
+  // 模拟创建病例
+  alert('病例创建成功！');
+  router.push('/cases');
 };
 
-const handlePrev = () => {
-  if (currentStep.value > 0) {
-    currentStep.value--;
-  }
-};
-
-// 表单数据收集
-const handleFormData = (step: number, data: any) => {
-  switch (step) {
-    case 0:
-      caseData.basicInfo = data;
-      break;
-    case 1:
-      caseData.diagnosis = data;
-      break;
-    case 2:
-      caseData.treatment = data;
-      break;
-    case 3:
-      caseData.documents = data;
-      break;
-  }
-};
-
-// 提交病例
-const handleSubmit = async () => {
-  try {
-    // 整合所有数据
-    const caseToCreate = {
-      ...caseData.basicInfo,
-      diagnosis: caseData.diagnosis,
-      treatmentPlan: caseData.treatment,
-      documents: caseData.documents,
-      status: 'active'
-    };
-
-    // 调用store创建病例
-    await caseStore.createCase(caseToCreate);
-    ElMessage.success('病例创建成功！');
-    router.push('/cases');
-  } catch (error) {
-    ElMessage.error('病例创建失败，请重试');
-    console.error('Case creation error:', error);
-  }
+// 取消方法
+const handleCancel = () => {
+  router.push('/cases');
 };
 </script>
 
 <style scoped>
 .case-create-page {
+  max-width: 800px;
+  margin: 0 auto;
   padding: 20px;
 }
 
-.step-navigation {
-  display: flex;
-  align-items: center;
+.form-container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
-.flex-1 {
-  flex: 1;
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #606266;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #dcdfe6 !important;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #303133;
+  background-color: #fff !important;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+  border-color: #409eff !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+  width: auto;
+  margin-right: 6px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #ebeef5;
+}
+
+.btn-cancel,
+.btn-submit {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.btn-cancel {
+  background: #f5f7fa;
+  color: #606266;
+  margin-right: 12px;
+}
+
+.btn-cancel:hover {
+  background: #e4e7ed;
+}
+
+.btn-submit {
+  background: #409eff;
+  color: #fff;
+}
+
+.btn-submit:hover {
+  background: #66b1ff;
 }
 </style>

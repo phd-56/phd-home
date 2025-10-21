@@ -1,23 +1,22 @@
-﻿<template>
+<template>
   <div class="doctor-sidebar">
     <div class="sidebar-header">
       <div class="user-info">
-        <el-avatar :size="50" :src="userInfo.avatar" />
+        <img :src="userInfo.avatar" alt="用户头像" class="user-avatar" />
         <div class="user-details">
-          <h4>{{ userInfo.name }}</h4>
-          <p class="user-role">医生</p>
+          <h4>{{ userInfo.name }} 医生</h4>
+          <p class="user-role">{{ userInfo.department }}</p>
           <p class="user-hospital">{{ userInfo.hospital }}</p>
         </div>
       </div>
     </div>
 
-    <!-- 简化的导航菜单 -->
     <div class="simple-menu">
       <div 
         v-for="item in menuItems" 
-        :key="item.index"
-        class="menu-item"
-        :class="{ active: activeTab === item.index }"
+        :key="item.index" 
+        class="menu-item" 
+        :class="{ active: props.activeTab === item.index }"
         @click="handleMenuSelect(item.index)"
       >
         <span class="menu-icon">{{ item.icon }}</span>
@@ -25,14 +24,21 @@
       </div>
     </div>
 
-    <!-- 快速操作区域 -->
     <div class="quick-actions">
       <h4>快速操作</h4>
       <div class="action-buttons">
-        <el-button type="primary" class="action-btn" @click="createNewCase">
+        <el-button 
+          type="default" 
+          class="action-btn" 
+          @click="createNewCase"
+        >
           ➕ 新建病例
         </el-button>
-        <el-button class="action-btn" @click="uploadImage">
+        <el-button 
+          type="default" 
+          class="action-btn" 
+          @click="uploadImage"
+        >
           ⬆️ 上传影像
         </el-button>
       </div>
@@ -50,7 +56,11 @@
         </div>
       </div>
       
-      <el-button type="danger" text @click="handleLogout" class="logout-btn">
+      <el-button 
+        type="text" 
+        class="logout-btn" 
+        @click="handleLogout"
+      >
         🚪 退出登录
       </el-button>
     </div>
@@ -60,7 +70,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, ElButton } from 'element-plus'
 import { useAuthStore } from '@/stores/auth'
 
 interface UserInfo {
@@ -104,10 +114,12 @@ const todayStats = reactive<TodayStats>({
   pendingCases: 3
 })
 
+// 新增：添加反馈历史菜单项
 const menuItems = reactive<MenuItem[]>([
   { index: 'cases', icon: '📁', text: '病例管理' },
   { index: 'images', icon: '🖼️', text: '影像查看' },
   { index: 'diagnosis', icon: '🤖', text: 'AI诊断分析' },
+  { index: 'feedback-history', icon: '📝', text: '反馈历史' }, // 新增的反馈历史菜单项
   { index: 'reports', icon: '📄', text: '报告生成' },
   { index: 'knowledge', icon: '📚', text: '知识库' },
   { index: 'statistics', icon: '📊', text: '数据统计' }
@@ -115,6 +127,11 @@ const menuItems = reactive<MenuItem[]>([
 
 const handleMenuSelect = (index: string) => {
   emit('tabChange', index)
+  
+  // 新增：当选择反馈历史菜单项时导航到对应页面
+  if (index === 'feedback-history') {
+    router.push('/doctor/feedback-history')
+  }
 }
 
 const createNewCase = () => {
@@ -128,12 +145,15 @@ const uploadImage = () => {
 
 const handleLogout = async () => {
   try {
-    await ElMessageBox.confirm('确定要退出登录吗？', '退出确认', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-    
+    await ElMessageBox.confirm(
+      '确定要退出登录吗？', 
+      '退出确认', 
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
     authStore.logout()
     ElMessage.success('已退出登录')
     router.push('/')
@@ -163,6 +183,14 @@ const handleLogout = async () => {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .user-details h4 {

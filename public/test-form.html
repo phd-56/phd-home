@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试表单</title>
+  <style>
+    /* 非常明显的样式确保输入框可见 */
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    
+    input {
+      width: 300px;
+      height: 40px;
+      padding: 10px;
+      margin: 15px 0;
+      border: 3px solid #ff0000;
+      border-radius: 4px;
+      background-color: #ffffff;
+      color: #000000;
+      font-size: 16px;
+      display: block;
+    }
+    
+    label {
+      display: block;
+      font-weight: bold;
+      font-size: 18px;
+      color: #333;
+    }
+    
+    button {
+      padding: 12px 24px;
+      margin: 10px 10px 10px 0;
+      background-color: #409eff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="color: #333;">测试表单页面</h1>
+  
+  <form id="testForm">
+    <div>
+      <label for="testInput1">测试输入框1:</label>
+      <input type="text" id="testInput1" placeholder="请输入内容1" value="默认值1">
+    </div>
+    
+    <div>
+      <label for="testInput2">测试输入框2:</label>
+      <input type="text" id="testInput2" placeholder="请输入内容2">
+    </div>
+    
+    <div>
+      <button type="button" onclick="alert('按钮被点击！')">测试按钮</button>
+    </div>
+  </form>
+  
+  <script>
+    // 简单的测试脚本
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('表单页面已加载');
+      const input1 = document.getElementById('testInput1');
+      console.log('输入框1的值:', input1?.value);
+    });
+  </script>
+</body>
+</html>

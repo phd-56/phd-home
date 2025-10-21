@@ -192,7 +192,7 @@ export class ExcelUtils {
           }
           
           // 提取数据行
-          const data: any[] = [];
+          const rows: any[] = [];
           for (let r = 1; r <= range.e.r; r++) {
             const row: any = {};
             for (let c = range.s.c; c <= range.e.c; c++) {
@@ -221,10 +221,10 @@ export class ExcelUtils {
                 row[headers[c]] = '';
               }
             }
-            data.push(row);
+            rows.push(row);
           }
           
-          resolve({ headers, data, sheetName });
+          resolve({ headers, data: rows, sheetName });
         } catch (error) {
           console.error('Error reading Excel sheet:', error);
           reject(new Error('读取工作表失败: ' + (error as Error).message));
