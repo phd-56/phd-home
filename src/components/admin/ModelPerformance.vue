@@ -74,28 +74,26 @@
         <el-tabs v-model="activeTab" type="card">
           <el-tab-pane label="诊断准确率趋势" name="accuracy">
             <div class="chart-wrapper">
-              <line-chart
-                :data="accuracyData"
-                :title="'诊断准确率趋势'"
-                :y-label="'准确率(%)'"
-              />
+              <!-- 图表组件暂时移除，因为组件不存在 -->
+              <div class="text-center py-10">
+                <p>模型准确率趋势图表</p>
+              </div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="满意度评分趋势" name="satisfaction">
             <div class="chart-wrapper">
-              <line-chart
-                :data="satisfactionData"
-                :title="'医生满意度评分趋势'"
-                :y-label="'评分(1-5)'"
-              />
+              <!-- 图表组件暂时移除，因为组件不存在 -->
+              <div class="text-center py-10">
+                <p>医生满意度评分趋势图表</p>
+              </div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="反馈标签分布" name="feedbackTags">
             <div class="chart-wrapper">
-              <pie-chart
-                :data="tagDistributionData"
-                :title="'反馈标签分布'"
-              />
+              <!-- 图表组件暂时移除，因为组件不存在 -->
+              <div class="text-center py-10">
+                <p>反馈标签分布图表</p>
+              </div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="优化效果对比" name="optimization">
@@ -117,9 +115,8 @@
 import { ref, computed, onMounted } from 'vue';
 import { useFeedbackStore } from '@/stores/feedbackStore';
 import { Refresh, CaretTop, CaretBottom } from '@element-plus/icons-vue';
-import LineChart from '@/components/admin/charts/LineChart.vue';
-import PieChart from '@/components/admin/charts/PieChart.vue';
-import BarChart from '@/components/admin/charts/BarChart.vue';
+// 暂时移除对不存在的图表组件的导入
+// 使用现有的图表组件;
 
 // 状态管理
 const feedbackStore = useFeedbackStore();

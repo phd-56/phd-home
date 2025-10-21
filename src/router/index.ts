@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import adminRoutes from './adminRoutes';
+import doctorRoutes from './doctorRoutes';
 import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     ...adminRoutes,
+    ...doctorRoutes,
     {
       path: '/',
       name: 'Home',
@@ -61,46 +63,14 @@ const router = createRouter({
               name: 'AdminUpload',
               component: () => import('@/views/Upload.vue')
             },
-            {
-              path: 'diagnosis',
-              name: 'AdminDiagnosis',
-              component: () => import('@/views/Diagnosis.vue')
-            },
-            {
-              path: 'cases',
-              name: 'AdminCases',
-              component: () => import('@/views/Cases.vue')
-            },
-            {
-              path: 'knowledge',
-              name: 'AdminKnowledge',
-              component: () => import('@/views/Knowledge.vue')
-            },
-            {
-              path: 'reports',
-              name: 'AdminReports',
-              component: () => import('@/views/Reports.vue')
-            },
-            {
-              path: 'system-monitor',
-              name: 'SystemMonitor',
-              component: () => import('@/views/SystemMonitor.vue')
-            },
-            {
-              path: 'data-backup',
-              name: 'DataBackup',
-              component: () => import('@/views/DataBackup.vue')
-            },
-            {
-              path: 'audit-logs',
-              name: 'AuditLogs',
-              component: () => import('@/views/AuditLogs.vue')
-            },
-            {
-              path: 'feedback',
-              name: 'AdminFeedback',
-              component: () => import('@/views/Feedback.vue')
-            },
+            // 这些路由引用了不存在的文件，已注释掉
+            /*
+            {              path: 'diagnosis',              name: 'AdminDiagnosis',              component: () => import('@/views/Diagnosis.vue')            },            {              path: 'cases',              name: 'AdminCases',              component: () => import('@/views/Cases.vue')            },            {              path: 'knowledge',              name: 'AdminKnowledge',              component: () => import('@/views/Knowledge.vue')            },            {              path: 'reports',              name: 'AdminReports',              component: () => import('@/views/Reports.vue')            },
+            */
+            // 这些路由已在adminRoutes.ts中正确配置，此处注释以避免冲突
+            /*
+            {              path: 'system-monitor',              name: 'SystemMonitor',              component: () => import('@/views/admin/SystemMonitor.vue')            },            {              path: 'data-backup',              name: 'DataBackup',              component: () => import('@/views/admin/BackupManagement.vue')            },            {              path: 'audit-logs',              name: 'AuditLogs',              component: () => import('@/views/admin/AuditLogs.vue')            },            {              path: 'feedback',              name: 'AdminFeedback',              component: null            },
+            */
             // 这些路由已在adminRoutes.ts中配置
           ]
         }

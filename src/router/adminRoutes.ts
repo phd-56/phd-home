@@ -2,13 +2,14 @@ import { RouteRecordRaw } from 'vue-router'
 import { defineAsyncComponent } from 'vue'
 
 // 异步加载管理员页面组件
-const AdminDashboard = defineAsyncComponent(() => import('@/views/admin/AdminDashboard.vue'))
+const AdminDashboard = defineAsyncComponent(() => import('@/views/AdminDashboard.vue'))
 const UserManagement = defineAsyncComponent(() => import('@/views/UserManagement.vue'))
-const ModelManagement = defineAsyncComponent(() => import('@/views/admin/ModelManagement.vue'))
-const ModelPerformance = defineAsyncComponent(() => import('@/views/admin/ModelPerformance.vue'))
+const ModelManagement = defineAsyncComponent(() => import('@/components/admin/ModelManagement.vue'))
+const ModelPerformance = defineAsyncComponent(() => import('@/components/admin/ModelPerformance.vue'))
 const OptimizationManagement = defineAsyncComponent(() => import('@/views/admin/OptimizationManagement.vue'))
-const ModelOptimizationComparison = defineAsyncComponent(() => import('@/views/admin/ModelOptimizationComparison.vue'))
-const SystemSettings = defineAsyncComponent(() => import('@/views/admin/SystemSettings.vue'))
+const ModelOptimizationComparison = defineAsyncComponent(() => import('@/components/admin/ModelOptimizationComparison.vue'))
+// SystemSettings组件暂时注释掉，因为文件不存在
+// const SystemSettings = defineAsyncComponent(() => import('@/views/admin/SystemSettings.vue'))
 // 使用现有的组件文件
 const SystemMonitor = defineAsyncComponent(() => import('@/views/admin/SystemMonitor.vue'))
 const BackupManagement = defineAsyncComponent(() => import('@/views/admin/BackupManagement.vue'))
@@ -23,7 +24,7 @@ const adminRoutes: RouteRecordRaw[] = [
   {
     path: '/admin',
     name: 'admin',
-    component: defineAsyncComponent(() => import('@/layouts/AdminLayout.vue')),
+    component: defineAsyncComponent(() => import('@/components/AppLayout.vue')),
     meta: {
       requiresAuth: true,
       role: 'admin', // 仅管理员可访问
@@ -132,16 +133,17 @@ const adminRoutes: RouteRecordRaw[] = [
         }
       },
       // 知识库管理路由已移除，因为组件导入不可用
-      {
+      // 系统设置路由暂时注释掉，因为SystemSettings组件不存在
+      /*{
         path: 'system-settings',
         name: 'admin.systemSettings',
         component: SystemSettings,
         meta: {
           title: '系统设置',
-          icon: '🔧',
+          icon: '⚙️',
           breadcrumb: '系统设置'
         }
-      },
+      },*/
       // 保留原有的优化管理路由作为别名
       {
         path: 'optimization-management',

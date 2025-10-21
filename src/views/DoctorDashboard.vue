@@ -96,7 +96,14 @@ const goToReports = () => {
 }
 
 const goToFeedback = () => {
-  ElMessage.info('意见反馈功能开发中...')
+  try {
+    // 跳转到反馈历史页面
+    router.push({ name: 'doctor.feedbackHistory' })
+    console.log('成功跳转到反馈历史页面')
+  } catch (error) {
+    console.error('路由跳转失败:', error)
+    ElMessage.error('跳转失败，请稍后重试')
+  }
 }
 
 const handleLogout = () => {
