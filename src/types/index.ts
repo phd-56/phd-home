@@ -35,6 +35,7 @@ export interface AuthState {
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // 影像引用接口
 interface ImageReference {
   id: string;                  // 影像唯一标识
@@ -120,6 +121,8 @@ export interface KnowledgeItem {
   isFavorite?: boolean
   isNew?: boolean
 =======
+=======
+>>>>>>> Stashed changes
 
 // 影像相关类型
 export interface MedicalImage {
@@ -300,5 +303,8 @@ export interface DiagnosisFinding {
   region: string;
   description: string;
   characteristic: string;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }

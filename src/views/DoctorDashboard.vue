@@ -84,9 +84,12 @@ const showDashboardHeader = computed(() => {
 
 const goToUpload = () => {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   // 医生使用简单的上传页面，不是管理员的上传页面
   router.push('/upload') // 修改为小写，与路由配置保持一致
 =======
+=======
+>>>>>>> Stashed changes
   router.push('/Upload')
 >>>>>>> Stashed changes
 }
@@ -96,6 +99,7 @@ const goToDiagnosis = () => {
 }
 
 const goToCases = () => {
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   console.log('病例管理卡片被点击，准备跳转到/cases')
   try {
@@ -116,6 +120,13 @@ const goToKnowledge = () => {
     console.error('路由跳转失败:', error)
     ElMessage.error('跳转失败，请稍后重试')
   }
+=======
+  router.push('/dashboard/doctor/cases')
+}
+
+const goToKnowledge = () => {
+  router.push('/dashboard/doctor/knowledge')
+>>>>>>> Stashed changes
 =======
   router.push('/dashboard/doctor/cases')
 }

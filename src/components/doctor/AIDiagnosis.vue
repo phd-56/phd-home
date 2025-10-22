@@ -1,6 +1,7 @@
 
 <template>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   <div class="ai-diagnosis">
     <div class="diagnosis-header">
       <h2>AI智能诊断分析</h2>
@@ -39,6 +40,18 @@
       </div>
     </div>
 
+=======
+  <div class="ultimate-diagnosis">
+    <!-- 页面标题 -->
+    <div class="page-header">
+      <h1>🦴 YOLO肌肉骨骼智能诊断系统</h1>
+      <div class="system-status">
+        <el-tag type="success">YOLO引擎: 就绪</el-tag>
+        <el-tag type="info">版本: Ultimate v3.0</el-tag>
+      </div>
+    </div>
+
+>>>>>>> Stashed changes
     <!-- 上传区域 -->
     <div class="upload-section">
       <el-card class="upload-card">
@@ -64,6 +77,7 @@
             <div class="el-upload__text">
               将肌肉骨骼影像拖到此处，或<em>点击上传</em>
             </div>
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
             <div class="el-upload__hint">支持 DICOM、JPG、PNG 格式</div>
           </el-upload>
@@ -263,6 +277,175 @@
             </div>
           </div>
         </el-upload>
+=======
+            <div class="el-upload__tip">
+              支持格式: JPEG, PNG, DICOM • YOLOv8医学专用模型
+            </div>
+          </div>
+        </el-upload>
+      </el-card>
+    </div>
+
+    <!-- 初始状态提示 -->
+    <div v-if="!diagnosisResult && !loading" class="initial-state">
+      <el-card>
+        <div class="initial-content">
+          <el-icon size="48" color="#909399"><Picture /></el-icon>
+          <h3>👨‍⚕️ 欢迎使用AI诊断系统</h3>
+          <p>请上传医学影像文件开始诊断分析</p>
+        </div>
+      </el-card>
+    </div>
+
+    <!-- 诊断结果 -->
+    <div v-if="diagnosisResult && diagnosisResult.yoloResult" class="results-section">
+      <el-card class="results-card">
+        <template #header>
+          <div class="result-header">
+            <h2>🎯 诊断结果</h2>
+            <div class="action-buttons">
+    <el-button @click="startEditing" type="primary" class="btn-edit-report">
+      📝 编辑报告
+    </el-button>
+    <el-button @click="previewReport" type="warning" class="btn-preview">
+      👁️ 预览报告
+    </el-button>
+    <el-button @click="downloadReportDirectly" type="success" class="btn-download-direct">
+      📄 直接下载
+    </el-button>
+    <el-button @click="resetDiagnosis" type="info" plain>
+      🔄 重新诊断
+    </el-button>
+  </div>
+          </div>
+        </template>
+        
+        <!-- 显示诊断结果摘要 -->
+        <div class="result-summary">
+          <h3>诊断摘要</h3>
+          <div class="summary-content">
+            <p><strong>检查部位:</strong> {{ diagnosisResult.yoloResult.bodyPart }}</p>
+            <p><strong>置信度:</strong> {{ diagnosisResult.yoloResult.confidenceScore }}%</p>
+            <p><strong>发现数量:</strong> {{ diagnosisResult.yoloResult.detectedDiseases.length }}个</p>
+            <p><strong>处理时间:</strong> {{ diagnosisResult.yoloResult.processingTime }}ms</p>
+          </div>
+        </div>
+
+        <!-- 检测结果 -->
+        <div class="detections-section">
+          <h3>YOLO检测结果 ({{ diagnosisResult.yoloResult.detectedDiseases.length }}个发现)</h3>
+          <div v-if="diagnosisResult.yoloResult.detectedDiseases.length > 0" class="detections-grid">
+            <div 
+              v-for="(detection, index) in diagnosisResult.yoloResult.detectedDiseases" 
+              :key="index"
+              class="detection-card"
+              :class="detection.severity"
+            >
+              <div class="detection-header">
+                <h4>{{ detection.anatomicalLocation }}</h4>
+                <el-tag 
+                  :type="detection.severity === '重度' ? 'danger' : 
+                         detection.severity === '中度' ? 'warning' : 'success'"
+                >
+                  {{ detection.severity }}
+                </el-tag>
+              </div>
+              <p class="detection-class">{{ detection.class }}</p>
+              <p class="detection-desc">{{ detection.clinicalSignificance }}</p>
+              <div class="detection-meta">
+                <span class="confidence">置信度: {{ (detection.confidence * 100).toFixed(1) }}%</span>
+                <span class="algorithm">YOLO检测</span>
+              </div>
+            </div>
+          </div>
+          <div v-else class="no-findings">
+            <el-empty description="未发现异常病变" />
+          </div>
+        </div>
+
+        <!-- 测量数据 -->
+        <div v-if="diagnosisResult.yoloResult.measurements && diagnosisResult.yoloResult.measurements.length > 0" class="measurements-section">
+          <h3>📏 定量测量分析</h3>
+          <el-table :data="diagnosisResult.yoloResult.measurements" border>
+            <el-table-column prop="type" label="测量项目" width="180" />
+            <el-table-column prop="value" label="测量值" width="120">
+              <template #default="scope">
+                {{ scope.row.value }} {{ scope.row.unit }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="normalRange" label="正常范围" width="120" />
+            <el-table-column prop="deviation" label="偏差" width="100">
+              <template #default="scope">
+                <span :class="scope.row.deviation > 0 ? 'deviation-positive' : 'deviation-negative'">
+                  {{ scope.row.deviation > 0 ? '+' : '' }}{{ scope.row.deviation }}{{ scope.row.unit }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="significance" label="临床意义" />
+          </el-table>
+        </div>
+
+        <!-- 热力图预览 -->
+        <div v-if="diagnosisResult.yoloResult.heatmapData" class="heatmap-section">
+          <h3>🔥 AI热力图分析</h3>
+          <div class="heatmap-preview">
+            <div class="heatmap-grid">
+              <div 
+                v-for="(row, i) in diagnosisResult.yoloResult.heatmapData" 
+                :key="i"
+                class="heatmap-row"
+              >
+                <div 
+                  v-for="(value, j) in row" 
+                  :key="j"
+                  class="heatmap-cell"
+                  :style="{
+                    backgroundColor: `rgba(255, ${Math.round(255 * (1 - value))}, ${Math.round(255 * (1 - value))}, ${value})`
+                  }"
+                  :title="`置信度: ${(value * 100).toFixed(1)}%`"
+                ></div>
+              </div>
+            </div>
+            <div class="heatmap-legend">
+              <span>低置信度</span>
+              <div class="gradient-bar"></div>
+              <span>高置信度</span>
+            </div>
+          </div>
+        </div>
+      </el-card>
+    </div>
+
+    <!-- 报告编辑区域 -->
+    <div v-if="showReportEditor && diagnosisResult && diagnosisResult.yoloResult" class="report-editor-section">
+      <el-card>
+        <template #header>
+          <div class="editor-header">
+            <h2>📋 诊断报告编辑</h2>
+            <p>请医生审核并完善诊断报告内容</p>
+          </div>
+        </template>
+        
+        <MedicalReportEditor
+          :report-data="diagnosisResult"
+          :patient-info="patientInfo"
+          :hospital-info="hospitalInfo"
+          @export-complete="onExportComplete"
+          @save-draft="onSaveDraft"
+          ref="reportEditor"
+        />
+      </el-card>
+    </div>
+
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading-overlay">
+      <el-card>
+        <div class="loading-content">
+          <el-icon class="loading-icon"><Loading /></el-icon>
+          <div>YOLO深度学习中...</div>
+          <div class="loading-tip">正在分析影像特征，请稍候</div>
+        </div>
+>>>>>>> Stashed changes
       </el-card>
     </div>
 
@@ -433,6 +616,7 @@
 
 <script setup lang="ts">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElTag, ElEmpty, ElDialog } from 'element-plus'
 import { 
@@ -452,6 +636,11 @@ import { ref, onMounted, reactive, nextTick } from 'vue';
 import { ElMessage, ElLoading } from 'element-plus';
 //import { UploadFilled, Loading } from '@element-plus/icons-vue';
 >>>>>>> Stashed changes
+=======
+import { ref, onMounted, reactive, nextTick } from 'vue';
+import { ElMessage, ElLoading } from 'element-plus';
+//import { UploadFilled, Loading } from '@element-plus/icons-vue';
+>>>>>>> Stashed changes
 
 import { UltimateDiagnosisSystem } from '@/utils/ultimateDiagnosisSystem';
 import MedicalReportEditor from '@/components/MedicalReportEditor.vue';
@@ -464,6 +653,7 @@ const diagnosisResult = ref<any>(null);
 const loading = ref(false);
 const showReportEditor = ref(false);
 const reportEditor = ref();
+<<<<<<< Updated upstream
 
 <<<<<<< Updated upstream
 // 新增：反馈表单显示状态
@@ -481,6 +671,9 @@ const analyzing = ref(false)
 const aiDetections = ref<AIDetection[]>([])
 const diagnosisResult = ref<DiagnosisResult | null>(null)
 =======
+=======
+
+>>>>>>> Stashed changes
 // 患者信息和医院信息
 const patientInfo = reactive({
   name: '张先生',
@@ -488,6 +681,9 @@ const patientInfo = reactive({
   age: '45',
   medicalRecordNo: 'MR202400123'
 });
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 const hospitalInfo = reactive({
@@ -500,6 +696,7 @@ const generateInitialFindings = (result: any): string => {
   if (result.detectedDiseases.length === 0) {
     return '<p>影像表现未见明确异常。</p>'
   }
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
   availableImages.value.push(newImage)
   selectImage(newImage)
@@ -711,6 +908,143 @@ const getConfidenceColor = (confidence: number) => {
   return '#67c23a' // 低置信度 - 绿色
 }
 =======
+=======
+  
+  return result.detectedDiseases.map((disease: any) => 
+    `<p>${disease.anatomicalLocation}可见${disease.class}，${disease.clinicalSignificance}。</p>`
+  ).join('')
+}
+
+const generateInitialDiagnosis = (result: any): string => {
+  if (result.detectedDiseases.length === 0) {
+    return '<p>未见明确异常征象。</p>'
+  }
+  
+  const primary = result.detectedDiseases[0]
+  return `<p>${primary.anatomicalLocation}${primary.class}。</p>`
+}
+
+const generateInitialRecommendation = (result: any): string => {
+  if (result.detectedDiseases.length === 0) {
+    return '<p>建议定期复查。</p>'
+  }
+  
+  const hasFracture = result.detectedDiseases.some((d: any) => d.class.includes('fracture'))
+  if (hasFracture) {
+    return '<p>建议进一步行CT检查明确诊断，并请骨科会诊。</p>'
+  }
+  
+  return '<p>建议临床随访，必要时进一步检查。</p>'
+}
+
+const htmlToText = (html: string): string => {
+  const div = document.createElement('div')
+  div.innerHTML = html
+  return div.textContent || div.innerText || ''
+}
+
+// 组件挂载时初始化系统
+onMounted(async () => {
+  try {
+    await UltimateDiagnosisSystem.initialize();
+    console.log('✅ YOLO诊断系统初始化完成');
+    ElMessage.success('系统初始化完成');
+  } catch (error) {
+    console.error('系统初始化失败:', error);
+    ElMessage.error('系统初始化失败，请刷新页面重试');
+  }
+});
+
+// 诊断处理
+const handleUltimateDiagnosis = async (file: File) => {
+  try {
+    console.log('开始YOLO诊断分析...', file.name);
+    loading.value = true;
+    diagnosisResult.value = null;
+    showReportEditor.value = false;
+
+    // 显示加载提示
+    const loadingInstance = ElLoading.service({
+      lock: true,
+      text: 'AI正在分析影像特征...',
+      background: 'rgba(0, 0, 0, 0.7)',
+    });
+
+    // 执行诊断
+    const result = await UltimateDiagnosisSystem.ultimateDiagnosis(file);
+    diagnosisResult.value = result;
+    
+    console.log('诊断结果:', result);
+    ElMessage.success('诊断完成！');
+
+    loadingInstance.close();
+    
+  } catch (error) {
+    console.error('诊断失败:', error);
+    ElMessage.error('诊断失败: ' + (error instanceof Error ? error.message : '未知错误'));
+    diagnosisResult.value = null;
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 预览报告
+const previewReport = () => {
+  if (!diagnosisResult.value?.yoloResult) {
+    ElMessage.warning('暂无诊断结果，请先进行诊断');
+    return;
+  }
+
+  // 收集所有报告数据
+  const reportPreviewData = {
+    reportData: diagnosisResult.value,
+    editedContent: reportEditor.value?.getEditedContent?.() || {
+      findings: generateInitialFindings(diagnosisResult.value.yoloResult),
+      diagnosis: generateInitialDiagnosis(diagnosisResult.value.yoloResult),
+      recommendation: generateInitialRecommendation(diagnosisResult.value.yoloResult)
+    },
+    patientInfo: patientInfo,
+    hospitalInfo: hospitalInfo,
+    doctorInfo: reportEditor.value?.doctorInfo || { reportDoctor: '', reviewDoctor: '' },
+    signatures: reportEditor.value?.signatures || { reportDoctor: '', reviewDoctor: '' }
+  }
+
+  // 跳转到报告预览页面
+  router.push({
+    path: '/report-preview',
+    query: {
+      reportData: JSON.stringify(reportPreviewData.reportData),
+      editedContent: JSON.stringify(reportPreviewData.editedContent),
+      patientInfo: JSON.stringify(reportPreviewData.patientInfo),
+      hospitalInfo: JSON.stringify(reportPreviewData.hospitalInfo),
+      doctorInfo: JSON.stringify(reportPreviewData.doctorInfo),
+      signatures: JSON.stringify(reportPreviewData.signatures)
+    }
+  })
+}
+
+// 直接下载报告（不编辑）
+const downloadReportDirectly = async () => {
+  if (!diagnosisResult.value?.yoloResult) {
+    ElMessage.warning('暂无诊断结果，请先进行诊断');
+    return;
+  }
+  
+  try {
+    ElMessage.info('开始生成PDF报告...');
+    await UltimateDiagnosisSystem.downloadUltimateReport(
+      diagnosisResult.value.yoloResult,
+      patientInfo,
+      hospitalInfo
+    );
+    ElMessage.success('PDF报告下载成功！');
+  } catch (error) {
+    console.error('直接下载失败:', error);
+    ElMessage.error('下载失败: ' + (error instanceof Error ? error.message : '未知错误'));
+  }
+};
+
+>>>>>>> Stashed changes
 // 进入编辑模式
 const startEditing = () => {
   if (!diagnosisResult.value?.yoloResult) {
@@ -727,6 +1061,9 @@ const startEditing = () => {
     });
   });
 };
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 // 重置诊断
@@ -986,6 +1323,7 @@ const downloadUltimateReport = async () => {
 .deviation-negative {
   color: #52c41a;
   font-weight: bold;
+<<<<<<< Updated upstream
 }
 
 <<<<<<< Updated upstream
@@ -995,12 +1333,25 @@ const downloadUltimateReport = async () => {
   padding: 2px 4px;
   border-radius: 2px;
   display: inline-block;
+=======
+>>>>>>> Stashed changes
 }
 
-.center-panel {
-  flex: 1;
+.heatmap-section {
+  margin: 30px 0;
+}
+
+.heatmap-section h3 {
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.heatmap-preview {
   display: flex;
   flex-direction: column;
+<<<<<<< Updated upstream
 }
 
 .image-display {
@@ -1070,10 +1421,13 @@ const downloadUltimateReport = async () => {
   display: flex;
   flex-direction: column;
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   align-items: center;
   gap: 15px;
 }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 .control-buttons {
   display: flex;
@@ -1124,6 +1478,10 @@ const downloadUltimateReport = async () => {
 .heatmap-grid {
   border: 1px solid #ddd;
 >>>>>>> Stashed changes
+=======
+.heatmap-grid {
+  border: 1px solid #ddd;
+>>>>>>> Stashed changes
   padding: 10px;
   border-radius: 8px;
   background: white;
@@ -1168,6 +1526,7 @@ const downloadUltimateReport = async () => {
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 .heatmap-preview img {
   width: 100%;
   border-radius: 4px;
@@ -1195,6 +1554,9 @@ const downloadUltimateReport = async () => {
 
 .report-section {
   margin-top: 20px;
+=======
+.editor-header {
+>>>>>>> Stashed changes
 =======
 .editor-header {
 >>>>>>> Stashed changes
@@ -1271,6 +1633,7 @@ const downloadUltimateReport = async () => {
   .detections-grid {
     grid-template-columns: 1fr;
   }
+<<<<<<< Updated upstream
 }
 
 /* 新增：反馈相关样式 */
@@ -1280,5 +1643,7 @@ const downloadUltimateReport = async () => {
 
 .feedback-button .el-icon-comment {
   margin-right: 5px;
+=======
+>>>>>>> Stashed changes
 }
 </style>

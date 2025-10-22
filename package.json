@@ -12,7 +12,13 @@
     "@element-plus/icons-vue": "^2.3.2",
     "@fortawesome/fontawesome-free": "^7.1.0",
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "axios": "^1.12.2",
+=======
+    "@tensorflow-models/coco-ssd": "^2.2.3",
+    "@tensorflow/tfjs": "^4.22.0",
+    "canvas": "^2.11.2",
+>>>>>>> Stashed changes
 =======
     "@tensorflow-models/coco-ssd": "^2.2.3",
     "@tensorflow/tfjs": "^4.22.0",
