@@ -88,7 +88,14 @@ const goToCases = () => {
 }
 
 const goToKnowledge = () => {
-  ElMessage.info('知识库功能开发中...')
+  try {
+    // 跳转到知识库页面
+    router.push({ name: 'doctor.knowledge' })
+    console.log('成功跳转到知识库页面')
+  } catch (error) {
+    console.error('路由跳转失败:', error)
+    ElMessage.error('跳转失败，请稍后重试')
+  }
 }
 
 const goToReports = () => {

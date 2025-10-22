@@ -34,19 +34,29 @@ export interface AuthState {
   isAuthenticated: boolean
 }
 
+// 影像引用接口
+interface ImageReference {
+  id: string;                  // 影像唯一标识
+  fileUrl: string;             // 影像文件URL
+  type: 'dicom' | 'jpg' | 'png'; // 影像类型
+  thumbnailUrl?: string;       // 缩略图URL
+  uploadedAt: string;          // 上传时间
+  seriesId?: string;           // 系列ID（用于DICOM序列）
+}
+
 // 病例基本信息接口
 interface Case {
   id: string;                  // 病例唯一标识
   patientId: string;           // 关联患者ID
   caseNumber: string;          // 病例编号(自动生成)
-  admissionDate: Date;         // 就诊日期
-  dischargeDate?: Date;        // 出院日期(可选)
+  admissionDate: string;       // 就诊日期（ISO字符串格式）
+  dischargeDate?: string;      // 出院日期(可选，ISO字符串格式)
   diagnosis: Diagnosis[];      // 诊断信息数组
   treatmentPlan: Treatment[];  // 治疗方案数组
   status: 'active' | 'closed' | 'archived'; // 病例状态
   createdBy: string;           // 创建医生ID
-  createdAt: Date;             // 创建时间
-  updatedAt: Date;             // 更新时间
+  createdAt: string;           // 创建时间（ISO字符串格式）
+  updatedAt: string;           // 更新时间（ISO字符串格式）
   documents: Document[];       // 相关文档列表
   images: ImageReference[];    // 关联影像引用
 }
@@ -56,7 +66,7 @@ interface Diagnosis {
   id: string;
   diseaseCode: string;         // 疾病编码
   diseaseName: string;         // 疾病名称
-  diagnosisDate: Date;         // 诊断日期
+  diagnosisDate: string;       // 诊断日期（ISO字符串格式）
   diagnosedBy: string;         // 诊断医生
   description?: string;        // 诊断描述
 }
@@ -68,8 +78,8 @@ interface Treatment {
   name: string;                // 治疗名称
   dosage?: string;             // 剂量(药物治疗)
   frequency?: string;          // 频率
-  startDate: Date;             // 开始日期
-  endDate?: Date;              // 结束日期(可选)
+  startDate: string;           // 开始日期（ISO字符串格式）
+  endDate?: string;            // 结束日期(可选，ISO字符串格式)
   notes?: string;              // 备注
 }
 
@@ -81,6 +91,31 @@ interface Document {
   fileUrl: string;             // 文件URL
   fileType: string;            // 文件格式
   fileSize: number;            // 文件大小(字节)
-  uploadedAt: Date;            // 上传时间
+  uploadedAt: string;          // 上传时间（ISO字符串格式）
   uploadedBy: string;          // 上传者
+}
+
+// 知识库项类型
+export interface KnowledgeItem {
+  id: string
+  title: string
+  description: string
+  category: string
+  tags: string[]
+  overview: string
+  symptoms: string[]
+  diagnosisCriteria: Array<{
+    title: string
+    description: string
+  }>
+  treatments: {
+    medication: string[]
+    physical: string[]
+    surgical: string[]
+  }
+  preventionTips: string[]
+  updateTime: string
+  viewCount: number
+  isFavorite?: boolean
+  isNew?: boolean
 }

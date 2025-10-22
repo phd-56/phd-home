@@ -185,35 +185,35 @@
             <!-- 治疗方案 -->
             <div class="detail-section">
               <h4>治疗方案</h4>
-              <el-tabs v-model="activeTreatmentTab">
+              <el-tabs v-model="activeTab">
                 <el-tab-pane label="药物治疗" name="medication">
-                  <div class="treatment-content">
-                    <h5>常用药物</h5>
-                    <ul>
-                      <li v-for="drug in selectedItem.treatments.medication" :key="drug">
-                        {{ drug }}
-                      </li>
-                    </ul>
+                  <ul class="treatment-list" v-if="selectedItem.treatments.medication.length > 0">
+                    <li v-for="med in selectedItem.treatments.medication" :key="med">
+                      {{ med }}
+                    </li>
+                  </ul>
+                  <div class="empty-state" v-else>
+                    暂无药物治疗方案
                   </div>
                 </el-tab-pane>
                 <el-tab-pane label="物理治疗" name="physical">
-                  <div class="treatment-content">
-                    <h5>物理疗法</h5>
-                    <ul>
-                      <li v-for="therapy in selectedItem.treatments.physical" :key="therapy">
-                        {{ therapy }}
-                      </li>
-                    </ul>
+                  <ul class="treatment-list" v-if="selectedItem.treatments.physical.length > 0">
+                    <li v-for="phys in selectedItem.treatments.physical" :key="phys">
+                      {{ phys }}
+                    </li>
+                  </ul>
+                  <div class="empty-state" v-else>
+                    暂无物理治疗方案
                   </div>
                 </el-tab-pane>
                 <el-tab-pane label="手术治疗" name="surgical">
-                  <div class="treatment-content">
-                    <h5>手术选项</h5>
-                    <ul>
-                      <li v-for="surgery in selectedItem.treatments.surgical" :key="surgery">
-                        {{ surgery }}
-                      </li>
-                    </ul>
+                  <ul class="treatment-list" v-if="selectedItem.treatments.surgical.length > 0">
+                    <li v-for="surgery in selectedItem.treatments.surgical" :key="surgery">
+                      {{ surgery }}
+                    </li>
+                  </ul>
+                  <div class="empty-state" v-else>
+                    暂无手术治疗方案
                   </div>
                 </el-tab-pane>
               </el-tabs>
@@ -252,64 +252,40 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { Search, Folder, View, Close, Check, Star, ArrowUp } from '@element-plus/icons-vue'
 import { ElMessage, ElEmpty, ElLoading } from 'element-plus'
+import { KnowledgeItem } from '@/types'
 
-interface KnowledgeItem {
-  id: string
-  title: string
-  description: string
-  category: string
-  tags: string[]
-  overview: string
-  symptoms: string[]
-  diagnosisCriteria: Array<{
-    title: string
-    description: string
-  }>
-  treatments: {
-    medication: string[]
-    physical: string[]
-    surgical: string[]
-  }
-  preventionTips: string[]
-  viewCount: number
-  updateTime: string
-  isNew: boolean
-  isFavorite: boolean // 新增收藏状态
-}
-
+// 响应式数据
 const searchQuery = ref('')
 const activeCategory = ref('all')
 const selectedTags = ref<string[]>([])
 const sortBy = ref('relevance')
+const loading = ref(false)
+const selectedItem = ref<KnowledgeItem | null>(null)
 const currentPage = ref(1)
 const pageSize = ref(10)
-const selectedItem = ref<KnowledgeItem | null>(null)
-const activeTreatmentTab = ref('medication')
-const loading = ref(false)
+const activeTab = ref('medication')
 const showBackToTop = ref(false)
+let searchTimer: number | null = null
 
-// 防抖计时器
-let searchTimer: NodeJS.Timeout | null = null
-
+// 疾病分类
 const diseaseCategories = [
-  { id: 'all', name: '全部疾病', count: 156 },
-  { id: 'arthritis', name: '关节炎', count: 34 },
-  { id: 'fracture', name: '骨折', count: 28 },
-  { id: 'osteoporosis', name: '骨质疏松', count: 22 },
-  { id: 'disc', name: '椎间盘疾病', count: 19 },
-  { id: 'tumor', name: '骨肿瘤', count: 15 },
-  { id: 'infection', name: '骨感染', count: 12 },
-  { id: 'metabolic', name: '代谢性骨病', count: 10 },
-  { id: 'congenital', name: '先天性骨病', count: 8 },
-  { id: 'other', name: '其他', count: 8 }
+  { id: 'all', name: '全部', count: 100 },
+  { id: 'arthritis', name: '关节炎', count: 15 },
+  { id: 'cardiovascular', name: '心血管疾病', count: 22 },
+  { id: 'neurology', name: '神经系统疾病', count: 18 },
+  { id: 'respiratory', name: '呼吸系统疾病', count: 16 },
+  { id: 'gastrointestinal', name: '消化系统疾病', count: 14 },
+  { id: 'endocrine', name: '内分泌疾病', count: 10 },
+  { id: 'other', name: '其他疾病', count: 5 }
 ]
 
+// 热门标签
 const hotTags = [
-  '膝关节', '腰椎', '骨质疏松', '关节炎', '骨折',
-  '康复治疗', '手术治疗', '药物治疗', '预防', '诊断标准'
+  '高血压', '糖尿病', '肺炎', '骨折', '肿瘤', '感染',
+  '心力衰竭', '脑卒中', '哮喘', '胃炎', '关节炎', '肾炎'
 ]
 
-// 模拟知识库数据，增加isFavorite字段
+// 模拟数据
 const knowledgeItems: KnowledgeItem[] = [
   {
     id: '1',
@@ -356,83 +332,82 @@ const knowledgeItems: KnowledgeItem[] = [
       ]
     },
     preventionTips: [
-      '保持适当体重，减轻关节负担',
-      '避免长时间蹲跪和爬楼梯',
-      '进行适当的关节周围肌肉力量训练',
-      '注意保暖，避免受凉'
+      '保持健康体重，减轻关节负担',
+      '加强下肢肌肉锻炼，增强关节稳定性',
+      '避免长时间站立和剧烈运动',
+      '注意膝关节保暖',
+      '适当补充钙剂和维生素D'
     ],
-    viewCount: 128,
-    updateTime: '2024-03-15T10:30:00',
-    isNew: true,
-    isFavorite: false
+    updateTime: '2023-10-15',
+    viewCount: 1254,
+    isFavorite: false,
+    isNew: true
   },
   {
     id: '2',
-    title: '骨质疏松症的预防与治疗',
-    description: '全面阐述骨质疏松症的危险因素、诊断方法和综合治疗策略，强调预防的重要性。',
-    category: '骨质疏松',
-    tags: ['骨质疏松', '预防', '药物治疗', '补钙'],
-    overview: '骨质疏松症是一种以骨量低下、骨微结构损坏，导致骨脆性增加，易发生骨折为特征的全身性骨病。',
+    title: '高血压诊断标准与治疗规范',
+    description: '全面介绍高血压的定义、分级、诊断流程和药物治疗方案，以及生活方式干预建议。',
+    category: '心血管疾病',
+    tags: ['高血压', '诊断标准', '治疗', '心血管'],
+    overview: '高血压是最常见的慢性病之一，也是心脑血管病最主要的危险因素。',
     symptoms: [
-      '腰背疼痛或全身骨痛',
-      '身高缩短、驼背',
-      '容易发生骨折',
-      '牙齿松动',
-      '呼吸功能下降'
+      '大多数患者无明显症状',
+      '部分患者可能出现头痛、头晕',
+      '心悸、胸闷',
+      '视力模糊',
+      '鼻出血'
     ],
     diagnosisCriteria: [
       {
-        title: '骨密度测定',
-        description: '双能X线吸收法（DXA）测定的骨密度T值≤-2.5SD'
+        title: '诊断标准',
+        description: '在未使用降压药物的情况下，非同日3次测量诊室血压，收缩压≥140mmHg和（或）舒张压≥90mmHg'
       },
       {
-        title: '脆性骨折',
-        description: '无明显外伤或轻微外伤情况下发生的骨折'
+        title: '分级标准',
+        description: '1级高血压：收缩压140-159mmHg和（或）舒张压90-99mmHg；2级高血压：收缩压≥160mmHg和（或）舒张压≥100mmHg'
       }
     ],
     treatments: {
       medication: [
-        '双膦酸盐类药物',
-        '降钙素',
-        '甲状旁腺激素类似物',
-        '雌激素类药物'
+        'ACEI类药物（如依那普利）',
+        'ARB类药物（如缬沙坦）',
+        '钙离子拮抗剂（如氨氯地平）',
+        '利尿剂（如氢氯噻嗪）',
+        'β受体阻滞剂（如美托洛尔）'
       ],
       physical: [
-        '负重运动',
-        '肌肉力量训练',
-        '平衡训练',
-        '物理因子治疗'
+        '规律有氧运动，每周至少150分钟',
+        '减轻体重，BMI控制在18.5-23.9',
+        '戒烟限酒',
+        '保持健康心态，减轻压力'
       ],
-      surgical: [
-        '椎体成形术',
-        '椎体后凸成形术',
-        '骨折内固定术'
-      ]
+      surgical: []
     },
     preventionTips: [
-      '摄入足够的钙和维生素D',
-      '规律运动，特别是负重运动',
-      '避免吸烟和过量饮酒',
-      '预防跌倒'
+      '减少钠盐摄入，每人每天不超过5g',
+      '增加钾盐摄入，多吃新鲜蔬果',
+      '控制脂肪摄入，尤其是饱和脂肪',
+      '增加体育锻炼',
+      '定期体检，监测血压'
     ],
-    viewCount: 95,
-    updateTime: '2024-02-20T15:45:00',
-    isNew: false,
-    isFavorite: true
+    updateTime: '2023-09-20',
+    viewCount: 2341,
+    isFavorite: true,
+    isNew: false
   }
 ]
 
-// 计算当前分类名称
+// 计算属性：当前分类名称
 const currentCategoryName = computed(() => {
   const category = diseaseCategories.find(c => c.id === activeCategory.value)
   return category ? category.name : '全部'
 })
 
-// 过滤知识项
+// 计算属性：过滤后的知识库项
 const filteredKnowledge = computed(() => {
   let result = [...knowledgeItems]
   
-  // 按分类过滤
+  // 分类过滤
   if (activeCategory.value !== 'all') {
     const categoryName = diseaseCategories.find(c => c.id === activeCategory.value)?.name
     if (categoryName) {
@@ -440,14 +415,14 @@ const filteredKnowledge = computed(() => {
     }
   }
   
-  // 按标签过滤
+  // 标签过滤
   if (selectedTags.value.length > 0) {
     result = result.filter(item => 
       selectedTags.value.every(tag => item.tags.includes(tag))
     )
   }
   
-  // 按搜索词过滤
+  // 搜索过滤
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     result = result.filter(item => 
@@ -552,7 +527,7 @@ const handleSearch = () => {
       currentPage.value = 1
       loading.value = false
     }, 300)
-  }, 300)
+  }, 300) as unknown as number
 }
 
 const handleCategorySelect = (categoryId: string) => {
@@ -607,7 +582,7 @@ watch(selectedItem, (newVal) => {
     const handleScroll = () => {
       const detailContent = document.querySelector('.detail-content')
       if (detailContent) {
-        showBackToTop.value = detailContent.scrollTop > 300
+        showBackToTop.value = (detailContent as HTMLElement).scrollTop > 300
       }
     }
     
@@ -629,7 +604,7 @@ watch(selectedItem, (newVal) => {
 const scrollToTop = () => {
   const detailContent = document.querySelector('.detail-content')
   if (detailContent) {
-    detailContent.scrollTo({ top: 0, behavior: 'smooth' })
+    (detailContent as HTMLElement).scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
 
@@ -747,6 +722,7 @@ onMounted(() => {
 .knowledge-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
 }
 
 .item-header {
@@ -900,18 +876,30 @@ onMounted(() => {
 
 .criterion-item h5 {
   margin: 0 0 5px 0;
-  color: #1f2937;
   font-size: 14px;
+  color: #1f2937;
+  font-weight: 500;
 }
 
-.treatment-content {
-  padding: 10px 0;
+.treatment-plan {
+  padding: 16px 0;
 }
 
-.treatment-content h5 {
-  margin: 0 0 10px 0;
-  color: #1f2937;
-  font-size: 14px;
+.treatment-list {
+  padding-left: 20px;
+}
+
+.treatment-list li {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.empty-state {
+  padding: 20px;
+  text-align: center;
+  color: #999;
+  background-color: #f9fafb;
+  border-radius: 4px;
 }
 
 .prevention-tips {
@@ -928,81 +916,36 @@ onMounted(() => {
   line-height: 1.6;
 }
 
-/* 加载状态 */
-.loading-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  color: #6b7280;
+.tip-item .el-icon {
+  margin-top: 4px;
+  color: #10b981;
 }
 
-/* 空状态 */
-.empty-state {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 0;
-}
-
-/* 收藏按钮样式 */
-:deep(.el-button--icon.favorited) {
-  color: #f59e0b;
-}
-
-/* 回到顶部按钮 */
 .back-to-top {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  width: 36px;
-  height: 36px;
+  background: #409eff;
+  color: white;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background-color: #409eff;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  z-index: 10;
-  transition: opacity 0.3s;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* 响应式调整 */
-@media (max-width: 1200px) {
-  .base-content {
-    flex-direction: column;
-    height: auto;
-  }
-  
-  .category-sidebar, .detail-sidebar {
-    width: 100%;
-    max-height: 300px;
-  }
-  
-  .search-bar {
-    width: 300px;
-  }
+.back-to-top:hover {
+  background: #66b1ff;
 }
 
-@media (max-width: 768px) {
-  .base-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-  }
-  
-  .search-bar {
-    width: 100%;
-  }
-  
-  .content-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
+:deep(.el-button--icon-only.is-small) {
+  width: 32px;
+  height: 32px;
+}
+
+.favorited {
+  color: #f56c6c;
 }
 </style>
