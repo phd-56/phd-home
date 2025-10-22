@@ -1,194 +1,122 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-
-export interface ImageFile {
-  id: string
-  name: string
-  type: 'dicom' | 'jpg' | 'png'
-  size: number
-  url: string
-  uploadTime: Date
-  thumbnail?: string
-  seriesId?: string // DICOM序列ID
-  instanceNumber?: number // DICOM实例号
-}
-
-export interface Annotation {
-  id: string
-  type: 'rectangle' | 'circle' | 'freehand' | 'text'
-  points: number[]
-  color: string
-  lineWidth: number
-  label?: string
-  createdAt: Date
-}
-
-export interface AnalysisFinding {
-  type: string
-  confidence: number
-  bbox: [number, number, number, number]
-  description: string
-}
-
-export interface AnalysisResult {
-  id: string
-  imageId: string
-  findings: AnalysisFinding[]
-  analysisTime: Date
-}
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import type { MedicalImage, Annotation, AIAnalysis, DetectedDisease } from '../types';
 
 export const useMedicalImageStore = defineStore('medicalImage', () => {
-  const images = ref<ImageFile[]>([])
-  const currentImage = ref<ImageFile | null>(null)
-  const analysisResults = ref<Record<string, AnalysisResult>>({})
-  const annotations = ref<Record<string, Annotation[]>>({})
-  const isLoading = ref(false)
-  const uploadProgress = ref(0)
+  const images = ref<MedicalImage[]>([]);
+  const currentImage = ref<MedicalImage | null>(null);
+  const isAnalyzing = ref(false);
+  const analysisProgress = ref(0);
 
-  // DICOM序列数据
-  const dicomSeries = ref<Record<string, ImageFile[]>>({})
+  // 获取患者影像
+  const getPatientImages = computed(() => (patientId: string) => {
+    return images.value.filter(img => img.patientId === patientId);
+  });
 
-  // 模拟分析结果数据
-  const mockAnalysisResults: Record<string, AnalysisResult> = {
-    '1': {
-      id: 'analysis-1',
-      imageId: '1',
-      findings: [
-        {
-          type: '肿瘤',
-          confidence: 0.92,
-          bbox: [100, 150, 80, 60],
-          description: '检测到疑似肿瘤病灶，建议进一步检查'
-        }
-      ],
-      analysisTime: new Date()
-    }
-  }
-
-  const uploadImage = async (file: File): Promise<ImageFile> => {
-    return new Promise((resolve) => {
-      isLoading.value = true
-      uploadProgress.value = 0
-
-      // 模拟上传进度
-      const progressInterval = setInterval(() => {
-        uploadProgress.value += 10
-        if (uploadProgress.value >= 100) {
-          clearInterval(progressInterval)
-
-          const reader = new FileReader()
-          reader.onload = (e) => {
-            const imageData: ImageFile = {
-              id: Date.now().toString(),
-              name: file.name,
-              type: getFileType(file.name),
-              size: file.size,
-              url: e.target?.result as string,
-              uploadTime: new Date(),
-              thumbnail: e.target?.result as string
-            }
-
-            images.value.push(imageData)
-            isLoading.value = false
-            resolve(imageData)
-          }
-          reader.readAsDataURL(file)
-        }
-      }, 100)
-    })
-  }
-
-  const uploadDicomSeries = async (files: File[]): Promise<void> => {
-    isLoading.value = true
-    uploadProgress.value = 0
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
-      const image = await uploadImage(file)
-
-      // 分组DICOM序列
-      const seriesId = generateSeriesId(file)
-      if (!dicomSeries.value[seriesId]) {
-        dicomSeries.value[seriesId] = []
-      }
-      dicomSeries.value[seriesId].push(image)
-
-      uploadProgress.value = ((i + 1) / files.length) * 100
-    }
-
-    isLoading.value = false
-  }
-
-  const analyzeImage = (imageId: string): Promise<AnalysisResult> => {
-    return new Promise((resolve) => {
-      isLoading.value = true
-
-      setTimeout(() => {
-        const result = mockAnalysisResults[imageId] || {
-          id: `analysis-${imageId}`,
-          imageId,
-          findings: [],
-          analysisTime: new Date()
-        }
-
-        analysisResults.value[imageId] = result
-        isLoading.value = false
-        resolve(result)
-      }, 2000)
-    })
-  }
-
+  // 添加标注
   const addAnnotation = (imageId: string, annotation: Omit<Annotation, 'id' | 'createdAt'>) => {
-    if (!annotations.value[imageId]) {
-      annotations.value[imageId] = []
+    const image = images.value.find(img => img.id === imageId);
+    if (image) {
+      const newAnnotation: Annotation = {
+        ...annotation,
+        id: generateId(),
+        createdAt: new Date().toISOString()
+      };
+      image.annotations.push(newAnnotation);
     }
+  };
 
-    const newAnnotation: Annotation = {
-      ...annotation,
-      id: generateId(),
-      createdAt: new Date()
-    }
-
-    annotations.value[imageId].push(newAnnotation)
-    return newAnnotation
-  }
-
+  // 删除标注
   const removeAnnotation = (imageId: string, annotationId: string) => {
-    if (annotations.value[imageId]) {
-      annotations.value[imageId] = annotations.value[imageId].filter(
-        ann => ann.id !== annotationId
-      )
+    const image = images.value.find(img => img.id === imageId);
+    if (image) {
+      image.annotations = image.annotations.filter(anno => anno.id !== annotationId);
     }
-  }
+  };
 
-  const getFileType = (fileName: string): 'dicom' | 'jpg' | 'png' => {
-    const ext = fileName.toLowerCase().split('.').pop()
-    if (ext === 'dcm') return 'dicom'
-    if (ext === 'jpg' || ext === 'jpeg') return 'jpg'
-    return 'png'
-  }
+  // AI分析影像
+  const analyzeImage = async (imageId: string): Promise<AIAnalysis> => {
+    isAnalyzing.value = true;
+    analysisProgress.value = 0;
 
-  const generateSeriesId = (file: File): string => {
-    // 简化的系列ID生成，实际应根据DICOM元数据
-    return file.name.split('.').slice(0, -1).join('.')
-  }
+    try {
+      // 模拟分析过程
+      for (let i = 0; i <= 100; i += 10) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+        analysisProgress.value = i;
+      }
 
-  const generateId = (): string => {
-    return Date.now().toString() + Math.random().toString(36).substr(2, 9)
-  }
+      // 模拟AI分析结果
+      const mockAnalysis: AIAnalysis = {
+        id: generateId(),
+        imageId,
+        diseases: generateMockDiseases(),
+        lesions: generateMockLesions(),
+        confidence: 0.87,
+        status: 'completed',
+        createdAt: new Date().toISOString(),
+        analysisTime: 3.2,
+        explanation: generateMockExplanation()
+      };
+
+      // 更新影像的分析结果
+      const image = images.value.find(img => img.id === imageId);
+      if (image) {
+        image.aiAnalysis = mockAnalysis;
+      }
+
+      return mockAnalysis;
+    } finally {
+      isAnalyzing.value = false;
+      analysisProgress.value = 0;
+    }
+  };
+
+  // 辅助函数
+  const generateId = () => Math.random().toString(36).substr(2, 9);
+
+  const generateMockDiseases = (): DetectedDisease[] => [
+    {
+      name: '骨关节炎',
+      confidence: 0.92,
+      severity: 'moderate',
+      description: '关节软骨退行性改变，伴有关节间隙狭窄',
+      treatmentSuggestions: ['物理治疗', '非甾体抗炎药', '体重管理']
+    },
+    {
+      name: '骨质疏松',
+      confidence: 0.78,
+      severity: 'mild',
+      description: '骨密度降低，骨小梁变细',
+      treatmentSuggestions: ['钙剂补充', '维生素D', '负重运动']
+    }
+  ];
+
+  const generateMockLesions = () => [
+    // 模拟病灶数据
+  ];
+
+  const generateMockExplanation = () => ({
+    featureImportance: [
+      { feature: '关节间隙', importance: 0.85, description: '关节间隙明显狭窄' },
+      { feature: '骨赘形成', importance: 0.76, description: '关节边缘骨赘' },
+      { feature: '软骨下骨硬化', importance: 0.68, description: '软骨下骨密度增高' }
+    ],
+    decisionFactors: [
+      '关节间隙不对称狭窄',
+      '骨赘形成明显',
+      '患者年龄相关性改变'
+    ]
+  });
 
   return {
     images,
     currentImage,
-    analysisResults,
-    annotations,
-    isLoading,
-    uploadProgress,
-    dicomSeries,
-    uploadImage,
-    uploadDicomSeries,
-    analyzeImage,
+    isAnalyzing,
+    analysisProgress,
+    getPatientImages,
     addAnnotation,
-    removeAnnotation
-  }
-})
+    removeAnnotation,
+    analyzeImage
+  };
+});

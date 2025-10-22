@@ -170,7 +170,8 @@
     </div>
 
     <!-- 报告查看对话框 -->
-    <el-dialog
+    <!-- 暂时注释掉不存在的组件 -->
+    <!-- <el-dialog
       v-model="showReportDialog"
       :title="selectedReport?.title"
       width="90%"
@@ -182,15 +183,14 @@
         :report="selectedReport"
         @close="showReportDialog = false"
       />
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Download, Document, Clock, Check, Share, Search, View } from '@element-plus/icons-vue'
-import ReportViewer from './components/ReportViewer.vue'
+//import { Download, Document, Clock, Check, Share, Search, View } from '@element-plus/icons-vue'
 
 interface ReportImage {
   id: string
@@ -217,7 +217,8 @@ const showReportDialog = ref(false)
 const selectedReport = ref<DiagnosisReport | null>(null)
 const searchQuery = ref('')
 const filterStatus = ref('')
-const dateRange = ref([])
+// 使用更明确的类型
+const dateRange = ref<[Date, Date] | null>(null)
 
 const reportStats = reactive({
   total: 8,
@@ -300,7 +301,8 @@ const filteredReports = computed(() => {
     reports = reports.filter(report => report.status === filterStatus.value)
   }
   
-  if (dateRange.value && dateRange.value.length === 2) {
+  // 修复：安全的日期范围过滤
+  if (dateRange.value) {
     const [start, end] = dateRange.value
     reports = reports.filter(report => {
       const createTime = new Date(report.createTime)

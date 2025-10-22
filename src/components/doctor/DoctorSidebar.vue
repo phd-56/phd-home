@@ -41,6 +41,10 @@
         >
           ⬆️ 上传影像
         </el-button>
+        <!-- 新增AI诊断快速操作 -->
+        <el-button class="action-btn" @click="startAIDiagnosis" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+          🧠 AI智能诊断
+        </el-button>
       </div>
     </div>
 
@@ -53,6 +57,11 @@
         <div class="stat-item">
           <span class="stat-label">待处理:</span>
           <span class="stat-value">{{ todayStats.pendingCases }}</span>
+        </div>
+        <!-- 新增AI诊断统计 -->
+        <div class="stat-item">
+          <span class="stat-label">AI辅助:</span>
+          <span class="stat-value" style="color: #764ba2;">{{ todayStats.aiAssistedCount }}</span>
         </div>
       </div>
       
@@ -83,12 +92,14 @@ interface UserInfo {
 interface TodayStats {
   diagnosisCount: number
   pendingCases: number
+  aiAssistedCount: number
 }
 
 interface MenuItem {
   index: string
   icon: string
   text: string
+  description?: string
 }
 
 const props = defineProps<{
@@ -104,16 +115,18 @@ const authStore = useAuthStore()
 
 const userInfo = reactive<UserInfo>({
   name: '李医生',
-  avatar: '/doctor-avatar.png', // 使用本地图片避免证书错误
+  avatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
   hospital: '北京协和医院',
   department: '骨科'
 })
 
 const todayStats = reactive<TodayStats>({
   diagnosisCount: 8,
-  pendingCases: 3
+  pendingCases: 3,
+  aiAssistedCount: 5
 })
 
+<<<<<<< Updated upstream
 // 新增：添加反馈历史菜单项
 const menuItems = reactive<MenuItem[]>([
   { index: 'cases', icon: '📁', text: '病例管理' },
@@ -123,24 +136,70 @@ const menuItems = reactive<MenuItem[]>([
   { index: 'reports', icon: '📄', text: '报告生成' },
   { index: 'knowledge', icon: '📚', text: '知识库' },
   { index: 'statistics', icon: '📊', text: '数据统计' }
+=======
+// 更新菜单项，添加AI诊断分析
+const menuItems = reactive<MenuItem[]>([
+  { index: 'cases', icon: '📁', text: '病例管理', description: '患者病例档案管理' },
+  { index: 'images', icon: '🖼️', text: '影像查看', description: '医学影像浏览与分析' },
+  { index: 'ai-diagnosis', icon: '🧠', text: 'AI诊断分析', description: '智能辅助诊断' },
+  { index: 'reports', icon: '📄', text: '报告生成', description: '诊断报告创建与管理' },
+  { index: 'knowledge', icon: '📚', text: '知识库', description: '医学知识查询' },
+  { index: 'statistics', icon: '📊', text: '数据统计', description: '工作数据统计分析' }
+>>>>>>> Stashed changes
 ])
 
 const handleMenuSelect = (index: string) => {
   emit('tabChange', index)
   
+<<<<<<< Updated upstream
   // 新增：当选择反馈历史菜单项时导航到对应页面
   if (index === 'feedback-history') {
     router.push('/doctor/feedback-history')
+=======
+  const menuToRoute: Record<string, string> = {
+    'cases': '/doctor/cases',
+    'images': '/doctor/images', 
+    'ai-diagnosis': '/doctor/ai-diagnosis/upload',
+    'reports': '/doctor/reports',
+    'knowledge': '/doctor/knowledge',
+    'statistics': '/doctor/statistics'
+  }
+  
+  const targetRoute = menuToRoute[index]
+  if (targetRoute) {
+    router.push(targetRoute)
+  }
+  
+  // 为AI诊断菜单添加特殊提示
+  if (index === 'ai-diagnosis') {
+    ElMessage.success({
+      message: '进入AI智能诊断模式',
+      duration: 2000,
+      showClose: true
+    })
+>>>>>>> Stashed changes
   }
 }
 
 const createNewCase = () => {
-  ElMessage.info('创建新病例功能')
+  router.push('/doctor/cases')
   emit('tabChange', 'cases')
 }
 
 const uploadImage = () => {
-  router.push('/doctor/image-processing')
+  router.push('/doctor/ai-diagnosis/upload')
+  emit('tabChange', 'ai-diagnosis')
+}
+
+// 新增AI诊断快速启动函数
+const startAIDiagnosis = () => {
+  ElMessage.success({
+    message: '启动AI智能诊断分析',
+    duration: 2000,
+    showClose: true
+  })
+  router.push('/doctor/ai-diagnosis/upload')
+  emit('tabChange', 'ai-diagnosis')
 }
 
 const handleLogout = async () => {
@@ -161,6 +220,11 @@ const handleLogout = async () => {
     // 用户取消退出
   }
 }
+
+// 暴露方法供父组件调用（如果需要）
+defineExpose({
+  startAIDiagnosis
+})
 </script>
 
 <style scoped>
@@ -224,16 +288,30 @@ const handleLogout = async () => {
   margin: 4px 0;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .menu-item:hover {
   background-color: #f5f5f5;
+  transform: translateX(4px);
 }
 
 .menu-item.active {
   background-color: #ecf5ff;
   color: #409eff;
+  border-left: 3px solid #409eff;
+}
+
+/* 为AI诊断菜单项添加特殊样式 */
+.menu-item[data-index="ai-diagnosis"].active {
+  background: linear-gradient(135deg, #ecf5ff, #f0f4ff);
+  color: #764ba2;
+  border-left: 3px solid #764ba2;
+}
+
+.menu-item[data-index="ai-diagnosis"]:hover {
+  background: linear-gradient(135deg, #f0f4ff, #e6f0ff);
 }
 
 .menu-icon {
@@ -243,6 +321,7 @@ const handleLogout = async () => {
 
 .menu-text {
   font-size: 14px;
+  font-weight: 500;
 }
 
 /* 其他样式保持不变 */
@@ -269,6 +348,12 @@ const handleLogout = async () => {
   width: 100%;
   justify-content: flex-start;
   padding: 10px 16px;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-footer {
@@ -312,5 +397,17 @@ const handleLogout = async () => {
 
 .logout-btn:hover {
   background-color: #fef0f0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .menu-text {
+    font-size: 13px;
+  }
+  
+  .action-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 }
 </style>

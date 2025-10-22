@@ -1,4 +1,6 @@
+
 <template>
+<<<<<<< Updated upstream
   <div class="ai-diagnosis">
     <div class="diagnosis-header">
       <h2>AI智能诊断分析</h2>
@@ -26,9 +28,43 @@
             :auto-upload="true"
           >
             <el-icon class="upload-icon"><upload-filled /></el-icon>
+=======
+  <div class="ultimate-diagnosis">
+    <!-- 页面标题 -->
+    <div class="page-header">
+      <h1>🦴 YOLO肌肉骨骼智能诊断系统</h1>
+      <div class="system-status">
+        <el-tag type="success">YOLO引擎: 就绪</el-tag>
+        <el-tag type="info">版本: Ultimate v3.0</el-tag>
+      </div>
+    </div>
+
+    <!-- 上传区域 -->
+    <div class="upload-section">
+      <el-card class="upload-card">
+        <template #header>
+          <div class="upload-header">
+            <span>📤 上传医学影像</span>
+            <el-tag type="danger">YOLO深度学习</el-tag>
+          </div>
+        </template>
+        
+        <el-upload
+          class="ultimate-upload"
+          drag
+          action=""
+          :before-upload="handleUltimateDiagnosis"
+          :show-file-list="false"
+          :disabled="loading"
+          accept=".jpg,.jpeg,.png,.dcm"
+        >
+          <div class="upload-content">
+            <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+>>>>>>> Stashed changes
             <div class="el-upload__text">
-              拖拽影像文件到此处，或<em>点击上传</em>
+              将肌肉骨骼影像拖到此处，或<em>点击上传</em>
             </div>
+<<<<<<< Updated upstream
             <div class="el-upload__hint">支持 DICOM、JPG、PNG 格式</div>
           </el-upload>
         </div>
@@ -221,10 +257,182 @@
         @submit-success="handleFeedbackSubmitted"
       />
     </el-dialog>
+=======
+            <div class="el-upload__tip">
+              支持格式: JPEG, PNG, DICOM • YOLOv8医学专用模型
+            </div>
+          </div>
+        </el-upload>
+      </el-card>
+    </div>
+
+    <!-- 初始状态提示 -->
+    <div v-if="!diagnosisResult && !loading" class="initial-state">
+      <el-card>
+        <div class="initial-content">
+          <el-icon size="48" color="#909399"><Picture /></el-icon>
+          <h3>👨‍⚕️ 欢迎使用AI诊断系统</h3>
+          <p>请上传医学影像文件开始诊断分析</p>
+        </div>
+      </el-card>
+    </div>
+
+    <!-- 诊断结果 -->
+    <div v-if="diagnosisResult && diagnosisResult.yoloResult" class="results-section">
+      <el-card class="results-card">
+        <template #header>
+          <div class="result-header">
+            <h2>🎯 诊断结果</h2>
+            <div class="action-buttons">
+    <el-button @click="startEditing" type="primary" class="btn-edit-report">
+      📝 编辑报告
+    </el-button>
+    <el-button @click="previewReport" type="warning" class="btn-preview">
+      👁️ 预览报告
+    </el-button>
+    <el-button @click="downloadReportDirectly" type="success" class="btn-download-direct">
+      📄 直接下载
+    </el-button>
+    <el-button @click="resetDiagnosis" type="info" plain>
+      🔄 重新诊断
+    </el-button>
+  </div>
+          </div>
+        </template>
+        
+        <!-- 显示诊断结果摘要 -->
+        <div class="result-summary">
+          <h3>诊断摘要</h3>
+          <div class="summary-content">
+            <p><strong>检查部位:</strong> {{ diagnosisResult.yoloResult.bodyPart }}</p>
+            <p><strong>置信度:</strong> {{ diagnosisResult.yoloResult.confidenceScore }}%</p>
+            <p><strong>发现数量:</strong> {{ diagnosisResult.yoloResult.detectedDiseases.length }}个</p>
+            <p><strong>处理时间:</strong> {{ diagnosisResult.yoloResult.processingTime }}ms</p>
+          </div>
+        </div>
+
+        <!-- 检测结果 -->
+        <div class="detections-section">
+          <h3>YOLO检测结果 ({{ diagnosisResult.yoloResult.detectedDiseases.length }}个发现)</h3>
+          <div v-if="diagnosisResult.yoloResult.detectedDiseases.length > 0" class="detections-grid">
+            <div 
+              v-for="(detection, index) in diagnosisResult.yoloResult.detectedDiseases" 
+              :key="index"
+              class="detection-card"
+              :class="detection.severity"
+            >
+              <div class="detection-header">
+                <h4>{{ detection.anatomicalLocation }}</h4>
+                <el-tag 
+                  :type="detection.severity === '重度' ? 'danger' : 
+                         detection.severity === '中度' ? 'warning' : 'success'"
+                >
+                  {{ detection.severity }}
+                </el-tag>
+              </div>
+              <p class="detection-class">{{ detection.class }}</p>
+              <p class="detection-desc">{{ detection.clinicalSignificance }}</p>
+              <div class="detection-meta">
+                <span class="confidence">置信度: {{ (detection.confidence * 100).toFixed(1) }}%</span>
+                <span class="algorithm">YOLO检测</span>
+              </div>
+            </div>
+          </div>
+          <div v-else class="no-findings">
+            <el-empty description="未发现异常病变" />
+          </div>
+        </div>
+
+        <!-- 测量数据 -->
+        <div v-if="diagnosisResult.yoloResult.measurements && diagnosisResult.yoloResult.measurements.length > 0" class="measurements-section">
+          <h3>📏 定量测量分析</h3>
+          <el-table :data="diagnosisResult.yoloResult.measurements" border>
+            <el-table-column prop="type" label="测量项目" width="180" />
+            <el-table-column prop="value" label="测量值" width="120">
+              <template #default="scope">
+                {{ scope.row.value }} {{ scope.row.unit }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="normalRange" label="正常范围" width="120" />
+            <el-table-column prop="deviation" label="偏差" width="100">
+              <template #default="scope">
+                <span :class="scope.row.deviation > 0 ? 'deviation-positive' : 'deviation-negative'">
+                  {{ scope.row.deviation > 0 ? '+' : '' }}{{ scope.row.deviation }}{{ scope.row.unit }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="significance" label="临床意义" />
+          </el-table>
+        </div>
+
+        <!-- 热力图预览 -->
+        <div v-if="diagnosisResult.yoloResult.heatmapData" class="heatmap-section">
+          <h3>🔥 AI热力图分析</h3>
+          <div class="heatmap-preview">
+            <div class="heatmap-grid">
+              <div 
+                v-for="(row, i) in diagnosisResult.yoloResult.heatmapData" 
+                :key="i"
+                class="heatmap-row"
+              >
+                <div 
+                  v-for="(value, j) in row" 
+                  :key="j"
+                  class="heatmap-cell"
+                  :style="{
+                    backgroundColor: `rgba(255, ${Math.round(255 * (1 - value))}, ${Math.round(255 * (1 - value))}, ${value})`
+                  }"
+                  :title="`置信度: ${(value * 100).toFixed(1)}%`"
+                ></div>
+              </div>
+            </div>
+            <div class="heatmap-legend">
+              <span>低置信度</span>
+              <div class="gradient-bar"></div>
+              <span>高置信度</span>
+            </div>
+          </div>
+        </div>
+      </el-card>
+    </div>
+
+    <!-- 报告编辑区域 -->
+    <div v-if="showReportEditor && diagnosisResult && diagnosisResult.yoloResult" class="report-editor-section">
+      <el-card>
+        <template #header>
+          <div class="editor-header">
+            <h2>📋 诊断报告编辑</h2>
+            <p>请医生审核并完善诊断报告内容</p>
+          </div>
+        </template>
+        
+        <MedicalReportEditor
+          :report-data="diagnosisResult"
+          :patient-info="patientInfo"
+          :hospital-info="hospitalInfo"
+          @export-complete="onExportComplete"
+          @save-draft="onSaveDraft"
+          ref="reportEditor"
+        />
+      </el-card>
+    </div>
+
+    <!-- 加载状态 -->
+    <div v-if="loading" class="loading-overlay">
+      <el-card>
+        <div class="loading-content">
+          <el-icon class="loading-icon"><Loading /></el-icon>
+          <div>YOLO深度学习中...</div>
+          <div class="loading-tip">正在分析影像特征，请稍候</div>
+        </div>
+      </el-card>
+    </div>
+>>>>>>> Stashed changes
   </div>
 </template>
 
 <script setup lang="ts">
+<<<<<<< Updated upstream
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElTag, ElEmpty, ElDialog } from 'element-plus'
 import { 
@@ -239,40 +447,25 @@ import {
 // 新增：导入反馈表单组件
 import FeedbackForm from '@/components/doctor/FeedbackForm.vue'
 import { useFeedbackStore } from '@/stores/feedbackStore'
+=======
+import { ref, onMounted, reactive, nextTick } from 'vue';
+import { ElMessage, ElLoading } from 'element-plus';
+//import { UploadFilled, Loading } from '@element-plus/icons-vue';
+>>>>>>> Stashed changes
 
-interface MedicalImage {
-  id: string
-  name: string
-  url: string
-  thumbnail: string
-  type: string
-  uploadTime: string
-}
+import { UltimateDiagnosisSystem } from '@/utils/ultimateDiagnosisSystem';
+import MedicalReportEditor from '@/components/MedicalReportEditor.vue';
+import { useRouter } from 'vue-router';
 
-interface AIDetection {
-  x: number
-  y: number
-  width: number
-  height: number
-  disease: string
-  confidence: number
-}
+const router = useRouter()
 
-interface DiagnosisResult {
-  diseases: Array<{
-    name: string
-    confidence: number
-    description: string
-  }>
-  detections: Array<{
-    location: string
-    confidence: number
-    description: string
-  }>
-  explanation: string
-  heatmap: string
-}
+// 响应式数据
+const diagnosisResult = ref<any>(null);
+const loading = ref(false);
+const showReportEditor = ref(false);
+const reportEditor = ref();
 
+<<<<<<< Updated upstream
 // 新增：反馈表单显示状态
 const showFeedbackForm = ref(false)
 const feedbackSuccess = ref(false)
@@ -287,60 +480,44 @@ const imageScale = ref(1)
 const analyzing = ref(false)
 const aiDetections = ref<AIDetection[]>([])
 const diagnosisResult = ref<DiagnosisResult | null>(null)
+=======
+// 患者信息和医院信息
+const patientInfo = reactive({
+  name: '张先生',
+  gender: '男',
+  age: '45',
+  medicalRecordNo: 'MR202400123'
+});
+>>>>>>> Stashed changes
 
-// 模拟可用影像数据
-const availableImages = ref<MedicalImage[]>([
-  {
-    id: '1',
-    name: '膝关节X光片',
-    url: 'https://via.placeholder.com/600x400?text=Knee+X-Ray',
-    thumbnail: 'https://via.placeholder.com/150x100?text=Knee',
-    type: 'image/jpeg',
-    uploadTime: '2024-01-15T10:30:00'
-  },
-  {
-    id: '2',
-    name: '腰椎MRI',
-    url: 'https://via.placeholder.com/600x400?text=Spine+MRI',
-    thumbnail: 'https://via.placeholder.com/150x100?text=Spine',
-    type: 'image/jpeg',
-    uploadTime: '2024-01-14T14:20:00'
-  }
-])
+const hospitalInfo = reactive({
+  name: '智能医学影像诊断中心',
+  department: '放射科'
+});
 
-const beforeImageUpload = (file: File) => {
-  const isValidType = ['image/jpeg', 'image/png', 'application/dicom'].includes(file.type)
-  if (!isValidType) {
-    ElMessage.error('只能上传 JPG、PNG 或 DICOM 格式的影像文件!')
-    return false
+// 内容生成函数
+const generateInitialFindings = (result: any): string => {
+  if (result.detectedDiseases.length === 0) {
+    return '<p>影像表现未见明确异常。</p>'
   }
-  return true
-}
-
-const handleImageUpload = (response: any, file: File) => {
-  const newImage: MedicalImage = {
-    id: Date.now().toString(),
-    name: file.name,
-    url: URL.createObjectURL(file),
-    thumbnail: URL.createObjectURL(file),
-    type: file.type,
-    uploadTime: new Date().toISOString()
-  }
+<<<<<<< Updated upstream
   availableImages.value.push(newImage)
   selectImage(newImage)
   ElMessage.success('影像上传成功')
-}
-
-const selectImage = (image: MedicalImage) => {
-  selectedImage.value = image
-  aiDetections.value = []
-  diagnosisResult.value = null
-  imageScale.value = 1
-}
-
-const runAIDiagnosis = async () => {
-  if (!selectedImage.value) return
+=======
   
+  return result.detectedDiseases.map((disease: any) => 
+    `<p>${disease.anatomicalLocation}可见${disease.class}，${disease.clinicalSignificance}。</p>`
+  ).join('')
+>>>>>>> Stashed changes
+}
+
+const generateInitialDiagnosis = (result: any): string => {
+  if (result.detectedDiseases.length === 0) {
+    return '<p>未见明确异常征象。</p>'
+  }
+  
+<<<<<<< Updated upstream
   analyzing.value = true
   try {
     // 模拟AI诊断过程
@@ -368,13 +545,133 @@ const runAIDiagnosis = async () => {
     }
     
     ElMessage.success('AI诊断分析完成')
-  } catch (error) {
-    ElMessage.error('AI诊断分析失败')
-  } finally {
-    analyzing.value = false
-  }
+=======
+  const primary = result.detectedDiseases[0]
+  return `<p>${primary.anatomicalLocation}${primary.class}。</p>`
 }
 
+const generateInitialRecommendation = (result: any): string => {
+  if (result.detectedDiseases.length === 0) {
+    return '<p>建议定期复查。</p>'
+  }
+  
+  const hasFracture = result.detectedDiseases.some((d: any) => d.class.includes('fracture'))
+  if (hasFracture) {
+    return '<p>建议进一步行CT检查明确诊断，并请骨科会诊。</p>'
+  }
+  
+  return '<p>建议临床随访，必要时进一步检查。</p>'
+}
+
+const htmlToText = (html: string): string => {
+  const div = document.createElement('div')
+  div.innerHTML = html
+  return div.textContent || div.innerText || ''
+}
+
+// 组件挂载时初始化系统
+onMounted(async () => {
+  try {
+    await UltimateDiagnosisSystem.initialize();
+    console.log('✅ YOLO诊断系统初始化完成');
+    ElMessage.success('系统初始化完成');
+  } catch (error) {
+    console.error('系统初始化失败:', error);
+    ElMessage.error('系统初始化失败，请刷新页面重试');
+  }
+});
+
+// 诊断处理
+const handleUltimateDiagnosis = async (file: File) => {
+  try {
+    console.log('开始YOLO诊断分析...', file.name);
+    loading.value = true;
+    diagnosisResult.value = null;
+    showReportEditor.value = false;
+
+    // 显示加载提示
+    const loadingInstance = ElLoading.service({
+      lock: true,
+      text: 'AI正在分析影像特征...',
+      background: 'rgba(0, 0, 0, 0.7)',
+    });
+
+    // 执行诊断
+    const result = await UltimateDiagnosisSystem.ultimateDiagnosis(file);
+    diagnosisResult.value = result;
+    
+    console.log('诊断结果:', result);
+    ElMessage.success('诊断完成！');
+
+    loadingInstance.close();
+    
+  } catch (error) {
+    console.error('诊断失败:', error);
+    ElMessage.error('诊断失败: ' + (error instanceof Error ? error.message : '未知错误'));
+    diagnosisResult.value = null;
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 预览报告
+const previewReport = () => {
+  if (!diagnosisResult.value?.yoloResult) {
+    ElMessage.warning('暂无诊断结果，请先进行诊断');
+    return;
+  }
+
+  // 收集所有报告数据
+  const reportPreviewData = {
+    reportData: diagnosisResult.value,
+    editedContent: reportEditor.value?.getEditedContent?.() || {
+      findings: generateInitialFindings(diagnosisResult.value.yoloResult),
+      diagnosis: generateInitialDiagnosis(diagnosisResult.value.yoloResult),
+      recommendation: generateInitialRecommendation(diagnosisResult.value.yoloResult)
+    },
+    patientInfo: patientInfo,
+    hospitalInfo: hospitalInfo,
+    doctorInfo: reportEditor.value?.doctorInfo || { reportDoctor: '', reviewDoctor: '' },
+    signatures: reportEditor.value?.signatures || { reportDoctor: '', reviewDoctor: '' }
+  }
+
+  // 跳转到报告预览页面
+  router.push({
+    path: '/report-preview',
+    query: {
+      reportData: JSON.stringify(reportPreviewData.reportData),
+      editedContent: JSON.stringify(reportPreviewData.editedContent),
+      patientInfo: JSON.stringify(reportPreviewData.patientInfo),
+      hospitalInfo: JSON.stringify(reportPreviewData.hospitalInfo),
+      doctorInfo: JSON.stringify(reportPreviewData.doctorInfo),
+      signatures: JSON.stringify(reportPreviewData.signatures)
+    }
+  })
+}
+
+// 直接下载报告（不编辑）
+const downloadReportDirectly = async () => {
+  if (!diagnosisResult.value?.yoloResult) {
+    ElMessage.warning('暂无诊断结果，请先进行诊断');
+    return;
+  }
+  
+  try {
+    ElMessage.info('开始生成PDF报告...');
+    await UltimateDiagnosisSystem.downloadUltimateReport(
+      diagnosisResult.value.yoloResult,
+      patientInfo,
+      hospitalInfo
+    );
+    ElMessage.success('PDF报告下载成功！');
+>>>>>>> Stashed changes
+  } catch (error) {
+    console.error('直接下载失败:', error);
+    ElMessage.error('下载失败: ' + (error instanceof Error ? error.message : '未知错误'));
+  }
+};
+
+<<<<<<< Updated upstream
 // 新增：反馈提交成功处理
 const handleFeedbackSubmitted = async (feedbackData: any) => {
   loading.value = true
@@ -413,103 +710,285 @@ const getConfidenceColor = (confidence: number) => {
   if (confidence >= 0.6) return '#e6a23c' // 中置信度 - 橙色
   return '#67c23a' // 低置信度 - 绿色
 }
+=======
+// 进入编辑模式
+const startEditing = () => {
+  if (!diagnosisResult.value?.yoloResult) {
+    ElMessage.warning('暂无诊断结果，请先进行诊断');
+    return;
+  }
+  
+  showReportEditor.value = true;
+  
+  // 滚动到编辑区域
+  nextTick(() => {
+    document.querySelector('.report-editor-section')?.scrollIntoView({ 
+      behavior: 'smooth' 
+    });
+  });
+};
+>>>>>>> Stashed changes
 
-const getConfidenceTagType = (confidence: number) => {
-  if (confidence >= 0.8) return 'danger'
-  if (confidence >= 0.6) return 'warning'
-  return 'success'
-}
+// 重置诊断
+const resetDiagnosis = () => {
+  diagnosisResult.value = null;
+  showReportEditor.value = false;
+  ElMessage.info('已重置诊断结果');
+};
 
-const generateReport = () => {
-  ElMessage.success('诊断报告生成成功')
-  // 这里可以跳转到报告页面或打开报告对话框
-}
+// 报告导出完成回调
+const onExportComplete = (filename: string) => {
+  console.log(`PDF导出完成: ${filename}`);
+  ElMessage.success(`报告已成功导出: ${filename}`);
+};
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('zh-CN')
-}
+// 保存草稿回调
+const onSaveDraft = (draft: any) => {
+  console.log('草稿已保存:', draft);
+  ElMessage.success('报告草稿已保存');
+};
+
+// 下载终极报告（备用方法）
+const downloadUltimateReport = async () => {
+  if (!diagnosisResult.value?.yoloResult) {
+    ElMessage.warning('暂无诊断结果，请先进行诊断');
+    return;
+  }
+  
+  try {
+    ElMessage.info('开始生成PDF报告...');
+    await UltimateDiagnosisSystem.downloadUltimateReport(
+      diagnosisResult.value.yoloResult,
+      patientInfo,
+      hospitalInfo,
+      `诊断报告_${new Date().getTime()}.pdf`
+    );
+    ElMessage.success('PDF报告下载成功！');
+  } catch (error) {
+    console.error('报告生成失败:', error);
+    ElMessage.error('报告生成失败: ' + (error instanceof Error ? error.message : '未知错误'));
+  }
+};
 </script>
 
 <style scoped>
-.ai-diagnosis {
+.ultimate-diagnosis {
   padding: 20px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.diagnosis-header {
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.page-header h1 {
+  color: #1890ff;
+  margin-bottom: 15px;
+  font-size: 28px;
+}
+
+.system-status {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.upload-card {
+  margin-bottom: 30px;
+}
+
+.upload-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
-.diagnosis-content {
-  display: flex;
-  flex: 1;
-  gap: 20px;
-  height: calc(100vh - 160px);
-}
-
-.left-panel {
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.upload-section, .image-selection {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 15px;
-}
-
-.upload-area {
+.ultimate-upload {
   width: 100%;
 }
 
-.image-grid {
-  display: grid;
+.upload-content {
+  padding: 40px 0;
+}
+
+.initial-state {
+  margin: 30px 0;
+}
+
+.initial-content {
+  text-align: center;
+  padding: 40px;
+  color: #909399;
+}
+
+.initial-content h3 {
+  margin: 16px 0 8px 0;
+  color: #606266;
+}
+
+.results-card {
+  margin-top: 20px;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.result-header h2 {
+  margin: 0;
+  color: #1890ff;
+}
+
+.action-buttons {
+  display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.result-summary {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.result-summary h3 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 2px solid #1890ff;
+  padding-bottom: 8px;
+}
+
+.summary-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.summary-content p {
+  margin: 0;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 4px;
+  border-left: 3px solid #1890ff;
+}
+
+.detections-section {
+  margin: 30px 0;
+}
+
+.detections-section h3 {
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.detections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.detection-card {
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #ddd;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+}
+
+.detection-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.detection-card.重度 {
+  border-left-color: #ff4d4f;
+  background: #fff2f0;
+}
+
+.detection-card.中度 {
+  border-left-color: #faad14;
+  background: #fffbe6;
+}
+
+.detection-card.轻度 {
+  border-left-color: #52c41a;
+  background: #f6ffed;
+}
+
+.detection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.detection-header h4 {
+  margin: 0;
+  flex: 1;
+  color: #333;
+}
+
+.detection-class {
+  margin: 4px 0;
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+}
+
+.detection-desc {
+  margin: 8px 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.detection-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #999;
   margin-top: 10px;
 }
 
-.image-card {
-  border: 2px solid transparent;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: border-color 0.3s;
+.no-findings {
+  text-align: center;
+  padding: 40px;
+  color: #999;
 }
 
-.image-card.active {
-  border-color: #409eff;
+.measurements-section {
+  margin: 30px 0;
 }
 
-.image-card img {
-  width: 100%;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 4px;
+.measurements-section h3 {
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e8e8e8;
 }
 
-.image-info {
-  padding: 5px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.image-info .name {
-  font-size: 12px;
+.deviation-positive {
+  color: #ff4d4f;
   font-weight: bold;
 }
 
-.image-info .date {
-  font-size: 10px;
-  color: #666;
+.deviation-negative {
+  color: #52c41a;
+  font-weight: bold;
 }
 
+<<<<<<< Updated upstream
 .detection-tag {
   font-size: 10px;
   color: white;
@@ -575,10 +1054,27 @@ const formatDate = (dateString: string) => {
   border-radius: 8px;
   margin-top: 10px;
   display: flex;
+=======
+.heatmap-section {
+  margin: 30px 0;
+}
+
+.heatmap-section h3 {
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.heatmap-preview {
+  display: flex;
+  flex-direction: column;
+>>>>>>> Stashed changes
   align-items: center;
   gap: 15px;
 }
 
+<<<<<<< Updated upstream
 .control-buttons {
   display: flex;
   gap: 5px;
@@ -624,47 +1120,54 @@ const formatDate = (dateString: string) => {
 
 .disease-item, .detection-item {
   background: white;
+=======
+.heatmap-grid {
+  border: 1px solid #ddd;
+>>>>>>> Stashed changes
   padding: 10px;
-  border-radius: 4px;
-  border-left: 4px solid #409eff;
+  border-radius: 8px;
+  background: white;
 }
 
-.disease-header {
+.heatmap-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
 }
 
-.disease-name {
-  font-weight: bold;
+.heatmap-cell {
+  width: 12px;
+  height: 12px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s;
+  cursor: pointer;
 }
 
-.detection-info {
+.heatmap-cell:hover {
+  transform: scale(1.2);
+  z-index: 1;
+  position: relative;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+
+.heatmap-legend {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
-}
-
-.location {
-  font-weight: bold;
-}
-
-.description {
+  gap: 10px;
   font-size: 12px;
   color: #666;
 }
 
-.explanation {
-  font-size: 14px;
-  line-height: 1.5;
+.gradient-bar {
+  width: 200px;
+  height: 10px;
+  background: linear-gradient(90deg, #ffffff, #ff4444);
+  border-radius: 5px;
 }
 
-.heatmap-preview {
-  margin-top: 10px;
+.report-editor-section {
+  margin-top: 30px;
 }
 
+<<<<<<< Updated upstream
 .heatmap-preview img {
   width: 100%;
   border-radius: 4px;
@@ -692,14 +1195,82 @@ const formatDate = (dateString: string) => {
 
 .report-section {
   margin-top: 20px;
+=======
+.editor-header {
+>>>>>>> Stashed changes
   text-align: center;
 }
 
-.no-results {
+.editor-header h2 {
+  color: #1890ff;
+  margin-bottom: 8px;
+}
+
+.editor-header p {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 200px;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-content {
+  text-align: center;
+  padding: 30px;
+  color: white;
+}
+
+.loading-icon {
+  font-size: 48px;
+  color: #1890ff;
+  margin-bottom: 16px;
+  animation: spin 1s linear infinite;
+}
+
+.loading-tip {
+  margin-top: 8px;
+  color: #ccc;
+  font-size: 14px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .ultimate-diagnosis {
+    padding: 10px;
+  }
+  
+  .result-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .action-buttons {
+    justify-content: center;
+  }
+  
+  .summary-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .detections-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* 新增：反馈相关样式 */

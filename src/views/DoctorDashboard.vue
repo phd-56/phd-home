@@ -1,7 +1,7 @@
 <template>
   <div class="doctor-dashboard">
-    <!-- 医生头部 -->
-    <div class="dashboard-header">
+    <!-- 医生头部 - 只在仪表板主页显示 -->
+    <div v-if="showDashboardHeader" class="dashboard-header">
       <h1>医生工作台</h1>
       <p>欢迎回来，{{ authStore.user?.fullName }} 医生</p>
       <div class="header-actions">
@@ -11,8 +11,11 @@
       </div>
     </div>
 
-    <!-- 医生核心功能 -->
-    <div class="function-grid">
+    <!-- 路由出口 -->
+    <router-view v-if="!showDashboardHome"/>
+    
+    <!-- 医生核心功能 - 只在仪表板主页显示 -->
+    <div v-else class="function-grid">
       <div class="function-card" @click="goToUpload">
         <div class="card-icon">📁</div>
         <h3>影像上传</h3>
@@ -60,23 +63,40 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { ElMessage } from 'element-plus'
+import { computed } from 'vue'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
+// 判断是否是仪表板主页（空路径或根路径）
+const showDashboardHome = computed(() => {
+  return route.name === 'DoctorDashboardMain' || route.path === '/dashboard/doctor'
+})
+
+// 判断是否显示仪表板头部（在主页和某些页面显示）
+const showDashboardHeader = computed(() => {
+  return showDashboardHome.value
+})
+
 const goToUpload = () => {
+<<<<<<< Updated upstream
   // 医生使用简单的上传页面，不是管理员的上传页面
   router.push('/upload') // 修改为小写，与路由配置保持一致
+=======
+  router.push('/Upload')
+>>>>>>> Stashed changes
 }
 
 const goToDiagnosis = () => {
-  ElMessage.info('AI诊断分析功能开发中...')
+  router.push('/dashboard/doctor/ai-diagnosis')
 }
 
 const goToCases = () => {
+<<<<<<< Updated upstream
   console.log('病例管理卡片被点击，准备跳转到/cases')
   try {
     // 使用name进行路由跳转，更可靠
@@ -96,10 +116,17 @@ const goToKnowledge = () => {
     console.error('路由跳转失败:', error)
     ElMessage.error('跳转失败，请稍后重试')
   }
+=======
+  router.push('/dashboard/doctor/cases')
+}
+
+const goToKnowledge = () => {
+  router.push('/dashboard/doctor/knowledge')
+>>>>>>> Stashed changes
 }
 
 const goToReports = () => {
-  ElMessage.info('报告生成功能开发中...')
+  router.push('/dashboard/doctor/reports')
 }
 
 const goToFeedback = () => {

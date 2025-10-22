@@ -113,7 +113,8 @@
     </div>
 
     <!-- 文章详情对话框 -->
-    <el-dialog
+    <!-- 暂时注释掉不存在的组件 -->
+    <!-- <el-dialog
       v-model="showArticleDialog"
       :title="selectedArticle?.title"
       width="80%"
@@ -124,14 +125,15 @@
         :article="selectedArticle"
         @close="showArticleDialog = false"
       />
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
-import { Clock, View, Calendar } from '@element-plus/icons-vue'
-import ArticleDetail from './components/ArticleDetail.vue'
+//import { Clock, View, Calendar } from '@element-plus/icons-vue'
+// 暂时注释掉不存在的导入
+// import ArticleDetail from './components/ArticleDetail.vue'
 
 interface HealthArticle {
   id: string
@@ -355,6 +357,7 @@ const formatDate = (dateString: string) => {
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

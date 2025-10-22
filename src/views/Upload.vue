@@ -219,7 +219,7 @@
                       分析中...
                     </template>
                     <template v-if="!isAnalyzing">
-                      <el-icon><Magic /></el-icon>
+                      
                       🎯 开始智能分析
                     </template>
                   </el-button>

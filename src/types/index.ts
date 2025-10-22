@@ -34,6 +34,7 @@ export interface AuthState {
   isAuthenticated: boolean
 }
 
+<<<<<<< Updated upstream
 // 影像引用接口
 interface ImageReference {
   id: string;                  // 影像唯一标识
@@ -118,4 +119,186 @@ export interface KnowledgeItem {
   viewCount: number
   isFavorite?: boolean
   isNew?: boolean
+=======
+
+// 影像相关类型
+export interface MedicalImage {
+  id: string;
+  patientId: string;
+  fileName: string;
+  fileSize: number;
+  uploadDate: string;
+  modality: string; // CT, MRI, X-Ray等
+  bodyPart: string;
+  imageUrl?: string;
+  dicomData?: any;
+  annotations: Annotation[];
+  aiAnalysis?: AIAnalysis;
+}
+
+export interface Annotation {
+  id: string;
+  imageId: string;
+  type: 'rectangle' | 'circle' | 'polygon' | 'point';
+  coordinates: number[];
+  label: string;
+  color: string;
+  createdAt: string;
+  createdBy: string;
+}
+
+export interface AIAnalysis {
+  id: string;
+  imageId: string;
+  diseases: DetectedDisease[];
+  lesions: DetectedLesion[];
+  confidence: number;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  createdAt: string;
+  analysisTime: number;
+  explanation?: ExplanationMap;
+}
+
+export interface DetectedDisease {
+  name: string;
+  confidence: number;
+  icdCode?: string;
+  severity: 'mild' | 'moderate' | 'severe';
+  description: string;
+  treatmentSuggestions: string[];
+}
+
+export interface DetectedLesion {
+  id: string;
+  type: string;
+  confidence: number;
+  boundingBox: number[]; // [x, y, width, height]
+  area: number;
+  characteristics: LesionCharacteristic[];
+}
+
+export interface LesionCharacteristic {
+  type: string;
+  value: string | number;
+  confidence: number;
+}
+
+export interface ExplanationMap {
+  heatmapUrl?: string;
+  featureImportance: FeatureImportance[];
+  decisionFactors: string[];
+}
+
+export interface FeatureImportance {
+  feature: string;
+  importance: number;
+  description: string;
+}
+
+// 肌肉骨骼疾病类型
+export const MUSCULOSKELETAL_DISEASES = [
+  '骨关节炎', '类风湿关节炎', '骨质疏松', '骨折', '椎间盘突出',
+  '脊柱侧弯', '肌腱炎', '滑囊炎', '骨坏死', '骨髓炎',
+  '骨肿瘤', '韧带损伤', '肌肉拉伤', '关节脱位', '颈椎病'
+] as const;
+
+// 在现有类型后添加以下内容
+
+export interface AIDiagnosisResult {
+  id: string;
+  imageId: string;
+  findings: MedicalFinding[];
+  suggestions: string[];
+  overallConfidence: number;
+  analysisTime: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  processed: boolean;
+  timestamp: string;
+}
+
+export interface MedicalFinding {
+  id: string;
+  description: string;
+  confidence: number;
+  location?: string;
+  clinicalSignificance?: string;
+  severity: 'normal' | 'mild' | 'moderate' | 'severe';
+  category: 'bone' | 'joint' | 'soft_tissue' | 'other';
+  boundingBox?: number[]; // [x, y, width, height] for YOLO detection
+}
+
+export interface ImageAnalysisRequest {
+  imageId: string;
+  imageFile: File;
+  analysisType: 'musculoskeletal' | 'chest' | 'brain' | 'general';
+  priority: 'normal' | 'urgent';
+  useYOLO?: boolean; // 是否使用YOLO进行目标检测
+}
+
+// 肌肉骨骼特定的发现类型
+export interface MusculoskeletalFinding extends MedicalFinding {
+  boneDensity?: 'normal' | 'osteopenia' | 'osteoporosis';
+  jointSpace?: 'normal' | 'narrowed' | 'widened';
+  fractureType?: 'none' | 'hairline' | 'displaced' | 'comminuted';
+}
+
+// YOLO检测结果
+export interface YOLODetection {
+  class: string;
+  confidence: number;
+  bbox: number[]; // [x, y, width, height]
+}
+
+// 在您现有的类型定义后面添加以下内容
+
+// AI诊断相关类型扩展
+export interface AIDiagnosisResult {
+  id: string;
+  imageId: string;
+  findings: MedicalFinding[];
+  suggestions: string[];
+  overallConfidence: number;
+  analysisTime: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  processed: boolean;
+  timestamp: string;
+}
+
+export interface MedicalFinding {
+  id: string;
+  description: string;
+  confidence: number;
+  location?: string;
+  clinicalSignificance?: string;
+  severity: 'normal' | 'mild' | 'moderate' | 'severe';
+  category: 'bone' | 'joint' | 'soft_tissue' | 'other';
+  boundingBox?: number[];
+}
+
+export interface ImageAnalysisRequest {
+  imageId: string;
+  imageFile: File;
+  analysisType: 'musculoskeletal' | 'chest' | 'brain' | 'general';
+  priority: 'normal' | 'urgent';
+  useYOLO?: boolean;
+}
+
+// 兼容您原有的 DiagnosisResult 类型
+export interface DiagnosisResult {
+  diagnosis: string;
+  confidence: number;
+  findings: DiagnosisFinding[];
+  recommendations: string[];
+  severity: 'low' | 'medium' | 'high';
+  probabilities: Record<string, number>;
+  regions: any[];
+  differential_diagnosis: string[];
+  clinical_correlation: string;
+}
+
+export interface DiagnosisFinding {
+  region: string;
+  description: string;
+  characteristic: string;
+>>>>>>> Stashed changes
 }
