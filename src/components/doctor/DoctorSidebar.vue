@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="doctor-sidebar">
     <div class="sidebar-header">
       <div class="user-info">
@@ -126,73 +126,17 @@ const todayStats = reactive<TodayStats>({
   aiAssistedCount: 5
 })
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-// 新增：添加反馈历史菜单项
 const menuItems = reactive<MenuItem[]>([
   { index: 'cases', icon: '📁', text: '病例管理' },
   { index: 'images', icon: '🖼️', text: '影像查看' },
   { index: 'diagnosis', icon: '🤖', text: 'AI诊断分析' },
-  { index: 'feedback-history', icon: '📝', text: '反馈历史' }, // 新增的反馈历史菜单项
   { index: 'reports', icon: '📄', text: '报告生成' },
   { index: 'knowledge', icon: '📚', text: '知识库' },
   { index: 'statistics', icon: '📊', text: '数据统计' }
-=======
-// 更新菜单项，添加AI诊断分析
-const menuItems = reactive<MenuItem[]>([
-=======
-// 更新菜单项，添加AI诊断分析
-const menuItems = reactive<MenuItem[]>([
->>>>>>> Stashed changes
-  { index: 'cases', icon: '📁', text: '病例管理', description: '患者病例档案管理' },
-  { index: 'images', icon: '🖼️', text: '影像查看', description: '医学影像浏览与分析' },
-  { index: 'ai-diagnosis', icon: '🧠', text: 'AI诊断分析', description: '智能辅助诊断' },
-  { index: 'reports', icon: '📄', text: '报告生成', description: '诊断报告创建与管理' },
-  { index: 'knowledge', icon: '📚', text: '知识库', description: '医学知识查询' },
-  { index: 'statistics', icon: '📊', text: '数据统计', description: '工作数据统计分析' }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 ])
 
 const handleMenuSelect = (index: string) => {
   emit('tabChange', index)
-  
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  // 新增：当选择反馈历史菜单项时导航到对应页面
-  if (index === 'feedback-history') {
-    router.push('/doctor/feedback-history')
-=======
-=======
->>>>>>> Stashed changes
-  const menuToRoute: Record<string, string> = {
-    'cases': '/doctor/cases',
-    'images': '/doctor/images', 
-    'ai-diagnosis': '/doctor/ai-diagnosis/upload',
-    'reports': '/doctor/reports',
-    'knowledge': '/doctor/knowledge',
-    'statistics': '/doctor/statistics'
-  }
-  
-  const targetRoute = menuToRoute[index]
-  if (targetRoute) {
-    router.push(targetRoute)
-  }
-  
-  // 为AI诊断菜单添加特殊提示
-  if (index === 'ai-diagnosis') {
-    ElMessage.success({
-      message: '进入AI智能诊断模式',
-      duration: 2000,
-      showClose: true
-    })
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-  }
 }
 
 const createNewCase = () => {

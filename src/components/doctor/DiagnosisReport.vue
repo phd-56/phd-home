@@ -185,9 +185,71 @@ const handleNewDiagnosis = () => {
   diagnosisStore.clearResult();
 };
 
-const exportReport = () => {
-  console.log('导出报告', unifiedResult.value);
-  ElMessage.success('报告导出功能开发中');
+const exportReport = async () => {
+  try {
+    console.log('开始导出报告...');
+    
+    // 验证必要的数据
+    if (!unifiedResult.value) {
+      ElMessage.warning('没有诊断结果，无法生成报告');
+      return;
+    }
+    
+    // 导入PDFGenerator类
+    import('@/utils/pdf-generator').then(({ PDFGenerator }) => {
+      // 构建AI诊断报告数据
+      const reportData = {
+        hospitalInfo: {
+          name: '未知医院',
+          department: '未知科室'
+        },
+        patientInfo: {
+          name: unifiedResult.value.patientInfo?.name || '未知患者',
+          id: unifiedResult.value.patientInfo?.id || '未提供',
+          gender: unifiedResult.value.patientInfo?.gender || '未提供',
+          age: unifiedResult.value.patientInfo?.age || '未提供'
+        },
+        reportDate: new Date().toISOString(),
+        reportNo: Date.now(),
+        diagnosisResult: {
+          diseases: unifiedResult.value.diagnosis?.map(d => ({
+            name: d.name,
+            confidence: d.confidence || 0,
+            description: d.description || ''
+          })) || [],
+          detections: unifiedResult.value.findings?.map(f => ({
+            location: f.location,
+            confidence: f.confidence || 0,
+            description: f.description || ''
+          })) || [],
+          explanation: unifiedResult.value.analysis || 'AI未提供详细解释',
+          heatmap: unifiedResult.value.visualizations?.heatmap || ''
+        },
+        doctorDiagnosis: '待医生填写诊断结论',
+        treatmentSuggestion: suggestions.value.join('；')
+      };
+      
+      // 生成PDF文件名
+      const fileName = `AI诊断报告_${reportData.patientInfo.name}_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.pdf`;
+      
+      // 使用项目中已有的PDFGenerator来生成AI诊断报告PDF
+      PDFGenerator.generateAIDiagnosisReport(reportData, fileName)
+        .then(() => {
+          console.log('PDF导出成功');
+          ElMessage.success('诊断报告已导出为PDF文件');
+        })
+        .catch(error => {
+          console.error('PDF导出失败:', error);
+          ElMessage.error('PDF导出失败: ' + (error instanceof Error ? error.message : String(error)));
+        });
+    }).catch(error => {
+      console.error('导入PDFGenerator失败:', error);
+      ElMessage.error('PDF导出功能加载失败');
+    });
+  } catch (error) {
+    console.error('导出报告失败:', error);
+    ElMessage.error('导出报告失败，请重试: ' + (error instanceof Error ? error.message : String(error)));
+  }
 };
 
 const requestConsultation = () => {

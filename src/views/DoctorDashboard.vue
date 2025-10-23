@@ -5,7 +5,6 @@
       <h1>医生工作台</h1>
       <p>欢迎回来，{{ authStore.user?.fullName }} 医生</p>
       <div class="header-actions">
-        <el-button type="primary" @click="goToUpload">📁 上传影像</el-button>
         <el-button @click="goToFeedback">💬 意见反馈</el-button>
         <el-button @click="handleLogout">🚪 退出登录</el-button>
       </div>
@@ -16,11 +15,7 @@
     
     <!-- 医生核心功能 - 只在仪表板主页显示 -->
     <div v-else class="function-grid">
-      <div class="function-card" @click="goToUpload">
-        <div class="card-icon">📁</div>
-        <h3>影像上传</h3>
-        <p>上传患者医学影像进行分析</p>
-      </div>
+
       
       <div class="function-card" @click="goToDiagnosis">
         <div class="card-icon">🤖</div>
@@ -82,62 +77,22 @@ const showDashboardHeader = computed(() => {
   return showDashboardHome.value
 })
 
-const goToUpload = () => {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  // 医生使用简单的上传页面，不是管理员的上传页面
-  router.push('/upload') // 修改为小写，与路由配置保持一致
-=======
-=======
->>>>>>> Stashed changes
-  router.push('/Upload')
->>>>>>> Stashed changes
-}
+
 
 const goToDiagnosis = () => {
-  router.push('/dashboard/doctor/ai-diagnosis')
+  router.push({ name: 'doctor.aiDiagnosis' })
 }
 
 const goToCases = () => {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  console.log('病例管理卡片被点击，准备跳转到/cases')
-  try {
-    // 使用name进行路由跳转，更可靠
-    router.push({ name: 'CaseManagement' })
-    console.log('路由跳转执行成功')
-  } catch (error) {
-    console.error('路由跳转失败:', error)
-  }
+  router.push({ name: 'doctor.caseManagement' })
 }
 
 const goToKnowledge = () => {
-  try {
-    // 跳转到知识库页面
-    router.push({ name: 'doctor.knowledge' })
-    console.log('成功跳转到知识库页面')
-  } catch (error) {
-    console.error('路由跳转失败:', error)
-    ElMessage.error('跳转失败，请稍后重试')
-  }
-=======
-  router.push('/dashboard/doctor/cases')
-}
-
-const goToKnowledge = () => {
-  router.push('/dashboard/doctor/knowledge')
->>>>>>> Stashed changes
-=======
-  router.push('/dashboard/doctor/cases')
-}
-
-const goToKnowledge = () => {
-  router.push('/dashboard/doctor/knowledge')
->>>>>>> Stashed changes
+  router.push({ name: 'doctor.knowledgeBase' })
 }
 
 const goToReports = () => {
-  router.push('/dashboard/doctor/reports')
+  router.push({ name: 'doctor.reports' })
 }
 
 const goToFeedback = () => {

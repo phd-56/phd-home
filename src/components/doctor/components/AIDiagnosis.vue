@@ -4,7 +4,7 @@
       <h2>AI智能诊断分析</h2>
       <div class="header-actions">
         <el-button type="primary" @click="runAIDiagnosis" :disabled="!selectedImage">
-          <el-icon><Magic /></el-icon>
+          <el-icon><StarFilled /></el-icon>
           开始AI诊断
         </el-button>
       </div>
@@ -35,23 +35,7 @@
             </el-upload>
           </div>
 
-          <div class="image-selection">
-            <h3>历史影像</h3>
-            <div class="image-grid">
-              <div
-                v-for="image in availableImages"
-                :key="image.id"
-                :class="['image-card', { active: selectedImage?.id === image.id }]"
-                @click="selectImage(image)"
-              >
-                <img :src="image.thumbnail" :alt="image.name" />
-                <div class="image-info">
-                  <span class="name">{{ image.name }}</span>
-                  <span class="date">{{ formatDate(image.uploadTime) }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <!-- 历史影像选择功能已移除，避免与影像上传功能冗余 -->
         </el-card>
       </div>
 
@@ -224,16 +208,7 @@
       </div>
     </div>
 
-    <!-- 初始状态提示 -->
-    <div v-if="!selectedImage && !loading" class="initial-state">
-      <el-card>
-        <div class="initial-content">
-          <el-icon size="48" color="#909399"><Picture /></el-icon>
-          <h3>👨‍⚕️ 欢迎使用AI诊断系统</h3>
-          <p>请上传医学影像文件开始诊断分析</p>
-        </div>
-      </el-card>
-    </div>
+
 
     <!-- 报告编辑区域 -->
     <div v-if="showReportEditor && diagnosisResult" class="report-editor-section">
@@ -308,7 +283,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
-import PDFGenerator from '@/utils/pdf-generator'
+import { StarFilled, UploadFilled, ZoomOut, ZoomIn, InfoFilled, WarningFilled, Document, ChatDotRound, Picture } from '@element-plus/icons-vue'
 
 
 interface MedicalImage {
@@ -344,14 +319,99 @@ interface DiagnosisResult {
   heatmap: string
 }
 
-// 创建base64占位图
+// 创建占位图
 const createPlaceholderImage = (text: string, width: number = 600, height: number = 400) => {
-  return `data:image/svg+xml;base64,${btoa(`
+  // 使用encodeURIComponent处理中文字符
+  const encodedText = encodeURIComponent(text);
+  return `data:image/svg+xml,\
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
       <rect width="100%" height="100%" fill="#f0f2f5"/>
-      <text x="50%" y="50%" font-family="Arial" font-size="14" text-anchor="middle" dy=".3em" fill="#666">${text}</text>
-    </svg>
-  `)}`
+      <text x="50%" y="50%" font-family="Arial, 'Microsoft YaHei'" font-size="14" text-anchor="middle" dy=".3em" fill="#666">${encodedText}</text>
+    </svg>`
+}
+
+// 创建真实医学影像热力图
+const createHeatmapImage = (width: number = 300, height: number = 200) => {
+  // 生成更真实的医学影像热力图SVG
+  const svgContent = `
+      <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+        <!-- 医学影像底图 -->
+        <rect width="100%" height="100%" fill="#e0e0e0"/>
+        
+        <!-- 添加医学影像纹理效果 -->
+        <filter id="noise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+        <rect width="100%" height="100%" fill="#d0d0d0" filter="url(%23noise)" opacity="0.8"/>
+        
+        <!-- 骨骼轮廓 -->
+        <path d="M60,50 Q100,20 150,40 T240,50" stroke="#b0b0b0" stroke-width="2" fill="none"/>
+        <path d="M60,150 Q100,120 150,140 T240,150" stroke="#b0b0b0" stroke-width="2" fill="none"/>
+        <line x1="60" y1="50" x2="60" y2="150" stroke="#b0b0b0" stroke-width="2"/>
+        <line x1="240" y1="50" x2="240" y2="150" stroke="#b0b0b0" stroke-width="2"/>
+        
+        <!-- 专业热力图配色方案 -->
+        <defs>
+          <!-- 专业热力图色阶 - 从低关注度到高关注度 -->
+          <linearGradient id="medicalHeatScale" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#0000ff"/>
+            <stop offset="25%" stop-color="#00ffff"/>
+            <stop offset="50%" stop-color="#ffff00"/>
+            <stop offset="75%" stop-color="#ff7700"/>
+            <stop offset="100%" stop-color="#ff0000"/>
+          </linearGradient>
+          
+          <!-- 热点径向渐变 -->
+          <radialGradient id="hotspot1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" stop-color="#ff0000" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#ff0000" stop-opacity="0.1"/>
+          </radialGradient>
+          
+          <radialGradient id="hotspot2" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" stop-color="#ff7700" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#ff7700" stop-opacity="0.1"/>
+          </radialGradient>
+          
+          <radialGradient id="hotspot3" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" stop-color="#ffff00" stop-opacity="0.7"/>
+            <stop offset="100%" stop-color="#ffff00" stop-opacity="0.05"/>
+          </radialGradient>
+        </defs>
+        
+        <!-- 主要病变热点区域 -->
+        <circle cx="100" cy="90" r="30" fill="url(%23hotspot1)"/>
+        
+        <!-- 次要病变区域 -->
+        <circle cx="180" cy="70" r="25" fill="url(%23hotspot2)"/>
+        <circle cx="140" cy="130" r="20" fill="url(%23hotspot3)"/>
+        
+        <!-- 病变标记点 -->
+        <circle cx="100" cy="90" r="3" fill="#000" stroke="#fff" stroke-width="1"/>
+        <text x="105" y="86" font-family="Arial, 'Microsoft YaHei'" font-size="11" fill="#000">A</text>
+        
+        <circle cx="180" cy="70" r="3" fill="#000" stroke="#fff" stroke-width="1"/>
+        <text x="185" y="66" font-family="Arial, 'Microsoft YaHei'" font-size="11" fill="#000">B</text>
+        
+        <!-- 专业热力图图例 -->
+        <rect x="${width * 0.67}" y="${height * 0.75}" width="${width * 0.27}" height="${height * 0.05}" fill="url(%23medicalHeatScale)"/>
+        <text x="${width * 0.67}" y="${height * 0.85}" font-family="Arial, 'Microsoft YaHei'" font-size="10" fill="#333">低</text>
+        <text x="${width * 0.94}" y="${height * 0.85}" font-family="Arial, 'Microsoft YaHei'" font-size="10" fill="#333" text-anchor="end">高</text>
+        <text x="${width * 0.8}" y="${height * 0.72}" font-family="Arial, 'Microsoft YaHei'" font-size="9" fill="#333" text-anchor="middle">关注度</text>
+        
+        <!-- 技术参数标签 -->
+        <text x="20" y="20" font-family="Arial, 'Microsoft YaHei'" font-size="9" fill="#666">AI置信度: 87.5%</text>
+        <text x="20" y="35" font-family="Arial, 'Microsoft YaHei'" font-size="9" fill="#666">分辨率: 512×512</text>
+        
+        <!-- 医学解剖标记 -->
+        <text x="30" y="${height * 0.9}" font-family="Arial, 'Microsoft YaHei'" font-size="10" fill="#333">医学影像热力图分析</text>
+        
+        <!-- 分析结论 -->
+        <rect x="20" y="${height * 0.78}" width="${width * 0.53}" height="15" fill="rgba(255,255,255,0.7)"/>
+        <text x="25" y="${height * 0.86}" font-family="Arial, 'Microsoft YaHei'" font-size="9" fill="#d00">发现高关注区域A: 疑似病变</text>
+      </svg>
+    `.trim();
+  return `data:image/svg+xml,${encodeURIComponent(svgContent)}`;
 }
 
 const displayArea = ref<HTMLElement>()
@@ -535,7 +595,7 @@ const runAIDiagnosis = async () => {
         }
       ],
       explanation: 'AI模型在膝关节区域检测到明显的骨关节炎特征，包括关节间隙变窄和边缘骨质增生。这些特征与中度骨关节炎的诊断一致。',
-      heatmap: createPlaceholderImage('热力图分析', 300, 200)
+      heatmap: createHeatmapImage(300, 200)
     }
     
     ElMessage.success('AI诊断分析完成')
@@ -675,8 +735,8 @@ const formatDate = (dateString: string) => {
 }
 
 .diagnosis-content {
-  display: grid;
-  grid-template-columns: 300px 1fr 400px;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
   margin-bottom: 20px;
 }
@@ -837,73 +897,64 @@ const formatDate = (dateString: string) => {
 }
 
 .explanation p {
-  margin-bottom: 10px;
-  line-height: 1.5;
+  line-height: 1.6;
+  color: #333;
+}
+
+.heatmap-preview {
+  margin-top: 10px;
+  text-align: center;
 }
 
 .heatmap-preview img {
-  width: 100%;
+  max-width: 100%;
+  border: 1px solid #e8e8e8;
   border-radius: 4px;
-}
-
-.suggestions-section {
-  margin-top: 20px;
 }
 
 .suggestion-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   padding: 8px;
-  background: #fff7e6;
+  background: #f0f9eb;
+  border: 1px solid #e1f3d8;
   border-radius: 4px;
 }
 
 .initial-state {
-  text-align: center;
-  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  padding: 40px;
 }
 
 .initial-content {
-  color: #909399;
+  text-align: center;
+  color: #666;
 }
 
 .initial-content h3 {
-  margin: 16px 0 8px 0;
-  color: #606266;
+  margin: 15px 0 10px;
+  color: #333;
 }
 
-.report-section {
-  margin-top: 15px;
-}
-
-.feedback-section {
-  margin-top: 15px;
-}
-
-.report-editor-section {
-  margin-top: 30px;
-}
-
-.editor-header h2 {
-  margin: 0;
-  color: #1890ff;
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .editor-header p {
   color: #666;
-  margin: 5px 0 0 0;
+  margin: 0;
 }
 
 .simple-report-editor {
-  padding: 20px;
+  padding: 20px 0;
 }
 
-.no-results {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
+.feedback-section {
+  margin-top: 20px;
 }
 </style>

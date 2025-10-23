@@ -218,13 +218,21 @@ const handleRegister = async () => {
 :deep(.el-input__inner) {
   height: 48px;
   border-radius: 8px;
-  border: 1px solid #d1d5db;
+  border: none;
+  background-color: #f9fafb;
   transition: all 0.3s;
 }
 
 :deep(.el-input__inner:focus) {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border: none;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+/* 美化输入框容器 */
+:deep(.el-input) {
+  background-color: #f9fafb;
+  border-radius: 8px;
 }
 
 :deep(.el-select .el-input__inner) {

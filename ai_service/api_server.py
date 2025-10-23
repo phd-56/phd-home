@@ -75,6 +75,27 @@ def analyze_medical_image(image_path):
         print(f"图像分析错误: {e}")
         return "需要进一步评估", 0.5, "low"
 
+@app.post("/api/upload")
+async def upload_file(file: UploadFile = File(...)):
+    """接收上传的文件并保存"""
+    try:
+        # 创建一个临时文件来保存上传的内容
+        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as temp_file:
+            content = await file.read()
+            temp_file.write(content)
+            temp_path = temp_file.name
+        
+        # 返回成功信息和文件路径
+        return JSONResponse(content={
+            "success": True,
+            "message": "文件上传成功",
+            "file_path": temp_path,
+            "file_name": file.filename
+        })
+    except Exception as e:
+        # 如果发生错误，则返回500错误
+        raise HTTPException(status_code=500, detail=f"文件上传失败: {str(e)}")
+
 @app.get("/")
 async def root():
     return {"message": "肌肉骨骼AI诊断服务运行中", "status": "healthy"}

@@ -85,33 +85,57 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import { useCaseStore } from '@/stores/caseStore';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
+const caseStore = useCaseStore();
 
 // 表单数据
 const formData = reactive({
   patientId: '',
   patientName: '',
   gender: '',
-  age: null,
+  age: null as number | null,
   chiefComplaint: '',
   presentIllness: '',
   pastHistory: ''
 });
 
 // 提交方法
-const handleSubmit = () => {
-  // 简单验证
+const handleSubmit = async () => {
   if (!formData.patientId || !formData.patientName) {
-    alert('请填写患者ID和姓名');
+    ElMessage.warning('请填写患者ID和姓名');
     return;
   }
-  
-  console.log('提交病例数据:', formData);
-  
-  // 模拟创建病例
-  alert('病例创建成功！');
-  router.push('/cases');
+
+  // 组织病例数据
+  const payload = {
+    patientId: formData.patientId,
+    patientName: formData.patientName,
+    gender: formData.gender,
+    age: formData.age,
+    chiefComplaint: formData.chiefComplaint,
+    presentIllness: formData.presentIllness,
+    pastHistory: formData.pastHistory,
+    caseNumber: `CASE-${Date.now()}`,
+    status: 'active',
+    admissionDate: new Date().toISOString().slice(0, 10)
+  };
+
+  try {
+    const created = await caseStore.createCase(payload);
+    if (created) {
+      ElMessage.success('病例创建成功');
+      router.push('/cases');
+    } else {
+      ElMessage.info('后端未返回数据，已本地保存');
+      router.push('/cases');
+    }
+  } catch (e) {
+    ElMessage.error('创建病例失败，已尝试本地保存');
+    router.push('/cases');
+  }
 };
 
 // 取消方法

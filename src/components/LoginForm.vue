@@ -1,4 +1,6 @@
 <template>
+  <!-- 登录表单 -->
+
   <el-form 
     :model="form" 
     :rules="rules" 
@@ -105,8 +107,8 @@ const rules: FormRules = {
     { min: 3, message: '用户名至少3个字符', trigger: 'blur' }
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, message: '密码至少6个字符', trigger: 'blur' }
+    { required: true, message: '请输入密码', trigger: 'blur' }
+    // 注意：演示环境密码可以是123456
   ]
 }
 
@@ -120,42 +122,28 @@ const handleLogin = async () => {
 
     console.log('开始登录...', form)
 
-    // 调用登录方法 - 添加错误处理
-    try {
-      await authStore.login(form.username, form.password, form.role)
-      
-      console.log('登录成功，用户信息:', authStore.user)
-      console.log('认证状态:', authStore.isAuthenticated)
-      console.log('Token:', authStore.token)
-
-      ElMessage.success('登录成功！')
-
-      // 确保用户信息存在后再跳转
-      if (authStore.user && authStore.isAuthenticated) {
-        const targetRoute = getTargetRoute(authStore.user.role)
-        console.log('准备跳转到:', targetRoute)
-        
-        // 使用 setTimeout 确保状态更新完成后再跳转
-        setTimeout(() => {
-          router.push(targetRoute)
-        }, 100)
-      } else {
-        console.error('用户信息或认证状态异常')
-        ElMessage.error('登录状态异常，请重试')
-      }
-      
-    } catch (loginError: any) {
-      console.error('登录API错误:', loginError)
-      ElMessage.error(loginError.message || '登录失败，请检查用户名和密码')
+    // 显示演示账号提示
+    if (form.password === '') {
+      ElMessage.info('提示：演示账号密码均为123456')
     }
+
+    // 调用登录方法
+    const user = await authStore.login(form.username, form.password, form.role)
     
-  } catch (validationError: any) {
-    console.error('表单验证失败:', validationError)
-    if (validationError?.errors) {
-      ElMessage.warning('请完善表单信息')
-    } else {
-      ElMessage.error('表单验证失败')
-    }
+    console.log('登录成功，用户信息:', authStore.user)
+    console.log('认证状态:', authStore.isAuthenticated)
+    console.log('Token:', authStore.token)
+
+    ElMessage.success('登录成功！')
+
+    // 立即跳转，不使用setTimeout
+    const targetRoute = getTargetRoute(user.role)
+    console.log('准备跳转到:', targetRoute)
+    router.push(targetRoute)
+      
+  } catch (error: any) {
+    console.error('登录错误:', error)
+    ElMessage.error(error.message || '登录失败，请检查用户名、密码和角色选择')
   } finally {
     loading.value = false
   }
@@ -196,13 +184,15 @@ const getTargetRoute = (role: string): string => {
 :deep(.el-input__inner) {
   height: 48px;
   border-radius: 8px;
-  border: 1px solid #d1d5db;
+  border: none;
+  background-color: #f9fafb;
   transition: all 0.3s;
 }
 
 :deep(.el-input__inner:focus) {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border: none;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
 }
 
 :deep(.el-select .el-input__inner) {
@@ -269,4 +259,10 @@ const getTargetRoute = (role: string): string => {
 .register-link:hover {
   text-decoration: underline;
 }
+
+/* 美化输入框容器 */
+  :deep(.el-input) {
+    background-color: #f9fafb;
+    border-radius: 8px;
+  }
 </style>

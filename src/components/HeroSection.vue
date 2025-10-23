@@ -29,6 +29,7 @@
   font-size: 2.5rem;
   font-weight: bold;
   margin-bottom: 1rem;
+  color: white !important;
 }
 
 .hero-subtitle {

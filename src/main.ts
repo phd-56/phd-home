@@ -20,10 +20,8 @@ const app = createApp(App)
 const pinia = createPinia()
 
 
-// 初始化认证状态，确保每次打开页面都是未登录状态
-// import { useAuthStore } from '@/stores/auth'
-// const authStore = useAuthStore()
-// authStore.initialize()
+// 初始化认证状态
+import { useAuthStore } from '@/stores/auth'
 
 // 注册Element Plus图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -38,3 +36,7 @@ app.use(pinia)
 app.use(router)
 
 app.mount('#app')
+
+// 应用挂载后初始化认证状态
+const authStore = useAuthStore()
+authStore.initialize()

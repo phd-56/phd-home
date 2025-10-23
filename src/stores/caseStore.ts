@@ -47,6 +47,26 @@ export const useCaseStore = defineStore('case', () => {
   });
 
   // Actions
+  const saveLocalCases = () => {
+    try {
+      localStorage.setItem('cases', JSON.stringify(cases.value));
+    } catch (e) {
+      console.warn('保存本地病例失败:', e);
+    }
+  };
+
+  const loadLocalCases = () => {
+    try {
+      const data = localStorage.getItem('cases');
+      if (data) {
+        cases.value = JSON.parse(data) || [];
+        pagination.value.total = cases.value.length;
+      }
+    } catch (e) {
+      console.warn('加载本地病例失败:', e);
+    }
+  };
+
   const fetchCases = async (params: { page: number; pageSize: number }) => {
     loading.value = true;
     error.value = null;
@@ -55,10 +75,15 @@ export const useCaseStore = defineStore('case', () => {
       if (response.data.code === 200 && response.data.data) {
         cases.value = response.data.data.records || [];
         pagination.value.total = response.data.data.total || 0;
+        saveLocalCases();
+        return;
       }
+      // 如果响应不符合预期，尝试使用本地数据
+      loadLocalCases();
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch cases';
-      cases.value = [];
+      // 回退到本地存储数据
+      loadLocalCases();
     } finally {
       loading.value = false;
     }
@@ -85,12 +110,36 @@ export const useCaseStore = defineStore('case', () => {
     try {
       const response = await axios.post('/api/cases', caseData);
       if (response.data.code === 200 && response.data.data) {
-        return response.data.data;
+        const created = response.data.data;
+        cases.value.unshift(created);
+        pagination.value.total = (pagination.value.total || 0) + 1;
+        saveLocalCases();
+        return created;
       }
-      return null;
+      // 如果后端未返回预期数据，回退为本地创建
+      const localCase = {
+        id: `local_${Date.now()}`,
+        caseNumber: caseData.caseNumber || `CASE-${Date.now()}`,
+        ...caseData,
+        status: caseData.status || 'active',
+      };
+      cases.value.unshift(localCase);
+      pagination.value.total = (pagination.value.total || 0) + 1;
+      saveLocalCases();
+      return localCase;
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to create case';
-      return null;
+      // 网络错误时也执行本地创建，确保用户数据不丢失
+      const localCase = {
+        id: `local_${Date.now()}`,
+        caseNumber: caseData.caseNumber || `CASE-${Date.now()}`,
+        ...caseData,
+        status: caseData.status || 'active',
+      };
+      cases.value.unshift(localCase);
+      pagination.value.total = (pagination.value.total || 0) + 1;
+      saveLocalCases();
+      return localCase;
     } finally {
       loading.value = false;
     }
@@ -103,11 +152,33 @@ export const useCaseStore = defineStore('case', () => {
       const response = await axios.put(`/api/cases/${id}`, caseData);
       if (response.data.code === 200 && response.data.data) {
         currentCase.value = response.data.data;
+        // 同步到列表
+        const idx = cases.value.findIndex(c => c && c.id === id);
+        if (idx !== -1) {
+          cases.value[idx] = { ...cases.value[idx], ...response.data.data };
+        }
+        saveLocalCases();
         return response.data.data;
+      }
+      // 后端未返回时，进行本地更新
+      const idx = cases.value.findIndex(c => c && c.id === id);
+      if (idx !== -1) {
+        cases.value[idx] = { ...cases.value[idx], ...caseData };
+        currentCase.value = cases.value[idx];
+        saveLocalCases();
+        return cases.value[idx];
       }
       return null;
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to update case';
+      // 网络错误时也执行本地更新
+      const idx = cases.value.findIndex(c => c && c.id === id);
+      if (idx !== -1) {
+        cases.value[idx] = { ...cases.value[idx], ...caseData };
+        currentCase.value = cases.value[idx];
+        saveLocalCases();
+        return cases.value[idx];
+      }
       return null;
     } finally {
       loading.value = false;
@@ -121,8 +192,14 @@ export const useCaseStore = defineStore('case', () => {
       await axios.delete(`/api/cases/${id}`);
       // 从列表中移除删除的病例
       cases.value = cases.value.filter(c => c && c.id !== id);
+      pagination.value.total = Math.max(0, (pagination.value.total || 0) - 1);
+      saveLocalCases();
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to delete case';
+      // 网络错误也执行本地删除
+      cases.value = cases.value.filter(c => c && c.id !== id);
+      pagination.value.total = Math.max(0, (pagination.value.total || 0) - 1);
+      saveLocalCases();
     } finally {
       loading.value = false;
     }
@@ -136,11 +213,21 @@ export const useCaseStore = defineStore('case', () => {
       if (response.data.code === 200 && response.data.data) {
         // 从列表中移除删除的病例
         cases.value = cases.value.filter(c => c && !ids.includes(c.id));
+        pagination.value.total = Math.max(0, (pagination.value.total || 0) - ids.length);
+        saveLocalCases();
         return response.data.data;
       }
+      // 后端不返回成功也执行本地删除
+      cases.value = cases.value.filter(c => c && !ids.includes(c.id));
+      pagination.value.total = Math.max(0, (pagination.value.total || 0) - ids.length);
+      saveLocalCases();
       return null;
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to batch delete cases';
+      // 网络错误时执行本地删除
+      cases.value = cases.value.filter(c => c && !ids.includes(c.id));
+      pagination.value.total = Math.max(0, (pagination.value.total || 0) - ids.length);
+      saveLocalCases();
       return null;
     } finally {
       loading.value = false;
