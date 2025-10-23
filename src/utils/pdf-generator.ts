@@ -1,21 +1,8 @@
-// 添加html2pdf的类型声明
-declare module 'html2pdf.js' {
-  interface Options {
-    margin?: number | number[];
-    filename?: string;
-    image?: { type?: string; quality?: number };
-    html2canvas?: any;
-    jsPDF?: any;
-  }
-  function html2pdf(): { from: (element: HTMLElement | string) => { set: (options: Options) => { save: () => Promise<void> } } };
-  export default html2pdf;
-}
-
-// 同步导入html2pdf.js
+// 导入html2pdf库
 import html2pdf from 'html2pdf.js';
 
 /**
- * PDF生成工具类，提供HTML转PDF、文本转PDF等功能
+ * 生成PDF文档的工具类
  */
 export class PDFGenerator {
   private static defaultOptions: any = {
@@ -43,7 +30,7 @@ export class PDFGenerator {
    */
   static generateFromHtml(
     element: string | HTMLElement,
-    options?: html2pdf.Options,
+    options?: any,
     fileName?: string
   ): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -120,7 +107,7 @@ export class PDFGenerator {
         reportElement.style.display = 'none';
 
         // 自定义PDF选项 - 横向布局更适合报告
-        const pdfOptions: html2pdf.Options = {
+        const pdfOptions = {
           ...this.defaultOptions,
           jsPDF: {
             unit: 'mm',
@@ -552,9 +539,9 @@ export class PDFGenerator {
    * @param options PDF选项
    */
   static generateMultiPagePdf(
-    pages: Array<{ title: string; content: string }>,
+    pages: any[],
     fileName?: string,
-    options?: html2pdf.Options
+    options?: any
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
@@ -661,7 +648,7 @@ export class PDFGenerator {
         
         console.log('调用html2pdf生成PDF...');
         // 使用链式调用但不使用Promise
-        html2pdf().set(opt).from(reportElement).save().then(() => {
+        (html2pdf() as any).set(opt).from(reportElement).save().then(() => {
           console.log('PDF生成成功并已下载');
           // 清理元素
           if (document.getElementById('temp-report-element')) {

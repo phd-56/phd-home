@@ -30,22 +30,19 @@ interface Props {
   options?: any
 }
 
-// 默认数据函数
-const defaultData = () => ({
-  labels: [] as string[],
-  datasets: [{
-    label: '',
-    data: [] as number[],
-    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-    borderColor: 'rgba(54, 162, 235, 1)',
-    borderWidth: 2,
-    fill: true,
-    tension: 0.4
-  }] as LineDataset[]
-})
-
 const props = withDefaults(defineProps<Props>(), {
-  data: defaultData,
+  data: () => ({
+    labels: [] as string[],
+    datasets: [{
+      label: '',
+      data: [] as number[],
+      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 2,
+      fill: true,
+      tension: 0.4
+    }] as LineDataset[]
+  }),
   options: () => ({})
 })
 

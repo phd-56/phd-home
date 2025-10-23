@@ -237,11 +237,13 @@ export const useBackupStore = defineStore('backup', () => {
       currentBackup.value = null;
       
       const response = await axios.post('/api/backup/manual', { configId });
-      currentBackup.value = response.data;
+      currentBackup.value = (response as any).data;
       
       ElMessage.success('备份任务已启动');
       // 轮询检查备份状态
-      checkBackupStatus(currentBackup.value.id);
+      if (currentBackup.value) {
+        checkBackupStatus(currentBackup.value.id);
+      }
     } catch (error) {
       console.error('启动手动备份失败:', error);
       ElMessage.error('启动备份失败，请重试');
@@ -255,7 +257,7 @@ export const useBackupStore = defineStore('backup', () => {
     const checkInterval = setInterval(async () => {
       try {
         const response = await axios.get(`/api/backup/records/${backupId}`);
-        const backup = response.data;
+        const backup = (response as any).data;
         
         currentBackup.value = backup;
         
@@ -338,8 +340,8 @@ export const useBackupStore = defineStore('backup', () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // 更新备份记录
-      backupRecord.status = 'completed';
-      backupRecord.endTime = new Date().toISOString();
+      (backupRecord as any).status = 'completed';
+      (backupRecord as any).endTime = new Date().toISOString();
       backupRecord.size = Math.floor(Math.random() * 1024) + 100; // 模拟大小
       backupRecord.duration = 3600;
       backupRecord.fileHash = 'mock-hash-' + Math.random().toString(36).substr(2, 9);
@@ -360,7 +362,7 @@ export const useBackupStore = defineStore('backup', () => {
   const restoreBackup = async (backupId: string) => {
     try {
       const backup = backupRecords.value.find(b => b.id === backupId);
-      if (!backup || backup.status !== 'success') {
+      if (!backup || backup.status !== 'completed') {
         throw new Error('无效的备份记录');
       }
 

@@ -154,7 +154,7 @@ const getTargetRoute = (role: string): string => {
   switch (role) {
     case 'patient': return '/dashboard/patient'
     case 'doctor': return '/dashboard/doctor'
-    case 'admin': return  '/dashboard/admin/user-management' // 管理员默认跳转到上传页面
+    case 'admin': return '/dashboard/admin/user-management' // 管理员默认跳转到用户管理页面
     default: return '/dashboard/patient'
   }
 }

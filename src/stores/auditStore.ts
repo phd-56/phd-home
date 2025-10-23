@@ -2,7 +2,8 @@ import { defineStore } from 'pinia';
 import { ref, reactive, onMounted, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import axios from '@/utils/axios';
-import * as XLSX from 'xlsx';
+// 使用window对象访问XLSX，避免模块导入问题
+const XLSX = (window as any).XLSX || {};
 
 // 审计日志类型定义
 interface AuditLog {
@@ -68,8 +69,8 @@ export const useAuditStore = defineStore('audit', () => {
       if (params.endTime) params.endTime = new Date(params.endTime).toISOString();
       
       const response = await axios.get('/api/audit/logs', { params });
-      logs.value = response.data.items;
-      totalLogs.value = response.data.total;
+      logs.value = (response as any).data.items;
+      totalLogs.value = (response as any).data.total;
     } catch (error) {
       console.error('获取审计日志失败:', error);
       ElMessage.error('无法加载审计日志');
@@ -196,7 +197,7 @@ export const useAuditStore = defineStore('audit', () => {
   const fetchAnomalyRules = async () => {
     try {
       const response = await axios.get('/api/audit/anomaly-rules');
-      anomalyRules.value = response.data;
+      anomalyRules.value = (response as any).data;
     } catch (error) {
       console.error('获取异常规则失败:', error);
       ElMessage.error('无法加载异常检测规则');
@@ -210,8 +211,8 @@ export const useAuditStore = defineStore('audit', () => {
       
       // 构建查询参数（导出全部符合条件的日志，忽略分页）
       const exportParams = { ...queryParams.value };
-      delete exportParams.page;
-      delete exportParams.pageSize;
+      (exportParams as any).page = undefined;
+      (exportParams as any).pageSize = undefined;
       
       const response = await axios.get('/api/audit/logs/export', { 
         params: exportParams,
@@ -219,7 +220,7 @@ export const useAuditStore = defineStore('audit', () => {
       });
       
       // 创建下载链接
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const url = window.URL.createObjectURL(new Blob([(response as any).data]));
       const a = document.createElement('a');
       a.href = url;
       
@@ -270,7 +271,7 @@ export const useAuditStore = defineStore('audit', () => {
   const getLogDetails = async (logId: string): Promise<AuditLog | null> => {
     try {
       const response = await axios.get(`/api/audit/logs/${logId}`);
-      return response.data;
+      return (response as any).data;
     } catch (error) {
       console.error(`获取日志 ${logId} 详情失败:`, error);
       ElMessage.error('无法加载日志详情');

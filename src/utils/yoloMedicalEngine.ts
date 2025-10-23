@@ -47,7 +47,7 @@ export class YOLOMedicalEngine {
       console.log('YOLO model loaded successfully');
     } catch (error) {
       console.error('Failed to load YOLO model:', error);
-      throw new Error(`YOLO model loading failed: ${error.message}`);
+      throw new Error(`YOLO model loading failed: ${(error as Error).message}`);
     }
   }
 
@@ -55,7 +55,8 @@ export class YOLOMedicalEngine {
    * 预处理图像
    */
   private preprocessImage(imageElement: HTMLImageElement | HTMLCanvasElement): tf.Tensor {
-    return tf.tidy(() => {
+    // 使用类型断言解决tf.tidy返回值类型问题
+    const result = tf.tidy((): tf.Tensor => {
       // 将图像转换为张量
       let tensor = tf.browser.fromPixels(imageElement)
         .resizeNearestNeighbor([416, 416])
@@ -67,6 +68,8 @@ export class YOLOMedicalEngine {
       // 添加批次维度
       return tensor.expandDims(0);
     });
+    
+    return result;
   }
 
   /**
@@ -77,7 +80,8 @@ export class YOLOMedicalEngine {
       throw new Error('YOLO model not loaded. Please call loadModel() first.');
     }
 
-    return tf.tidy(() => {
+    // 使用类型断言解决tf.tidy返回值类型问题
+    const result = tf.tidy((): any => {
       // 预处理图像
       const inputTensor = this.preprocessImage(image);
 
@@ -93,6 +97,8 @@ export class YOLOMedicalEngine {
         imageHeight: image.height
       };
     });
+    
+    return result as DetectionResult;
   }
 
   /**

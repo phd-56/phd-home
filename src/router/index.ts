@@ -43,7 +43,28 @@ const router = createRouter({
           path: 'patient',
           name: 'PatientDashboard',
           component: () => import('@/views/PatientDashboard.vue'),
-          meta: { role: 'patient' }
+          meta: { role: 'patient', requiresAuth: true },
+          children: [
+            {
+              path: 'image-upload',
+              name: 'PatientImageUpload',
+              component: () => import('@/views/patient/PatientImageUpload.vue'),
+              meta: { role: 'patient', requiresAuth: true }
+            },
+            {
+              path: 'reports',
+              name: 'PatientReports',
+              component: () => import('@/views/patient/PatientReports.vue'),
+              meta: { role: 'patient', requiresAuth: true }
+            },
+            {
+              path: 'knowledge-base',
+              name: 'PatientKnowledgeBase',
+              component: () => import('@/views/patient/PatientKnowledgeBase.vue'),
+              meta: { role: 'patient', requiresAuth: true }
+            },
+            {              path: 'feedback',              name: 'PatientFeedback',              component: () => import('@/views/patient/PatientFeedback.vue'),              meta: { role: 'patient', requiresAuth: true }            },            {              path: 'image-history',              name: 'PatientImageHistory',              component: () => import('@/views/patient/ImageHistory.vue'),              meta: { role: 'patient', requiresAuth: true }            }
+          ]
         },
 
         // 医生仪表板

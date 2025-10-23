@@ -1,4 +1,5 @@
-import * as XLSX from 'xlsx';
+// 使用any类型解决模块导入问题
+const XLSX = (window as any).XLSX || {};
 
 /**
  * Excel工具类，提供Excel文件的解析、生成等功能
@@ -85,7 +86,7 @@ export class ExcelUtils {
 
       reader.onload = (e) => {
         try {
-          const data = new Uint8Array(e.target.result as ArrayBuffer);
+          const data = new Uint8Array(e.target!.result as ArrayBuffer);
           const workbook = XLSX.read(data, { type: 'array' });
           const firstSheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[firstSheetName];
@@ -169,7 +170,7 @@ export class ExcelUtils {
 
       reader.onload = (e) => {
         try {
-          const data = new Uint8Array(e.target.result as ArrayBuffer);
+          const data = new Uint8Array(e.target!.result as ArrayBuffer);
           const workbook = XLSX.read(data, { type: 'array' });
           
           if (sheetIndex >= workbook.SheetNames.length) {
@@ -285,7 +286,7 @@ export class ExcelUtils {
    * @param header 表头映射
    * @returns 工作表对象
    */
-  static jsonToSheet(data: any[], header?: Record<string, string>): XLSX.WorkSheet {
+  static jsonToSheet(data: any[], header?: Record<string, string>): any {
     if (!data || data.length === 0) {
       return XLSX.utils.aoa_to_sheet([]);
     }

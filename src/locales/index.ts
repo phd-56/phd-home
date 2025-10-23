@@ -23,8 +23,15 @@ const detectLanguage = (): string => {
   return 'zh-CN';
 };
 
+// 定义消息类型，添加索引签名
+interface Messages {
+  'zh-CN': typeof zhCN;
+  'en-US': typeof enUS;
+  [key: string]: any;
+}
+
 // 语言消息
-const messages = {
+const messages: Messages = {
   'zh-CN': zhCN,
   'en-US': enUS
 };

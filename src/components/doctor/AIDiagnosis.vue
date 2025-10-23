@@ -599,10 +599,10 @@ const exportReport = async () => {
         reportDate: new Date().toISOString(),
         reportNo: Date.now(),
         diagnosisResult: {
-          diseases: Array.isArray(diagnosisResult.value.diseases) ? diagnosisResult.value.diseases : [],
-          detections: diagnosisResult.value.detections || [],
-          explanation: diagnosisResult.value.explanation || 'AI未提供详细解释',
-          heatmap: diagnosisResult.value.heatmap || ''
+          diseases: diagnosisResult.value && Array.isArray(diagnosisResult.value.diseases) ? diagnosisResult.value.diseases : [],
+          detections: diagnosisResult.value?.detections || [],
+          explanation: diagnosisResult.value?.explanation || 'AI未提供详细解释',
+          heatmap: diagnosisResult.value?.heatmap || ''
         },
         doctorDiagnosis: reportForm.diagnosis || '待医生填写诊断结论',
         treatmentSuggestion: reportForm.treatment || '待医生填写治疗建议'

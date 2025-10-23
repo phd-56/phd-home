@@ -67,10 +67,10 @@
           <!-- 网络流量 -->
           <ResourceMeter 
             title="网络入站" 
-            :value="currentResource.network.in" 
+            :value="currentResource?.network?.in || 0" 
             unit="Mbps" 
             :threshold="networkThreshold"
-            :color="getColor(currentResource.network.in)"
+            :color="getColor(currentResource?.network?.in || 0)"
           />
         </div>
       </div>

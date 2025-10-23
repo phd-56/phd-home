@@ -43,27 +43,31 @@ const processChartData = () => {
   if (!props.data || props.data.length === 0) return [];
   
   return props.data.map(item => {
-    let value;
-    switch (props.resource) {
-      case 'cpu':
-        value = item.cpu;
-        break;
-      case 'memory':
-        value = item.memory;
-        break;
-      case 'disk':
-        value = item.disk;
-        break;
-      case 'network':
-        value = item.network.in; // 使用入站流量
-        break;
-      default:
-        value = 0;
+    let value = 0; // 默认为0
+    
+    if (item) {
+      switch (props.resource) {
+        case 'cpu':
+          value = typeof item.cpu === 'number' ? item.cpu : 0;
+          break;
+        case 'memory':
+          value = typeof item.memory === 'number' ? item.memory : 0;
+          break;
+        case 'disk':
+          value = typeof item.disk === 'number' ? item.disk : 0;
+          break;
+        case 'network':
+          // 安全地获取network.in，确保item.network存在
+          value = item.network && typeof item.network.in === 'number' ? item.network.in : 0;
+          break;
+        default:
+          value = 0;
+      }
     }
     
     return {
-      time: new Date(item.timestamp).toLocaleTimeString(),
-      value: value.toFixed(1)
+      time: item?.timestamp ? new Date(item.timestamp).toLocaleTimeString() : '--:--:--',
+      value: value.toFixed(1) // 现在value保证是数字，可以安全调用toFixed
     };
   });
 };

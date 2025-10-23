@@ -250,7 +250,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, watch } from 'vue'
-import { Search, Folder, View, Close, Check, Star, ArrowUp } from '@element-plus/icons-vue'
+//import { Search, Folder, View, Close, Check, Star, ArrowUp } from '@element-plus/icons-vue'
 import { ElMessage, ElEmpty, ElLoading } from 'element-plus'
 import { KnowledgeItem } from '@/types'
 

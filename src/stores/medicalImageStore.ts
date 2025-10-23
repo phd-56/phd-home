@@ -1,6 +1,34 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { MedicalImage, Annotation, AIAnalysis, DetectedDisease } from '../types';
+
+// 简化的类型定义
+interface Annotation {
+  id: string;
+  type: string;
+  [key: string]: any;
+}
+
+interface DetectedDisease {
+  name: string;
+  confidence: number;
+  [key: string]: any;
+}
+
+interface AIAnalysis {
+  id: string;
+  imageId: string;
+  diseases: DetectedDisease[];
+  [key: string]: any;
+}
+
+interface MedicalImage {
+  id: string;
+  patientId: string;
+  type: string;
+  url: string;
+  annotations: Annotation[];
+  [key: string]: any;
+}
 
 export const useMedicalImageStore = defineStore('medicalImage', () => {
   const images = ref<MedicalImage[]>([]);
@@ -20,7 +48,8 @@ export const useMedicalImageStore = defineStore('medicalImage', () => {
       const newAnnotation: Annotation = {
         ...annotation,
         id: generateId(),
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        type: 'annotation'
       };
       image.annotations.push(newAnnotation);
     }

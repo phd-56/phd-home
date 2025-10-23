@@ -10,10 +10,12 @@ interface Feedback extends Omit<FeedbackItem, 'feedbackType' | 'status'> {
   rating: number;
   tags: string[];
   comment: string;
+  content: string;
   isPublic: boolean;
   timestamp: string;
   status: 'pending' | 'processed';
   processNote?: string;
+  diagnosisId?: string;
 }
 
 // 优化问题类型定义
@@ -85,6 +87,7 @@ export const useFeedbackStore = defineStore('feedback', () => {
       rating: 4,
       tags: ['diagnosis_accuracy', 'treatment_rationality'],
       comment: '诊断准确，治疗建议合理，但对并发症的考虑可以更全面。',
+      content: '诊断准确，治疗建议合理，但对并发症的考虑可以更全面。',
       timestamp: '2023-10-01 14:30:00',
       status: 'processed',
       isPublic: true,
@@ -102,6 +105,7 @@ export const useFeedbackStore = defineStore('feedback', () => {
       rating: 3,
       tags: ['case_analysis_depth', 'user_experience'],
       comment: '病例分析深度一般，界面操作略显复杂，希望能简化流程。',
+      content: '病例分析深度一般，界面操作略显复杂，希望能简化流程。',
       timestamp: '2023-10-02 09:15:00',
       status: 'pending',
       isPublic: false,
@@ -155,6 +159,7 @@ export const useFeedbackStore = defineStore('feedback', () => {
         rating: feedbackData.rating,
         tags: feedbackData.tags,
         comment: feedbackData.comment,
+        content: feedbackData.comment || '',
         isPublic: feedbackData.isPublic,
         timestamp: new Date().toISOString(),
         status: 'pending',

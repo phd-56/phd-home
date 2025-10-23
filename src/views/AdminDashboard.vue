@@ -1,7 +1,5 @@
 <template>
-  
-  <AppLayout>
-    <div class="min-h-screen bg-slate-50">
+  <div class="min-h-screen bg-slate-50">
     <div class="container mx-auto py-8 px-4">
       <div class="glassmorphism p-6 rounded-lg mb-6">
         <h1 class="text-2xl font-bold text-slate-800 mb-4">管理员仪表板</h1>
@@ -36,11 +34,9 @@
       </div>
     </div>
   </div>
-  </AppLayout>
 </template>
 
 <script setup lang="ts">
-import AppLayout from '@/components/AppLayout.vue'
 
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'

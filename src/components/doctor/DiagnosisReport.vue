@@ -204,26 +204,26 @@ const exportReport = async () => {
           department: '未知科室'
         },
         patientInfo: {
-          name: unifiedResult.value.patientInfo?.name || '未知患者',
-          id: unifiedResult.value.patientInfo?.id || '未提供',
-          gender: unifiedResult.value.patientInfo?.gender || '未提供',
-          age: unifiedResult.value.patientInfo?.age || '未提供'
+          name: unifiedResult.value?.patientInfo?.name || '未知患者',
+          id: unifiedResult.value?.patientInfo?.id || '未提供',
+          gender: unifiedResult.value?.patientInfo?.gender || '未提供',
+          age: unifiedResult.value?.patientInfo?.age || '未提供'
         },
         reportDate: new Date().toISOString(),
         reportNo: Date.now(),
         diagnosisResult: {
-          diseases: unifiedResult.value.diagnosis?.map(d => ({
+          diseases: unifiedResult.value?.diagnosis?.map(d => ({
             name: d.name,
             confidence: d.confidence || 0,
             description: d.description || ''
           })) || [],
-          detections: unifiedResult.value.findings?.map(f => ({
+          detections: unifiedResult.value?.findings?.map(f => ({
             location: f.location,
             confidence: f.confidence || 0,
             description: f.description || ''
           })) || [],
-          explanation: unifiedResult.value.analysis || 'AI未提供详细解释',
-          heatmap: unifiedResult.value.visualizations?.heatmap || ''
+          explanation: unifiedResult.value?.analysis || 'AI未提供详细解释',
+          heatmap: unifiedResult.value?.visualizations?.heatmap || ''
         },
         doctorDiagnosis: '待医生填写诊断结论',
         treatmentSuggestion: suggestions.value.join('；')

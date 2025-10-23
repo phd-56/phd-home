@@ -1,4 +1,16 @@
-import { KnowledgeItem } from '@/types'
+// 添加本地KnowledgeItem接口定义
+interface KnowledgeItem {
+  id: string;
+  title: string;
+  description: string;
+  symptoms: string[];
+  diagnosisCriteria: Array<{ title: string; description: string }>;
+  treatments: string[];
+  category: string;
+  tags: string[];
+  updateTime: string;
+  viewCount: number;
+}
 
 /**
  * 搜索知识库项（支持多字段匹配）
@@ -23,8 +35,8 @@ export const searchKnowledge = (
       const lowerQuery = query.toLowerCase()
       const matchTitle = item.title.toLowerCase().includes(lowerQuery)
       const matchDesc = item.description.toLowerCase().includes(lowerQuery)
-      const matchSymptom = item.symptoms.some(s => s.toLowerCase().includes(lowerQuery))
-      const matchCriteria = item.diagnosisCriteria.some(c => 
+      const matchSymptom = item.symptoms.some((s: string) => s.toLowerCase().includes(lowerQuery))
+      const matchCriteria = item.diagnosisCriteria.some((c: any) => 
         c.title.toLowerCase().includes(lowerQuery) || 
         c.description.toLowerCase().includes(lowerQuery)
       )

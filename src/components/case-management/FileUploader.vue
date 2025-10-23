@@ -5,7 +5,7 @@
       class="upload-container"
       :action="uploadUrl"
       :headers="uploadHeaders"
-      :file-list="fileList"
+      v-model:file-list="fileList"
       :accept="acceptTypes"
       :multiple="multiple"
       :limit="fileLimit"
@@ -15,6 +15,7 @@
       :on-error="handleError"
       :on-progress="handleProgress"
       :on-remove="handleRemove"
+      :on-change="handleChange"
       :auto-upload="autoUpload"
       drag
     >
@@ -32,16 +33,16 @@
       <el-card class="file-list-card" v-for="(file, index) in fileList" :key="file.uid || index">
         <div class="file-item">
           <div class="file-icon">
-            <el-icon :class="getFileIconClass(file)"></el-icon>
+            <el-icon :class="getFileIconClass(file)"><file /></el-icon>
           </div>
           <div class="file-info">
             <div class="file-name">{{ file.name }}</div>
             <div class="file-meta">
               <span class="file-size">{{ formatFileSize(file.size) }}</span>
-              <span class="file-status" :class="getStatusClass(file.status)">
-                {{ getStatusText(file.status) }}
+              <span class="file-status" :class="getStatusClass(file.status || 'ready')">
+                {{ getStatusText(file.status || 'ready') }}
               </span>
-              <span class="file-progress" v-if="file.status === 'uploading'">
+              <span class="file-progress" v-if="file.status === 'uploading' && file.percentage !== undefined">
                 {{ file.percentage.toFixed(0) }}%
               </span>
             </div>
@@ -64,17 +65,18 @@
           </div>
         </div>
         <div v-if="file.status === 'uploading'" class="file-progress-bar">
-          <el-progress :percentage="file.percentage" :status="file.status === 'fail' ? 'exception' : ''" :stroke-width="2"></el-progress>
+          <el-progress :percentage="file.percentage || 0" :status="file.status === 'fail' ? 'exception' : ''" :stroke-width="2"></el-progress>
         </div>
       </el-card>
     </div>
 
     <!-- 上传按钮 -->
-    <div class="upload-actions" v-if="!autoUpload && fileList.length > 0">
+    <div class="upload-actions">
       <el-button 
         type="primary" 
         @click="submitUpload"
         :loading="uploading"
+        :disabled="false"
         icon="el-icon-upload2"
       >
         开始上传
@@ -92,7 +94,7 @@
 <script setup lang="ts">
 import { ref, reactive, defineProps, defineEmits, computed } from 'vue';
 import { ElMessage, ElNotification } from 'element-plus';
-import { UploadFilled, File, Picture, Document, Video, Music, Archive, HelpFilled } from '@element-plus/icons-vue';
+import { UploadFilled, File } from '@element-plus/icons-vue';
 
 // 定义Props
 const props = defineProps({
@@ -137,10 +139,24 @@ const props = defineProps({
 const emit = defineEmits(['upload-success', 'upload-error', 'upload-complete', 'file-removed', 'file-added']);
 
 // 上传组件引用
-const uploadRef = ref(null);
+const uploadRef = ref<InstanceType<typeof import('element-plus').ElUpload> | null>(null);
 
 // 文件列表
-const fileList = ref([]);
+type UploadFileStatus = 'ready' | 'uploading' | 'success' | 'fail';
+
+interface UploadFile {
+  uid: string;
+  name: string;
+  size: number;
+  status: UploadFileStatus;
+  percentage?: number;
+  response?: any;
+  error?: string;
+  raw?: File;
+  type?: string;
+}
+
+const fileList = ref<UploadFile[]>([]);
 
 // 上传状态
 const uploading = ref(false);
@@ -192,12 +208,12 @@ const uploadHeaders = computed(() => {
 });
 
 // 文件超出限制处理
-const handleExceed = (files, fileList) => {
+const handleExceed = (files: File[], fileList: UploadFile[]) => {
   ElMessage.warning(`当前限制选择 ${props.fileLimit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
 };
 
 // 上传前检查
-const beforeUpload = (file) => {
+const beforeUpload = (file: any) => {
   // 检查文件大小
   const isLtMaxSize = file.size / 1024 / 1024 <= props.fileSizeLimit;
   if (!isLtMaxSize) {
@@ -216,7 +232,7 @@ const beforeUpload = (file) => {
 };
 
 // 上传进度处理
-const handleProgress = (event, file, fileList) => {
+const handleProgress = (event: any, file: UploadFile, fileList: UploadFile[]) => {
   // 更新文件进度
   const index = fileList.findIndex(f => f.uid === file.uid);
   if (index !== -1) {
@@ -230,7 +246,7 @@ const handleProgress = (event, file, fileList) => {
 };
 
 // 上传成功处理
-const handleSuccess = (response, file, fileList) => {
+const handleSuccess = (response: any, file: UploadFile, fileList: UploadFile[]) => {
   // 检查响应状态
   if (response.code === 200) {
     file.status = 'success';
@@ -263,7 +279,7 @@ const handleSuccess = (response, file, fileList) => {
 };
 
 // 上传错误处理
-const handleError = (err, file, fileList) => {
+const handleError = (err: any, file: UploadFile, fileList: UploadFile[]) => {
   file.status = 'fail';
   file.error = err.message || '上传失败';
   
@@ -281,11 +297,11 @@ const handleError = (err, file, fileList) => {
 };
 
 // 文件移除处理
-const handleRemove = (file) => {
+const handleRemove = (file: UploadFile) => {
   // 从文件列表中移除
-  const index = fileList.findIndex(f => f.uid === file.uid);
+  const index = fileList.value.findIndex(f => f.uid === file.uid);
   if (index !== -1) {
-    fileList.splice(index, 1);
+    fileList.value.splice(index, 1);
   }
   
   // 触发文件移除事件
@@ -293,7 +309,7 @@ const handleRemove = (file) => {
 };
 
 // 重试上传
-const handleRetry = (file) => {
+const handleRetry = (file: UploadFile) => {
   // 重置文件状态
   file.status = 'ready';
   file.percentage = 0;
@@ -301,41 +317,56 @@ const handleRetry = (file) => {
   // 重新上传
   if (props.autoUpload) {
     // 自动上传模式下直接上传
-    uploadRef.value.submit();
+    if (uploadRef.value) {
+      (uploadRef.value as any).submit();
+    }
   }
+};
+
+// 文件状态变化处理
+const handleChange = (file: UploadFile, fileList: UploadFile[]) => {
+  // 更新本地文件列表
+  fileList.value = fileList.map(f => ({
+    ...f,
+    status: f.status || 'ready'
+  }));
 };
 
 // 提交上传
 const submitUpload = () => {
-  if (fileList.length === 0) {
+  if (fileList.value.length === 0) {
     ElMessage.warning('请先选择文件');
     return;
   }
   
   // 检查是否有就绪状态的文件
-  const readyFiles = fileList.filter(file => file.status === 'ready');
+  const readyFiles = fileList.value.filter(file => file.status === 'ready');
   if (readyFiles.length === 0) {
     ElMessage.warning('没有待上传的文件');
     return;
   }
   
-  uploading = true;
-  uploadRef.value.submit();
+  uploading.value = true;
+  if (uploadRef.value) {
+    (uploadRef.value as any).submit();
+  }
 };
 
 // 清空文件列表
 const clearFiles = () => {
-  uploadRef.value.clearFiles();
+  if (uploadRef.value) {
+    (uploadRef.value as any).clearFiles();
+  }
   fileList.value = [];
 };
 
 // 检查所有文件是否上传完成
-const checkAllUploaded = (fileList) => {
+const checkAllUploaded = (fileList: UploadFile[]) => {
   // 检查是否还有上传中的文件
   const hasUploading = fileList.some(file => file.status === 'uploading');
   
   if (!hasUploading) {
-    uploading = false;
+    uploading.value = false;
     
     // 触发上传完成事件
     emit('upload-complete', {
@@ -374,7 +405,7 @@ const checkAllUploaded = (fileList) => {
 };
 
 // 获取文件图标类名
-const getFileIconClass = (file) => {
+const getFileIconClass = (file: UploadFile) => {
   const fileName = file.name.toLowerCase();
   
   if (fileName.endsWith('.pdf')) return 'el-icon-document';
@@ -394,7 +425,7 @@ const getFileIconClass = (file) => {
 };
 
 // 获取状态类名
-const getStatusClass = (status) => {
+const getStatusClass = (status: UploadFileStatus) => {
   switch (status) {
     case 'success': return 'status-success';
     case 'fail': return 'status-error';
@@ -404,7 +435,7 @@ const getStatusClass = (status) => {
 };
 
 // 获取状态文本
-const getStatusText = (status) => {
+const getStatusText = (status: UploadFileStatus) => {
   switch (status) {
     case 'ready': return '等待上传';
     case 'uploading': return '上传中';
@@ -415,7 +446,7 @@ const getStatusText = (status) => {
 };
 
 // 格式化文件大小
-const formatFileSize = (bytes) => {
+const formatFileSize = (bytes: number) => {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];

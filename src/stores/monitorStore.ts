@@ -55,18 +55,39 @@ export const useMonitorStore = defineStore('monitor', () => {
     try {
       isLoading.value = true;
       const response = await axios.get('/api/monitoring/resources');
-      currentResource.value = response.data;
+      const data = (response as any).data || {};
+      // 确保数据结构完整，添加默认值避免undefined错误
+      currentResource.value = {
+        cpu: data.cpu || 0,
+        memory: data.memory || 0,
+        disk: data.disk || 0,
+        network: data.network || { in: 0, out: 0 },
+        timestamp: data.timestamp || new Date().toISOString()
+      };
       // 保留最近30条记录用于趋势图表
       if (resources.value.length >= 30) {
         resources.value.shift();
       }
-      resources.value.push(response.data);
+      resources.value.push(currentResource.value);
       
       // 检查是否触发告警
-      checkAlarms(response.data);
+      checkAlarms(currentResource.value);
     } catch (error) {
       console.error('获取系统资源失败:', error);
       ElMessage.error('无法获取系统资源数据');
+      // 在错误情况下提供默认资源数据，避免页面崩溃
+      const defaultResource: SystemResource = {
+        cpu: 0,
+        memory: 0,
+        disk: 0,
+        network: { in: 0, out: 0 },
+        timestamp: new Date().toISOString()
+      };
+      currentResource.value = defaultResource;
+      if (resources.value.length >= 30) {
+        resources.value.shift();
+      }
+      resources.value.push(defaultResource);
     } finally {
       isLoading.value = false;
     }
@@ -76,7 +97,7 @@ export const useMonitorStore = defineStore('monitor', () => {
   const fetchAlarmRules = async () => {
     try {
       const response = await axios.get('/api/monitoring/alarm-rules');
-      alarmRules.value = response.data;
+      alarmRules.value = (response as any).data;
     } catch (error) {
       console.error('获取告警规则失败:', error);
       ElMessage.error('无法加载告警规则');
@@ -87,7 +108,7 @@ export const useMonitorStore = defineStore('monitor', () => {
   const fetchAlarmRecords = async () => {
     try {
       const response = await axios.get('/api/monitoring/alarms');
-      alarmRecords.value = response.data;
+      alarmRecords.value = (response as any).data;
     } catch (error) {
       console.error('获取告警记录失败:', error);
       ElMessage.error('无法加载告警历史');
@@ -179,7 +200,7 @@ export const useMonitorStore = defineStore('monitor', () => {
   // 保存告警规则
   const saveAlarmRules = async () => {
     try {
-      await axios.put('/api/monitoring/alarm-rules', alarmRules.value);
+      await axios.put('/api/monitoring/alarm-rules', alarmRules.value) as any;
       ElMessage.success('告警规则保存成功');
     } catch (error) {
       console.error('保存告警规则失败:', error);
@@ -245,7 +266,7 @@ export const useMonitorStore = defineStore('monitor', () => {
     try {
       await axios.patch(`/api/monitoring/alarms/${alarmId}`, {
         status: 'handled'
-      });
+      }) as any;
       const alarm = alarmRecords.value.find(a => a.id === alarmId);
       if (alarm) {
         alarm.status = 'handled';

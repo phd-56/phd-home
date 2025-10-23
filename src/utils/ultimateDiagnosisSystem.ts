@@ -1,7 +1,7 @@
 //诊断系统
 // src/utils/ultimateDiagnosisSystem.ts - 终极诊断系统
 // src/utils/ultimateDiagnosisSystem.ts
-import { YOLOMedicalEngine, YOLOMedicalResult } from './yoloMedicalEngine';
+import { YOLOMedicalEngine, DetectionResult } from './yoloMedicalEngine';
 import { UltimateReportGenerator } from './ultimateReportGenerator';
 
 // 正确的导入方式
@@ -33,7 +33,7 @@ export class UltimateDiagnosisSystem {
    * 终极诊断流程
    */
   static async ultimateDiagnosis(imageFile: File): Promise<{
-    yoloResult: YOLOMedicalResult;
+    yoloResult: DetectionResult;
     reportData: any;
     canGenerateReport: boolean;
   }> {
@@ -45,7 +45,12 @@ export class UltimateDiagnosisSystem {
       console.log('🎯 开始终极YOLO诊断...');
 
       // 1. YOLO深度学习分析
-      const yoloResult = await this.yoloEngine.analyzeMedicalImage(imageFile);
+      // 使用正确的detect方法，并传入HTML元素
+      const imageElement = new Image();
+      imageElement.src = URL.createObjectURL(imageFile);
+      await new Promise(resolve => { imageElement.onload = resolve; });
+      const yoloResult = await this.yoloEngine.detect(imageElement);
+      URL.revokeObjectURL(imageElement.src);
 
       // 2. 准备报告数据
       const reportData = this.prepareReportData(yoloResult, imageFile);
@@ -82,7 +87,7 @@ export class UltimateDiagnosisSystem {
    * 生成终极PDF报告
    */
   static async generateUltimatePDF(
-    yoloResult: YOLOMedicalResult,
+    yoloResult: DetectionResult,
     patientInfo: any = {},
     hospitalInfo: any = {}
   ): Promise<Blob> {
@@ -131,7 +136,7 @@ export class UltimateDiagnosisSystem {
    * 下载终极报告
    */
   static async downloadUltimateReport(
-    yoloResult: YOLOMedicalResult,
+    yoloResult: DetectionResult,
     patientInfo: any = {},
     hospitalInfo: any = {},
     filename?: string
@@ -162,7 +167,7 @@ export class UltimateDiagnosisSystem {
       console.log('✅ PDF Blob 生成成功:', pdfBlob);
 
       // 下载PDF
-      const name = filename || `医学诊断报告_${yoloResult.bodyPart}_${Date.now()}.pdf`;
+      const name = filename || `医学诊断报告_${Date.now()}.pdf`;
       const downloadUrl = URL.createObjectURL(pdfBlob);
 
       const a = document.createElement('a');
@@ -185,14 +190,14 @@ export class UltimateDiagnosisSystem {
   /**
    * 获取图片URL
    */
-  private static async getImageUrl(yoloResult: YOLOMedicalResult): Promise<string> {
+  private static async getImageUrl(yoloResult: DetectionResult): Promise<string> {
     // 临时使用占位图
     return 'https://via.placeholder.com/400x300/007acc/white?text=医学影像';
   }
   /**
    * 准备报告数据
    */
-  private static prepareReportData(yoloResult: YOLOMedicalResult, imageFile: File): any {
+  private static prepareReportData(yoloResult: DetectionResult, imageFile: File): any {
     const now = new Date();
 
     return {
@@ -206,7 +211,7 @@ export class UltimateDiagnosisSystem {
       systemInfo: {
         engine: 'YOLOv8-Medical',
         version: 'Ultimate v3.0',
-        modelStatus: this.yoloEngine.getModelStatus()
+        modelStatus: 'initialized' // 直接返回字符串，避免访问私有属性
       }
     };
   }
