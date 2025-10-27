@@ -70,10 +70,16 @@ const router = createRouter({
         // 医生仪表板
         {
           path: 'doctor',
-          name: 'DoctorDashboard',
-          component: () => import('@/views/DoctorDashboard.vue'),
+          component: () => import('@/components/AppLayout.vue'),
           meta: { role: 'doctor' },
-          children: doctorRoutes
+          children: [
+            {
+              path: '',
+              name: 'DoctorDashboardMain',
+              component: () => import('@/views/DoctorDashboard.vue')
+            },
+            ...doctorRoutes
+          ]
         },
 
         // 管理员仪表板
