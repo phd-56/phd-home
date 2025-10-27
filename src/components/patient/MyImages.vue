@@ -126,18 +126,18 @@
     </div>
 
     <!-- 上传对话框 -->
-    <ImageUploadDialog 
+    <!-- 暂时注释掉不存在的组件 -->
+    <!-- <ImageUploadDialog 
       v-model="showUploadDialog"
       @upload-success="handleUploadSuccess"
-    />
+    /> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Download, Delete, View, Calendar, Document } from '@element-plus/icons-vue'
-import ImageUploadDialog from './components/ImageUploadDialog.vue'
+//import { Plus, Search, Download, Delete, View, Calendar, Document } from '@element-plus/icons-vue'
 
 interface MedicalImage {
   id: string
@@ -155,7 +155,8 @@ const showUploadDialog = ref(false)
 const searchQuery = ref('')
 const filterBodyPart = ref('')
 const filterType = ref('')
-const dateRange = ref([])
+// 修复：使用更明确的类型定义
+const dateRange = ref<Date[]>([])
 
 const imageStats = reactive({
   total: 15,
@@ -219,8 +220,10 @@ const filteredImages = computed(() => {
     images = images.filter(image => image.type === filterType.value)
   }
   
+  // 修复：安全的日期范围过滤
   if (dateRange.value && dateRange.value.length === 2) {
-    const [start, end] = dateRange.value
+    const start = dateRange.value[0]
+    const end = dateRange.value[1]
     images = images.filter(image => {
       const uploadTime = new Date(image.uploadTime)
       return uploadTime >= start && uploadTime <= end
@@ -229,6 +232,7 @@ const filteredImages = computed(() => {
   
   return images
 })
+
 
 const getImageTypeColor = (type: string) => {
   const colorMap = {

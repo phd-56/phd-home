@@ -60,13 +60,13 @@ onMounted(() => {
   activeMenu.value = route.path
 })
 
-// 菜单数据结构 - 只保留管理员功能
+// 菜单数据结构 - 修正为正确的路由路径格式
 const menuSections = [
   {
     title: '系统管理',
     items: [
       { key: '/dashboard/admin/user-management', name: '用户管理', icon: '👥', roles: ['admin'] },
-      { key: '/dashboard/admin/system-monitor', name: '系统监控', icon: '📊', roles: ['admin'] },
+      { key: '/dashboard/admin/system-monitor', name: '数据监控', icon: '📊', roles: ['admin'] },
       { key: '/dashboard/admin/data-backup', name: '数据备份', icon: '💾', roles: ['admin'] },
       { key: '/dashboard/admin/audit-logs', name: '操作日志', icon: '📝', roles: ['admin'] },
     ]
@@ -104,7 +104,13 @@ const getUserDisplayName = (): string => {
 
 // 菜单选择处理
 const handleMenuSelect = (key: string) => {
-  router.push(key)
+  try {
+    // 直接使用key作为完整路径，因为已经包含了/admin前缀
+    router.push(key)
+  } catch (error) {
+    console.error('菜单跳转错误:', error)
+    ElMessage.error('页面跳转失败，请检查系统设置')
+  }
 }
 
 // 退出登录

@@ -1,23 +1,21 @@
 <template>
   <div class="doctor-dashboard">
-    <!-- 医生头部 -->
-    <div class="dashboard-header">
+    <!-- 医生头部 - 只在仪表板主页显示 -->
+    <div v-if="showDashboardHeader" class="dashboard-header">
       <h1>医生工作台</h1>
       <p>欢迎回来，{{ authStore.user?.fullName }} 医生</p>
       <div class="header-actions">
-        <el-button type="primary" @click="goToUpload">📁 上传影像</el-button>
         <el-button @click="goToFeedback">💬 意见反馈</el-button>
         <el-button @click="handleLogout">🚪 退出登录</el-button>
       </div>
     </div>
 
-    <!-- 医生核心功能 -->
-    <div class="function-grid">
-      <div class="function-card" @click="goToUpload">
-        <div class="card-icon">📁</div>
-        <h3>影像上传</h3>
-        <p>上传患者医学影像进行分析</p>
-      </div>
+    <!-- 路由出口 -->
+    <router-view v-if="!showDashboardHome"/>
+    
+    <!-- 医生核心功能 - 只在仪表板主页显示 -->
+    <div v-else class="function-grid">
+
       
       <div class="function-card" @click="goToDiagnosis">
         <div class="card-icon">🤖</div>
@@ -49,40 +47,63 @@
         <p>提供系统使用反馈和建议</p>
       </div>
     </div>
+    
+    <!-- 额外的仪表板内容 -->
+    <div class="dashboard">
+      <div class="card-container">
+        <!-- 这里可以添加更多卡片或内容 -->
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { ElMessage } from 'element-plus'
+import { computed } from 'vue'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
-const goToUpload = () => {
-  // 医生使用简单的上传页面，不是管理员的上传页面
-  router.push('/Upload')
-}
+// 判断是否是仪表板主页（空路径或根路径）
+const showDashboardHome = computed(() => {
+  return route.name === 'DoctorDashboardMain' || route.path === '/dashboard/doctor'
+})
+
+// 判断是否显示仪表板头部（在主页和某些页面显示）
+const showDashboardHeader = computed(() => {
+  return showDashboardHome.value
+})
+
+
 
 const goToDiagnosis = () => {
-  ElMessage.info('AI诊断分析功能开发中...')
+  router.push({ name: 'doctor.aiDiagnosis' })
 }
 
 const goToCases = () => {
-  ElMessage.info('病例管理功能开发中...')
+  router.push({ name: 'doctor.caseManagement' })
 }
 
 const goToKnowledge = () => {
-  ElMessage.info('知识库功能开发中...')
+  router.push({ name: 'doctor.knowledgeBase' })
 }
 
 const goToReports = () => {
-  ElMessage.info('报告生成功能开发中...')
+  router.push({ name: 'doctor.reports' })
 }
 
 const goToFeedback = () => {
-  ElMessage.info('意见反馈功能开发中...')
+  try {
+    // 跳转到反馈历史页面
+    router.push({ name: 'doctor.feedbackHistory' })
+    console.log('成功跳转到反馈历史页面')
+  } catch (error) {
+    console.error('路由跳转失败:', error)
+    ElMessage.error('跳转失败，请稍后重试')
+  }
 }
 
 const handleLogout = () => {

@@ -91,7 +91,7 @@
           </div>
           <div class="info-item">
             <span class="label">当前工具:</span>
-            <span class="value">{{ toolNames[activeTool] }}</span>
+            <span class="value">{{ getToolName(activeTool) }}</span>
           </div>
         </div>
       </div>
@@ -151,7 +151,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { ZoomIn, ZoomOut, FullScreen, Upload, UploadFilled } from '@element-plus/icons-vue'
+//import { ZoomIn, ZoomOut, FullScreen, Upload, UploadFilled } from '@element-plus/icons-vue'
 
 interface MedicalImage {
   id: string
@@ -206,6 +206,16 @@ const startPos = reactive({ x: 0, y: 0 })
 const mousePosition = reactive({ x: 0, y: 0 })
 const annotations = ref<Annotation[]>([])
 const ctx = ref<CanvasRenderingContext2D | null>(null)
+// 修复 TypeScript 错误：使用函数而不是对象索引
+const getToolName = (tool: string): string => {
+  const toolNames: Record<string, string> = {
+    select: '选择',
+    rectangle: '矩形', 
+    circle: '圆形',
+    line: '直线'
+  }
+  return toolNames[tool] || '未知工具'
+}
 
 const toolNames = {
   select: '选择',

@@ -214,12 +214,30 @@ const handleRegister = async () => {
 :deep(.el-input__wrapper) {
   height: 48px;
   border-radius: 8px;
+
   border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
 }
 
 :deep(.el-input__wrapper:hover) {
   border-color: #2563eb;
+
+  border: none;
+  background-color: #f9fafb;
+  transition: all 0.3s;
+}
+
+:deep(.el-input__inner:focus) {
+  border: none;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+/* 美化输入框容器 */
+:deep(.el-input) {
+  background-color: #f9fafb;
+  border-radius: 8px;
+
 }
 
 :deep(.el-input.is-focus .el-input__wrapper) {
