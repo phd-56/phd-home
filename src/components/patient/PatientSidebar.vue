@@ -13,35 +13,43 @@
     </div>
 
     <div class="sidebar-menu">
-      <div class="menu-section">
-        <div class="section-title">患者管理</div>
-        <nav class="menu-nav">
-          <a 
-            href="#" 
-            :class="['menu-item', { active: activeTab === 'dashboard' }]"
-            @click.prevent="handleMenuSelect('dashboard')"
-          >
-            <i class="fas fa-desktop"></i>
-            <span>我的工作台</span>
-          </a>
-          <a 
-            href="#" 
-            :class="['menu-item', { active: activeTab === 'reports' }]"
-            @click.prevent="handleMenuSelect('reports')"
-          >
-            <i class="fas fa-file-medical"></i>
-            <span>影像报告</span>
-          </a>
-          <a 
-            href="#" 
-            :class="['menu-item', { active: activeTab === 'appointment' }]"
-            @click.prevent="handleMenuSelect('appointment')"
-          >
-            <i class="fas fa-stethoscope"></i>
-            <span>检查预约</span>
-          </a>
-        </nav>
-      </div>
+              <div class="menu-section">
+                <div class="section-title">患者管理</div>
+                <nav class="menu-nav">
+                  <a 
+                    href="#" 
+                    :class="['menu-item', { active: activeTab === 'dashboard' }]"
+                    @click.prevent="handleMenuSelect('dashboard')"
+                  >
+                    <i class="fas fa-desktop"></i>
+                    <span>我的工作台</span>
+                  </a>
+                  <a 
+                    href="#" 
+                    :class="['menu-item', { active: activeTab === 'reports' }]"
+                    @click.prevent="handleMenuSelect('reports')"
+                  >
+                    <i class="fas fa-file-medical"></i>
+                    <span>影像报告</span>
+                  </a>
+                  <a 
+                    href="#" 
+                    :class="['menu-item', { active: activeTab === 'appointment' }]"
+                    @click.prevent="handleMenuSelect('appointment')"
+                  >
+                    <i class="fas fa-stethoscope"></i>
+                    <span>检查预约</span>
+                  </a>
+                  <a 
+                    href="#" 
+                    :class="['menu-item', { active: activeTab === 'knowledge' }]"
+                    @click.prevent="handleMenuSelect('knowledge')"
+                  >
+                    <i class="fas fa-book"></i>
+                    <span>知识库</span>
+                  </a>
+                </nav>
+              </div>
 
       <div class="menu-section">
         <div class="section-title">账户管理</div>
@@ -106,7 +114,12 @@ const userInfo = reactive<UserInfo>({
 })
 
 const handleMenuSelect = (tab: string) => {
-  emit('tabChange', tab)
+  if (tab === 'knowledge') {
+    // 知识库直接跳转到独立路由，不通过父组件
+    router.push('/dashboard/patient/knowledge')
+  } else {
+    emit('tabChange', tab)
+  }
 }
 
 const handleLogout = async () => {
@@ -129,16 +142,17 @@ const handleLogout = async () => {
 <style scoped>
 .patient-sidebar {
   width: 224px;
-  height: 100%;
+  height: 100vh;
   background: #fff;
   border-right: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
-  top: 64px;
-  bottom: 0;
+  top: 0;
   overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-header {

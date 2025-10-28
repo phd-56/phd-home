@@ -30,6 +30,14 @@ const router = createRouter({
       component: () => import('@/views/ReportPreview.vue')
     },
 
+    // 独立的知识库路由
+    {
+      path: '/dashboard/patient/knowledge',
+      name: 'PatientKnowledge',
+      component: () => import('@/views/patient/PatientKnowledgeBase.vue'),
+      meta: { role: 'patient', requiresAuth: true }
+    },
+
     // 仪表板路由组
     {
       path: '/dashboard',

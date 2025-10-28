@@ -1,709 +1,1501 @@
 <template>
-  <div class="patient-knowledge-base">
+  <div class="knowledge-page">
+    <div class="patient-knowledge">
+          <!-- 页面标题 -->
     <div class="page-header">
-      <h1>健康知识库</h1>
-      <p>获取专业的医学健康知识，了解更多健康资讯</p>
+            <div>
+              <h1 class="text-2xl font-semibold text-black mb-1" style="color: black;">知识库</h1>
+              <p class="text-sm text-gray-500">骨骼疾病诊断指南、影像图谱与临床案例库</p>
+            </div>
+            <div class="header-actions">
+              <button class="back-to-dashboard-btn" @click="backToDashboard">
+                <i class="fas fa-arrow-left"></i>
+                返回工作台
+              </button>
+            </div>
     </div>
 
-    <el-card>
-      <template #header>
-        <div class="search-section">
-          <el-input
+      <!-- 智能检索模块 -->
+      <div class="search-module">
+        <h3>智能医学知识检索</h3>
+        <p class="search-description">快速查找骨骼疾病诊断相关的指南、图谱和案例</p>
+        <div class="search-box">
+          <input 
+            type="text" 
             v-model="searchQuery"
-            placeholder="搜索健康知识..."
-            clearable
-            @keyup.enter="searchKnowledge"
+            placeholder="搜索疾病名称、症状、解剖部位或关键词..."
+            @keyup.enter="handleSearch"
           >
-            <template #prefix>
-              <el-icon><Search /></el-icon>
-            </template>
-            <template #append>
-              <el-button type="primary" @click="searchKnowledge">搜索</el-button>
-            </template>
-          </el-input>
+          <button @click="handleSearch">
+            <i class="fas fa-search"></i>
+            搜索
+          </button>
         </div>
-      </template>
+        <div class="search-links">
+          热门搜索:
+          <a href="#" @click.prevent="searchByKeyword('半月板损伤')" :class="{ active: searchQuery === '半月板损伤' }">半月板损伤</a>
+          <a href="#" @click.prevent="searchByKeyword('骨折分型')" :class="{ active: searchQuery === '骨折分型' }">骨折分型</a>
+          <a href="#" @click.prevent="searchByKeyword('MRI影像解读')" :class="{ active: searchQuery === 'MRI影像解读' }">MRI影像解读</a>
+          <a href="#" @click.prevent="searchByKeyword('更多')">查看更多</a>
+        </div>
+      </div>
 
-      <!-- 分类导航 -->
-      <div class="category-nav">
-        <el-scrollbar wrap-class="scroll-wrapper">
-          <div class="category-list">
-            <div
-              v-for="category in categories"
-              :key="category.id"
-              class="category-item"
-              :class="{ active: selectedCategory === category.id }"
-              @click="selectCategory(category.id)"
-            >
-              <div class="category-icon">{{ category.icon }}</div>
-              <div class="category-name">{{ category.name }}</div>
+      <!-- 快速入口网格 -->
+      <div class="quick-links-grid">
+        <div class="quick-card" @click="showPage('all-guides')">
+          <div class="card-icon iconify-c1">
+            <i class="fas fa-file-medical"></i>
             </div>
+          <div class="card-content">
+            <h4>诊断指南</h4>
+            <p>最新骨骼疾病诊断标准、治疗流程和临床路径</p>
+            <span class="count">128 新指南</span>
           </div>
-        </el-scrollbar>
+          <i class="fas fa-arrow-right card-arrow"></i>
+        </div>
+        <div class="quick-card" @click="showPage('all-atlases')">
+          <div class="card-icon iconify-c2">
+            <i class="fas fa-images"></i>
+          </div>
+          <div class="card-content">
+            <h4>影像图谱</h4>
+            <p>正常与异常骨骼影像对比、解剖结构标注和典型病例影像</p>
+            <span class="count">356 组图谱</span>
+          </div>
+          <i class="fas fa-arrow-right card-arrow"></i>
+        </div>
+        <div class="quick-card" @click="showPage('all-cases')">
+          <div class="card-icon iconify-c3">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <div class="card-content">
+            <h4>临床案例</h4>
+            <p>疑难病例分析、误诊案例讨论和多学科会诊记录</p>
+            <span class="count">245 个案例</span>
+          </div>
+          <i class="fas fa-arrow-right card-arrow"></i>
+        </div>
+        <div class="quick-card" @click="showPage('all-literature')">
+          <div class="card-icon iconify-c4">
+            <i class="fas fa-book-open"></i>
+          </div>
+          <div class="card-content">
+            <h4>医学文献</h4>
+            <p>骨骼疾病领域最新研究进展、指南解读和专家评论</p>
+            <span class="count">512 篇文献</span>
+          </div>
+          <i class="fas fa-arrow-right card-arrow"></i>
+        </div>
       </div>
 
-      <!-- 热门标签 -->
-      <div class="hot-tags">
-        <span class="tags-title">热门标签：</span>
-        <el-tag
-          v-for="tag in hotTags"
-          :key="tag"
-          size="small"
-          effect="plain"
-          @click="searchByTag(tag)"
-        >
-          {{ tag }}
-        </el-tag>
-      </div>
-
-      <!-- 知识内容区域 -->
-      <div v-loading="loading" class="knowledge-content">
-        <div v-if="knowledgeList.length > 0" class="knowledge-list">
-          <el-card
-            v-for="item in pagedKnowledgeList"
-            :key="item.id"
-            class="knowledge-item"
-            @click="viewKnowledgeDetail(item)"
-          >
-            <template #header>
-              <div class="item-header">
-                <h3 class="item-title">{{ item.title }}</h3>
-                <span class="item-category">{{ getCategoryName(item.categoryId) }}</span>
+      <!-- 主布局容器 -->
+      <div class="main-layout">
+        <!-- 知识库侧边栏 -->
+        <div class="knowledge-sidebar">
+          <div class="sidebar-header">
+            <h2>骨骼疾病分类</h2>
+            <p>按解剖部位和疾病类型浏览</p>
+          </div>
+          <ul class="sidebar-nav">
+            <li class="nav-item" :class="{ 'is-expanded': expandedItems.includes('spine') }">
+              <div class="nav-item-title" @click="toggleExpanded('spine')">
+                <i class="fas fa-chevron-right" :class="{ 'rotated': expandedItems.includes('spine') }"></i>
+                脊柱疾病
               </div>
-            </template>
-            <div class="item-content">
-              <div class="item-summary">{{ item.summary }}</div>
-              <div class="item-meta">
-                <span class="item-author">作者：{{ item.author }}</span>
-                <span class="item-date">{{ formatDate(item.publishDate) }}</span>
-                <span class="item-views"><View />&nbsp;{{ item.viewCount }}</span>
-                <span class="item-likes"><Star />&nbsp;{{ item.likeCount }}</span>
+              <ul class="sub-nav" v-show="expandedItems.includes('spine')">
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'herniation' }]" @click.prevent="selectDisease('herniation')">腰椎间盘突出症</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'spondylosis' }]" @click.prevent="selectDisease('spondylosis')">颈椎病</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'spinal-fracture' }]" @click.prevent="selectDisease('spinal-fracture')">脊柱骨折</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'spinal-deformity' }]" @click.prevent="selectDisease('spinal-deformity')">脊柱侧弯</a></li>
+              </ul>
+            </li>
+            <li class="nav-item" :class="{ 'is-expanded': expandedItems.includes('joint') }">
+              <div class="nav-item-title" @click="toggleExpanded('joint')">
+                <i class="fas fa-chevron-right" :class="{ 'rotated': expandedItems.includes('joint') }"></i>
+                关节疾病
+              </div>
+              <ul class="sub-nav" v-show="expandedItems.includes('joint')">
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'arthritis' }]" @click.prevent="selectDisease('arthritis')">膝关节骨关节炎</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'meniscus-injury' }]" @click.prevent="selectDisease('meniscus-injury')">半月板损伤</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'ligament-injury' }]" @click.prevent="selectDisease('ligament-injury')">韧带损伤</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'anfh' }]" @click.prevent="selectDisease('anfh')">股骨头坏死</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" :class="['nav-link', 'nav-parent-link', { 'is-active': activeDisease === 'trauma' }]" @click.prevent="selectDisease('trauma')">
+                <i class="fas fa-chevron-right"></i>
+                骨折与创伤
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" :class="['nav-link', 'nav-parent-link', { 'is-active': activeDisease === 'bone-tumor' }]" @click.prevent="selectDisease('bone-tumor')">
+                <i class="fas fa-chevron-right"></i>
+                骨肿瘤
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" :class="['nav-link', 'nav-parent-link', { 'is-active': activeDisease === 'metabolic' }]" @click.prevent="selectDisease('metabolic')">
+                <i class="fas fa-chevron-right"></i>
+                代谢性骨病
+              </a>
+            </li>
+          </ul>
+          <div class="sidebar-footer">
+            <a href="#">查看全部疾病分类</a>
+          </div>
+      </div>
+
+        <!-- 主内容区域 -->
+        <div class="content-area">
+          <!-- 腰椎间盘突出症内容（默认选中） -->
+          <div v-if="activeDisease === 'herniation'" class="content-page is-active">
+            <div class="content-section">
+              <div class="section-header">
+                <h3>推荐的专业指南 (腰椎)</h3>
+                <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+              </div>
+              <div class="guide-list">
+                <div class="guide-item">
+                  <i class="fas fa-file-medical guide-icon"></i>
+                  <div class="guide-content">
+                    <h4 class="guide-title-link" @click="openGuideDetail('herniation-2023')">腰椎间盘突出症诊疗指南 (2023版)</h4>
+                    <p>本指南由中华医学会骨科学分会编写。系统阐述了腰椎间盘突出症的流行病学、发病机制、临床表现、影像学诊断...</p>
+                    <div class="guide-meta">
+                      <span><i class="fas fa-calendar"></i> 2023-01-10</span>
+                      <span><i class="fas fa-eye"></i> 1,893 查看</span>
+                      <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
               </div>
             </div>
-          </el-card>
+                </div>
+                <div class="guide-item">
+                  <i class="fas fa-file-medical guide-icon"></i>
+                  <div class="guide-content">
+                    <h4 class="guide-title-link" @click="openGuideDetail('meniscus-2023')">中国半月板损伤诊疗指南 (2023版)</h4>
+                    <p>本指南由中华医学会骨科学分会关节镜学组组织编写。系统阐述了半月板损伤的诊断标准、影像学表现、治疗方案...</p>
+                    <div class="guide-meta">
+                      <span><i class="fas fa-calendar"></i> 2023-03-15</span>
+                      <span><i class="fas fa-eye"></i> 3,452 查看</span>
+                      <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
         
-        <div v-else-if="!loading" class="empty-state">
-          <el-empty description="暂无相关知识内容" />
+            <div class="content-section">
+              <div class="section-header">
+                <h3>骨骼系统影像诊断 (腰椎)</h3>
+                <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+              </div>
+              <div class="article-grid">
+                <div class="article-card">
+                  <h4>腰椎MRI影像学诊断图谱</h4>
+                  <p>包含椎间盘膨出、突出、脱出、游离的典型MRI矢状位和轴位影像，以及椎管狭窄的测量...</p>
+                  <div class="tag-list">
+                    <span>MRI</span>
+                    <span>腰椎</span>
+                    <span>椎间盘</span>
+                  </div>
+                </div>
+                <div class="article-card">
+                  <h4>脊柱骨折X线诊断图谱</h4>
+                  <p>对比稳定性骨折、不稳定性骨折、Chance骨折等常见类型的X线表现...</p>
+                  <div class="tag-list">
+                    <span>X线</span>
+                    <span>脊柱</span>
+                    <span>骨折</span>
+                  </div>
+                </div>
         </div>
       </div>
 
-      <!-- 分页 -->
-      <div v-if="knowledgeList.length > 0" class="pagination-container">
-        <el-pagination
-          v-model:current-page="pagination.currentPage"
-          v-model:page-size="pagination.pageSize"
-          :page-sizes="[10, 20, 50]"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="knowledgeList.length"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
+            <div class="content-section">
+              <div class="section-header">
+                <h3>经典病例讨论 (腰椎)</h3>
+                <div class="actions">
+                  <a href="#" class="see-all">查看全部案例</a>
+                  <a href="#" class="see-all">更多讨论 <i class="fas fa-arrow-right"></i></a>
       </div>
-    </el-card>
+              </div>
+              <div class="case-study-card">
+                <div class="case-study-header">
+                  <h4>案例：青少年特发性脊柱侧弯的诊断与治疗</h4>
+                  <span class="tag-hot">最新热议</span>
+                </div>
+                <div class="case-study-body">
+                  14岁女性患者，因"发现脊柱侧弯2年，加重半年"入院。查体：双肩不等高，胸廓不对称...
+                </div>
+                <div class="case-study-footer">
+                  <span><i class="fas fa-user-md"></i> 主持专家：张教授 (骨科)</span>
+                  <span><i class="fas fa-clock"></i> 发表时间: 2023-07-22</span>
+                </div>
+                <div class="case-study-actions">
+                  <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                  <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                  <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                  <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-08-10</span>
+                </div>
+              </div>
+            </div>
 
-    <!-- 知识详情对话框 -->
-    <el-dialog
-      v-model="detailVisible"
-      :title="selectedKnowledge?.title || '知识详情'"
-      width="80%"
-      destroy-on-close
-      class="knowledge-detail-dialog"
-    >
-      <div v-if="selectedKnowledge" class="knowledge-detail-content">
-        <div class="detail-header">
-          <div class="detail-meta">
-            <span class="detail-category">{{ getCategoryName(selectedKnowledge.categoryId) }}</span>
-            <span class="detail-date">{{ formatDate(selectedKnowledge.publishDate) }}</span>
-            <span class="detail-author">作者：{{ selectedKnowledge.author }}</span>
+            <div class="qa-section">
+              <h3>简易疾病QA (腰椎间盘突出症)</h3>
+              <div class="qa-item">
+                <div class="qa-question">
+                  <span class="qa-icon q">Q:</span>
+                  <p>腰椎间盘突出一定要手术吗？</p>
           </div>
-          <div class="detail-stats">
-            <span class="detail-views"><View />&nbsp;{{ selectedKnowledge.viewCount }}</span>
-            <span class="detail-likes" @click="likeKnowledge"><Star :fill="isLiked ? '#f56c6c' : 'none'" />&nbsp;{{ selectedKnowledge.likeCount }}</span>
+                <div class="qa-answer">
+                  <span class="qa-icon a">A:</span>
+                  <p>不一定。绝大多数（约80-90%）的初发患者可通过保守治疗（如休息、药物、理疗）缓解。只有保守治疗无效、症状严重或出现马尾神经综合征时才考虑手术。</p>
           </div>
         </div>
-        <div class="detail-body" v-html="selectedKnowledge.content"></div>
-        <div class="detail-tags">
-          <el-tag
-            v-for="tag in selectedKnowledge.tags"
-            :key="tag"
-            size="small"
-            effect="plain"
-            @click="searchByTag(tag)"
-          >
-            {{ tag }}
-          </el-tag>
+              <div class="qa-item">
+                <div class="qa-question">
+                  <span class="qa-icon q">Q:</span>
+                  <p>腰椎间盘突出和腰肌劳损有什么区别？</p>
+        </div>
+                <div class="qa-answer">
+                  <span class="qa-icon a">A:</span>
+                  <p>主要区别是是否有神经压迫。腰肌劳损主要是腰部肌肉酸痛，活动受限，但通常不会有腿部放射性疼痛或麻木。腰突症的典型症状是"坐骨神经痛"，即疼痛会从臀部放射到大腿后侧和小腿。</p>
+      </div>
+              </div>
+            </div>
+          </div>
+
+        <!-- 颈椎病内容 -->
+        <div v-else-if="activeDisease === 'spondylosis'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>推荐的专业指南 (颈椎)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">颈椎病诊疗指南 (2022版)</h4>
+                  <p>本指南由中华医学会骨科学分会发布，涵盖了脊髓型、神经根型颈椎病的诊断标准、阶梯治疗和手术时机...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2022-10-18</span>
+                    <span><i class="fas fa-eye"></i> 6,210 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                </div>
+              </div>
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">脊髓型颈椎病(CSM)诊断与治疗专家共识</h4>
+                  <p>针对脊髓型颈椎病的早期识别、影像学评估（T2高信号）、手术入路选择（前路ACDF/ACCF，后路）提供了详细建议...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2023-02-05</span>
+                    <span><i class="fas fa-eye"></i> 4,119 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (颈椎病)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>颈椎病MRI影像学分型与诊断</h4>
+                <p>详细解读颈椎病在MRI上的T1、T2信号表现，包括椎间盘突出、黄韧带肥厚、椎管狭窄等...</p>
+                <div class="tag-list">
+                  <span>MRI</span>
+                  <span>颈椎病</span>
+                  <span>影像</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>颈椎X线动力位片诊断图谱</h4>
+                <p>介绍颈椎正位、侧位、过屈过伸动力位片的拍摄规范和诊断要点，如生理曲度变直、椎间隙变窄...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>颈椎</span>
+                  <span>动力位</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (颈椎病)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：重度脊髓型颈椎病(CSM)的手术治疗与康复</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                58岁男性，主诉"四肢麻木无力2年，行走不稳1月"。影像学显示C4/5、C5/6节段严重压迫，脊髓T2高信号...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：李教授 (脊柱外科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-06-15</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-08-01</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="qa-section">
+            <h3>简易疾病QA (颈椎病)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>颈椎病会引起头晕吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>会。特定类型的颈椎病（如椎动脉型）会因为压迫或刺激椎动脉，导致脑供血不足，引起头晕、恶心、甚至视物模糊。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>选什么样的枕头对颈椎好？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>枕头的关键是能"填补"颈部的生理曲度。合适的枕头应能支撑颈部，使颈椎在睡眠时保持中立位，不宜过高或过低。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 脊柱骨折内容 -->
+        <div v-else-if="activeDisease === 'spinal-fracture'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>推荐的专业指南 (脊柱骨折)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">脊柱骨折诊疗指南 (2023版)</h4>
+                  <p>本指南详细介绍了脊柱骨折的分类、诊断标准、保守治疗和手术治疗的适应症，特别强调了稳定性评估的重要性...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2023-04-20</span>
+                    <span><i class="fas fa-eye"></i> 2,856 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (脊柱骨折)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>脊柱骨折CT三维重建诊断图谱</h4>
+                <p>包含压缩性骨折、爆裂性骨折、Chance骨折等常见类型的CT三维重建影像表现...</p>
+                <div class="tag-list">
+                  <span>CT</span>
+                  <span>脊柱</span>
+                  <span>骨折</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>脊柱骨折MRI信号分析图谱</h4>
+                <p>详细介绍脊柱骨折在MRI上的信号变化，包括急性期、亚急性期和慢性期的特征...</p>
+                <div class="tag-list">
+                  <span>MRI</span>
+                  <span>脊柱</span>
+                  <span>信号</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (脊柱骨折)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>脊柱骨折后多久可以下床活动？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>这取决于骨折的类型和严重程度。稳定性骨折通常4-6周后可逐渐下床，不稳定性骨折需要更长时间，甚至需要手术治疗。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 脊柱畸形内容 -->
+        <div v-else-if="activeDisease === 'spinal-deformity'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>推荐的专业指南 (脊柱畸形)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">青少年特发性脊柱侧弯诊疗指南</h4>
+                  <p>本指南针对青少年特发性脊柱侧弯的诊断、Cobb角测量、支具治疗和手术指征提供了详细指导...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2023-05-15</span>
+                    <span><i class="fas fa-eye"></i> 3,124 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (脊柱畸形)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>脊柱侧弯什么情况下需要手术？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>通常Cobb角超过40-45度，或支具治疗无效且侧弯继续进展时考虑手术。具体指征需要结合患者年龄、骨骼成熟度等因素综合判断。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 膝关节骨关节炎内容 -->
+        <div v-else-if="activeDisease === 'arthritis'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>推荐的专业指南 (膝关节)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">膝关节骨关节炎诊疗指南 (2023版)</h4>
+                  <p>本指南详细介绍了膝关节骨关节炎的病理机制、临床表现、影像学分级和阶梯治疗方案...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2023-06-10</span>
+                    <span><i class="fas fa-eye"></i> 4,567 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (膝关节骨关节炎)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>膝关节骨关节炎如何预防？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>控制体重、避免过度负重、适当运动（如游泳、骑自行车）、避免长时间下蹲或跪姿，以及及时治疗膝关节损伤。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 半月板损伤内容 -->
+        <div v-else-if="activeDisease === 'meniscus-injury'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>推荐的专业指南 (半月板)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">半月板损伤诊疗指南 (2023版)</h4>
+                  <p>本指南详细介绍了半月板损伤的解剖、分型、MRI诊断标准和关节镜手术指征...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2023-03-15</span>
+                    <span><i class="fas fa-eye"></i> 3,452 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (半月板损伤)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>半月板损伤一定要手术吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>不一定。小的撕裂可以保守治疗，包括休息、物理治疗和功能锻炼。只有保守治疗无效或撕裂严重时才考虑关节镜手术。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 韧带损伤内容 -->
+        <div v-else-if="activeDisease === 'ligament-injury'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>推荐的专业指南 (韧带损伤)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">膝关节韧带损伤诊疗指南</h4>
+                  <p>本指南详细介绍了前交叉韧带、后交叉韧带、内侧副韧带等损伤的诊断和治疗方案...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2023-07-20</span>
+                    <span><i class="fas fa-eye"></i> 2,789 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (韧带损伤)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>韧带损伤后多久可以恢复运动？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>这取决于损伤的严重程度。轻度损伤通常4-6周，中度损伤需要2-3个月，重度损伤或手术后需要6-12个月的专业康复。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 股骨头坏死内容 -->
+        <div v-else-if="activeDisease === 'anfh'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>推荐的专业指南 (股骨头坏死)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">股骨头坏死诊疗指南 (2023版)</h4>
+                  <p>本指南详细介绍了股骨头坏死的病因、分期、影像学诊断和保髋手术的适应症...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2023-08-15</span>
+                    <span><i class="fas fa-eye"></i> 1,956 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (股骨头坏死)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>股骨头坏死早期有什么症状？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>早期症状包括髋关节疼痛，特别是夜间痛和负重时疼痛加重。疼痛可放射到大腿内侧或膝关节，活动受限。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-if="showGuideDetail" class="content-page is-active">
+          <div class="page-header">
+            <a href="#" class="btn-back" @click.prevent="showGuideDetail = null">
+              <i class="fas fa-arrow-left"></i> 返回上一级
+            </a>
+          </div>
+          <div class="guide-content-full">
+            <h1>{{ currentGuide.title }}</h1>
+            <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+              <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+              <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+              <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+            </div>
+            <div v-html="currentGuide.content"></div>
+          </div>
         </div>
       </div>
-      <template #footer>
-        <el-button @click="detailVisible = false">关闭</el-button>
-      </template>
-    </el-dialog>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
-//import { Search, View, Star } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { useAuthStore } from '@/stores/auth'
+import PatientSidebar from '@/components/patient/PatientSidebar.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
-const loading = ref(false)
+
+// 搜索相关
 const searchQuery = ref('')
-const selectedCategory = ref('all')
-const detailVisible = ref(false)
-const selectedKnowledge = ref<any>(null)
-const isLiked = ref(false)
 
-// 分页数据
-const pagination = reactive({
-  currentPage: 1,
-  pageSize: 10
+// 侧边栏展开状态
+const expandedItems = ref(['spine'])
+
+// 当前选中的疾病
+const activeDisease = ref('herniation')
+
+// 指南详情
+const showGuideDetail = ref(false)
+const currentGuide = ref({
+  title: '',
+  date: '',
+  views: '',
+  content: ''
 })
 
-// 分类数据
-const categories = ref([
-  { id: 'all', name: '全部', icon: '🏥' },
-  { id: 'disease', name: '疾病知识', icon: '📋' },
-  { id: 'treatment', name: '治疗方法', icon: '💊' },
-  { id: 'prevention', name: '预防保健', icon: '🛡️' },
-  { id: 'nutrition', name: '营养健康', icon: '🥗' },
-  { id: 'exercise', name: '运动健身', icon: '🏃' },
-  { id: 'mental', name: '心理健康', icon: '🧠' },
-  { id: 'medical', name: '医学前沿', icon: '🔬' }
-])
-
-// 热门标签
-const hotTags = ref([
-  '高血压', '糖尿病', '心脏病', '防癌', '急救', '中医养生', '疫苗接种',
-  '合理用药', '睡眠健康', '儿童保健', '老年健康', '女性健康', '男性健康'
-])
-
-// 模拟知识数据
-const knowledgeList = ref([
-  {
-    id: '1',
-    title: '高血压患者的日常饮食管理',
-    categoryId: 'disease',
-    summary: '本文详细介绍了高血压患者的饮食原则，包括低盐饮食、控制热量摄入、增加蔬果摄入等方面的建议...',
-    content: `<p>高血压是一种常见的慢性疾病，饮食管理是控制血压的重要手段。以下是高血压患者的饮食建议：</p>
-    <h4>1. 低盐饮食</h4>
-    <p>世界卫生组织建议每人每天盐摄入量不超过5克。高血压患者应特别注意减少食盐的摄入，避免食用腌制食品、加工食品等高盐食物。</p>
-    <h4>2. 均衡膳食</h4>
-    <p>增加新鲜蔬菜和水果的摄入，每天应摄入500克以上的蔬菜和200-350克的水果。选择全谷物、低脂乳制品、瘦肉、鱼类等。</p>
-    <h4>3. 控制总热量</h4>
-    <p>保持健康体重，避免肥胖。计算并控制每日总热量摄入，适当增加运动量。</p>
-    <h4>4. 限制饮酒</h4>
-    <p>尽量不饮酒，如必须饮酒，应限制量。男性每日酒精摄入量不超过25克，女性不超过15克。</p>
-    <h4>5. 补充钾、钙、镁</h4>
-    <p>增加富含钾、钙、镁的食物摄入，如香蕉、橙子、牛奶、坚果等。</p>`,
-    author: '张医生',
-    publishDate: '2024-06-20T08:30:00',
-    viewCount: 1568,
-    likeCount: 230,
-    tags: ['高血压', '饮食管理', '慢性病']
+// 指南数据
+const guideData = {
+  'herniation-2023': {
+    title: '腰椎间盘突出症诊疗指南 (2023版)',
+    date: '2023-01-10',
+    views: '1,893',
+    content: `
+      <h3>1. 概述</h3>
+      <p>本指南由中华医学会骨科学分会编写。系统阐述了腰椎间盘突出症的流行病学、发病机制、临床表现、影像学诊断、分型、以及保守治疗和手术治疗的最新进展。</p>
+      <h3>2. 影像学诊断</h3>
+      <p>MRI是诊断腰椎间盘突出症的金标准。推荐进行腰椎矢状位T1、T2和轴位T2加权成像。根据影像学表现，突出可分为膨出(Bulging)、突出(Protrusion)、脱出(Extrusion)和游离(Sequestration)。</p>
+      <p>CT扫描对于显示椎间盘钙化、骨赘形成、椎管狭窄具有优势，尤其在评估骨性结构时。X线动力位片可用于评估腰椎的稳定性。</p>
+      <h3>3. 治疗原则</h3>
+      <p>治疗应遵循阶梯化原则。绝大多数（约80-90%）的初发患者可通过保守治疗获得缓解。保守治疗包括卧床休息、药物治疗（NSAIDs、肌松剂）、物理治疗和康复锻炼。</p>
+      <p>手术治疗指征包括：(1) 保守治疗无效；(2) 出现马尾神经综合征；(3) 出现进行性肌力下降。手术方式包括经典的椎板开窗髓核摘除术(Fenestration)、椎间孔镜(TESSYS)和UBE等微创手术。</p>
+    `
   },
-  {
-    id: '2',
-    title: '日常运动对心脏健康的重要性',
-    categoryId: 'exercise',
-    summary: '适量的运动有助于增强心肺功能，降低心血管疾病风险。本文介绍了适合不同人群的运动方式和注意事项...',
-    content: `<p>运动对心脏健康的益处已被多项研究证实。适量的运动可以：</p>
-    <ul>
-      <li>增强心肌收缩力</li>
-      <li>降低血压</li>
-      <li>改善血脂水平</li>
-      <li>减轻体重</li>
-      <li>降低心血管疾病风险</li>
-    </ul>
-    <h4>适合的运动类型</h4>
-    <p>有氧运动是对心脏最有益的运动类型，如快走、慢跑、游泳、骑自行车等。建议每周至少进行150分钟中等强度的有氧运动。</p>
-    <h4>运动强度控制</h4>
-    <p>运动时应注意控制强度，可以通过心率来监测：</p>
-    <p>中等强度运动：心率=（220-年龄）×（60%-70%）</p>
-    <p>高强度运动：心率=（220-年龄）×（70%-85%）</p>
-    <h4>注意事项</h4>
-    <p>运动前应进行热身，运动后进行拉伸。如有心脏病史或其他慢性疾病，应在医生指导下进行运动。</p>`,
-    author: '李医生',
-    publishDate: '2024-06-15T10:20:00',
-    viewCount: 2134,
-    likeCount: 328,
-    tags: ['运动', '心脏健康', '预防保健']
-  },
-  {
-    id: '3',
-    title: '中医养生：四季养生要点',
-    categoryId: 'prevention',
-    summary: '中医认为人与自然是一个整体，不同季节有不同的养生重点。本文介绍了春、夏、秋、冬四季的养生方法...',
-    content: `<h4>春季养生</h4>
-    <p>春季阳气升发，养生重点是：</p>
-    <ul>
-      <li>早睡早起，顺应自然</li>
-      <li>适量增加户外活动，吸收阳气</li>
-      <li>饮食宜温补，可食用春笋、荠菜等时令蔬菜</li>
-      <li>注意保持情绪舒畅，避免肝气郁结</li>
-    </ul>
-    <h4>夏季养生</h4>
-    <p>夏季阳气旺盛，养生重点是：</p>
-    <ul>
-      <li>作息规律，适当午休</li>
-      <li>注意防暑降温，避免长时间在烈日下活动</li>
-      <li>饮食宜清淡，多吃清热祛湿的食物</li>
-      <li>避免过度贪凉，保护阳气</li>
-    </ul>
-    <h4>秋季养生</h4>
-    <p>秋季阳气收敛，养生重点是：</p>
-    <ul>
-      <li>早睡早起，顺应收敛之势</li>
-      <li>注意防燥润肺，多喝水，多吃梨、百合等润肺食物</li>
-      <li>适当增加锻炼，提高免疫力</li>
-      <li>保持情绪稳定，避免悲秋情绪</li>
-    </ul>
-    <h4>冬季养生</h4>
-    <p>冬季阳气潜藏，养生重点是：</p>
-    <ul>
-      <li>早睡晚起，顺应潜藏之势</li>
-      <li>注意保暖，尤其是背部和脚部</li>
-      <li>饮食宜温补，可适当食用羊肉、栗子等温补食物</li>
-      <li>适当减少户外活动，保存阳气</li>
-    </ul>`,
-    author: '王中医',
-    publishDate: '2024-06-10T14:15:00',
-    viewCount: 1876,
-    likeCount: 290,
-    tags: ['中医养生', '四季养生', '保健']
-  }
-])
-
-// 分页后的知识列表
-const pagedKnowledgeList = computed(() => {
-  const start = (pagination.currentPage - 1) * pagination.pageSize
-  const end = start + pagination.pageSize
-  return filterKnowledgeList.value.slice(start, end)
-})
-
-// 根据搜索条件和分类过滤知识
-const filterKnowledgeList = computed(() => {
-  let result = [...knowledgeList.value]
-  
-  // 根据分类过滤
-  if (selectedCategory.value !== 'all') {
-    result = result.filter(item => item.categoryId === selectedCategory.value)
-  }
-  
-  // 根据搜索关键词过滤
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    result = result.filter(item => 
-      item.title.toLowerCase().includes(query) ||
-      item.summary.toLowerCase().includes(query) ||
-      item.tags.some(tag => tag.toLowerCase().includes(query))
-    )
-  }
-  
-  // 按发布日期降序排列
-  result.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
-  
-  return result
-})
-
-// 加载知识数据
-const loadKnowledge = async () => {
-  loading.value = true
-  try {
-    // 模拟API调用
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    // 实际应用中这里会从服务器获取数据
-    // knowledgeList.value = await api.getKnowledgeList(selectedCategory.value, searchQuery.value)
-  } catch (error) {
-    ElMessage.error('加载知识内容失败')
-    console.error('加载知识失败:', error)
-  } finally {
-    loading.value = false
+  'meniscus-2023': {
+    title: '中国半月板损伤诊疗指南 (2023版)',
+    date: '2023-03-15',
+    views: '3,452',
+    content: `
+      <h3>1. 诊断</h3>
+      <p>诊断主要依据病史（明确的膝关节扭伤史）、临床体征（关节间隙压痛、McMurray试验阳性）和影像学检查。</p>
+      <p>MRI是诊断半月板损伤最准确的无创检查方法。Stoller分级是目前最常用的MRI分级标准：I级和II级为半月板内部退变信号，未达关节面；III级信号（线状或不规则高信号）达到半月板的关节面，诊断为半月板撕裂。</p>
+      <h3>2. 治疗</h3>
+      <p>治疗原则是尽可能保留半月板组织，恢复其生物力学功能。治疗方式包括保守治疗、半月板部分切除术、半月板缝合术和半月板移植术。</p>
+      <p>半月板缝合术是目前的主流趋势，尤其适用于位于红区（外1/3血供区）的纵行撕裂。桶柄状撕裂一经诊断，应尽早行关节镜下复位缝合。</p>
+    `
   }
 }
 
-// 搜索知识
-const searchKnowledge = () => {
-  pagination.currentPage = 1
-  loadKnowledge()
-}
-
-// 选择分类
-const selectCategory = (categoryId: string) => {
-  selectedCategory.value = categoryId
-  pagination.currentPage = 1
-  loadKnowledge()
-}
-
-// 按标签搜索
-const searchByTag = (tag: string) => {
-  searchQuery.value = tag
-  pagination.currentPage = 1
-  loadKnowledge()
-}
-
-// 查看知识详情
-const viewKnowledgeDetail = (item: any) => {
-  selectedKnowledge.value = item
-  detailVisible.value = true
-  // 更新浏览次数
-  item.viewCount++
-  // 重置点赞状态
-  isLiked.value = false
-}
-
-// 点赞
-const likeKnowledge = () => {
-  if (!isLiked.value) {
-    selectedKnowledge.value.likeCount++
-    isLiked.value = true
-    ElMessage.success('点赞成功')
-  } else {
-    selectedKnowledge.value.likeCount--
-    isLiked.value = false
-    ElMessage.info('取消点赞')
+const handleTabChange = (tab: string) => {
+  switch (tab) {
+    case 'dashboard':
+      router.push('/dashboard/patient');
+      break;
+    case 'reports':
+      router.push('/dashboard/patient/reports');
+      break;
+    case 'appointment':
+      router.push('/dashboard/patient/appointment');
+      break;
+    case 'knowledge':
+      router.push('/dashboard/patient/knowledge');
+      break;
+    case 'settings':
+      router.push('/dashboard/patient/settings');
+      break;
+    case 'help':
+      router.push('/dashboard/patient/help');
+      break;
   }
 }
 
-// 获取分类名称
-const getCategoryName = (categoryId: string) => {
-  const category = categories.value.find(c => c.id === categoryId)
-  return category ? category.name : '未知分类'
-}
-
-// 格式化日期
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('zh-CN')
-}
-
-// 分页处理
-const handleSizeChange = (size: number) => {
-  pagination.pageSize = size
-}
-
-const handleCurrentChange = (current: number) => {
-  pagination.currentPage = current
-}
-
-// 返回患者工作台
-const goBack = () => {
+const backToDashboard = () => {
   router.push('/dashboard/patient')
 }
 
-// 组件挂载时加载数据
-onMounted(() => {
-  loadKnowledge()
-})
+const handleSearch = () => {
+  if (searchQuery.value.trim()) {
+    ElMessage.info(`搜索: ${searchQuery.value}`)
+  }
+}
+
+const searchByKeyword = (keyword: string) => {
+  searchQuery.value = keyword
+  handleSearch()
+}
+
+const toggleExpanded = (item: string) => {
+  const index = expandedItems.value.indexOf(item)
+  if (index > -1) {
+    expandedItems.value.splice(index, 1)
+  } else {
+    expandedItems.value.push(item)
+  }
+}
+
+const selectDisease = (disease: string) => {
+  activeDisease.value = disease
+}
+
+const showPage = (page: string) => {
+  ElMessage.info(`显示页面: ${page}`)
+}
+
+const openGuideDetail = (guideId: string) => {
+  const guide = guideData[guideId as keyof typeof guideData]
+  if (guide) {
+    currentGuide.value = guide
+    showGuideDetail.value = true
+  }
+}
 </script>
 
 <style scoped>
-.patient-knowledge-base {
-  padding: 20px;
+.knowledge-page {
+  min-height: 100vh;
+  background: #f9fafb;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.patient-knowledge {
+  min-height: 100vh;
+  background: #f9fafb;
+  padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.page-header {
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.page-header h1 {
-  color: #1890ff;
-  margin-bottom: 8px;
-}
-
-.page-header p {
-  color: #666;
-  margin: 0;
-}
-
-.search-section {
-  margin-bottom: 20px;
-}
-
-.search-section .el-input {
-  width: 100%;
-  max-width: 600px;
-}
-
-/* 分类导航 */
-.category-nav {
-  margin-bottom: 20px;
-}
-
-.scroll-wrapper {
-  max-width: 100%;
-}
-
-.category-list {
+.main-layout {
   display: flex;
-  gap: 15px;
-  padding: 10px 0;
+  gap: 24px;
+  margin-top: 24px;
 }
 
-.category-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px 20px;
+/* 搜索模块 */
+.search-module {
+  background-color: #ffffff;
+  padding: 24px;
   border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-  background: #f5f7fa;
-  min-width: 80px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
 }
 
-.category-item:hover {
-  background: #e6f7ff;
-  transform: translateY(-2px);
-}
-
-.category-item.active {
-  background: #1890ff;
-  color: white;
-}
-
-.category-icon {
-  font-size: 24px;
-  margin-bottom: 8px;
-}
-
-.category-name {
-  font-size: 14px;
-  text-align: center;
-}
-
-/* 热门标签 */
-.hot-tags {
-  margin-bottom: 25px;
-  padding: 15px;
-  background: #f9f9f9;
-  border-radius: 8px;
-}
-
-.tags-title {
-  font-weight: 500;
-  margin-right: 10px;
-  color: #333;
-}
-
-.hot-tags .el-tag {
-  margin-right: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.hot-tags .el-tag:hover {
-  transform: scale(1.05);
-}
-
-/* 知识列表 */
-.knowledge-content {
-  margin-bottom: 20px;
-}
-
-.knowledge-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.knowledge-item {
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.knowledge-item:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-}
-
-.item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.item-title {
-  margin: 0;
-  color: #333;
+.search-module h3 {
+  margin: 0 0 8px 0;
   font-size: 18px;
+  color: #303133;
+}
+
+.search-description {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #606266;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+}
+
+.search-box input {
+  flex-grow: 1;
+  height: 44px;
+  padding: 0 16px;
+  font-size: 15px;
+  border: 1px solid #e4e7ed;
+  border-radius: 6px 0 0 6px;
+  outline: none;
+}
+
+.search-box input:focus {
+  border-color: #409EFF;
+}
+
+.search-box button {
+  height: 46px;
+  border: none;
+  background-color: #409EFF;
+  color: #fff;
+  padding: 0 24px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 0 6px 6px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.search-links {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #909399;
+}
+
+.search-links a {
+  color: #606266;
+  text-decoration: none;
+  margin-left: 16px;
+}
+
+.search-links a:hover, .search-links a.active {
+  color: #409EFF;
+}
+
+/* 快速入口网格 */
+.quick-links-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.quick-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+  text-decoration: none;
+  transition: box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.quick-card:hover {
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.quick-card .iconify-c1 { 
+  background-color: #409EFF; 
+  color: #ffffff; 
+}
+.quick-card .iconify-c2 { 
+  background-color: #67C23A; 
+  color: #ffffff; 
+}
+.quick-card .iconify-c3 { 
+  background-color: #E6A23C; 
+  color: #ffffff; 
+}
+.quick-card .iconify-c4 { 
+  background-color: #F56C6C; 
+  color: #ffffff; 
+}
+
+.card-content h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  color: #303133;
+}
+
+.card-content p {
+  margin: 0;
+  font-size: 12px;
+  color: #909399;
+}
+
+.card-content .count {
+  color: #606266;
   font-weight: 500;
 }
 
-.item-category {
-  padding: 4px 12px;
-  background: #e6f7ff;
-  color: #1890ff;
-  border-radius: 4px;
+.card-arrow {
+  margin-left: auto;
+  font-size: 16px;
+  color: #909399;
+}
+
+/* 知识库侧边栏 */
+.knowledge-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-right: 1px solid #e4e7ed;
+  padding: 20px 0;
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+}
+
+.sidebar-header {
+  padding: 0 20px 10px 20px;
+  border-bottom: 1px solid #e4e7ed;
+  margin-bottom: 10px;
+}
+
+.sidebar-header h2 {
+  font-size: 18px;
+  margin: 0 0 4px 0;
+  color: #303133;
+}
+
+.sidebar-header p {
   font-size: 12px;
+  color: #909399;
+  margin: 0;
 }
 
-.item-content {
-  line-height: 1.8;
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.item-summary {
-  color: #666;
-  margin-bottom: 15px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.item-meta {
+.nav-item-title {
   display: flex;
-  gap: 20px;
-  color: #999;
+  align-items: center;
+  padding: 12px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #303133;
+}
+
+.nav-item-title:hover {
+  background-color: #f9fafb;
+}
+
+.nav-item-title i {
+  font-size: 12px;
+  margin-right: 8px;
+  color: #606266;
+  transition: transform 0.2s ease;
+}
+
+.nav-item-title i.rotated {
+  transform: rotate(90deg);
+}
+
+.sub-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fafafa;
+}
+
+.nav-link {
+  display: block;
+  padding: 10px 20px 10px 44px;
+  text-decoration: none;
+  color: #606266;
   font-size: 14px;
+  position: relative;
+  border-left: 4px solid transparent;
+  cursor: pointer;
 }
 
-/* 空状态 */
-.empty-state {
-  padding: 60px 0;
-  text-align: center;
+.nav-link:hover {
+  color: #409EFF;
 }
 
-/* 分页 */
-.pagination-container {
-  margin-top: 30px;
+.nav-link.nav-parent-link {
+  padding: 12px 20px;
+  font-weight: 500;
+  color: #303133;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
 }
 
-/* 详情对话框 */
-.knowledge-detail-dialog .el-dialog__body {
-  max-height: 60vh;
+.nav-link.nav-parent-link:hover {
+  background-color: #f9fafb;
+}
+
+.nav-link.nav-parent-link i {
+  font-size: 12px;
+  margin-right: 8px;
+  color: #606266;
+}
+
+.nav-link.is-active {
+  background-color: #ecf5ff;
+  color: #409EFF;
+  font-weight: 500;
+  border-left-color: #409EFF;
+}
+
+.sidebar-footer {
+  padding: 15px 20px;
+  margin-top: 10px;
+  border-top: 1px solid #e4e7ed;
+}
+
+.sidebar-footer a {
+  text-decoration: none;
+  font-size: 13px;
+  color: #409EFF;
+}
+
+/* 主内容区域 */
+.content-area {
+  flex-grow: 1;
   overflow-y: auto;
 }
 
-.knowledge-detail-content {
-  line-height: 1.8;
+.content-page {
+  display: none;
 }
 
-.detail-header {
+.content-page.is-active {
+  display: block;
+}
+
+.content-section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+}
+
+.section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid #e4e7ed;
+  padding-bottom: 16px;
   margin-bottom: 20px;
 }
 
-.detail-meta {
-  display: flex;
-  gap: 20px;
-  color: #666;
-  font-size: 14px;
+.section-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #303133;
 }
 
-.detail-category {
-  padding: 4px 12px;
-  background: #e6f7ff;
-  color: #1890ff;
+.section-description {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #606266;
+}
+
+.section-header .see-all {
+  text-decoration: none;
+  font-size: 13px;
+  color: #409EFF;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.section-header .actions {
+  display: flex;
+  gap: 16px;
+  order: 1;
+}
+
+.section-header .actions .see-all {
+  order: 0;
+}
+
+/* 指南列表 */
+.guide-list .guide-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px dashed #e4e7ed;
+}
+
+.guide-list .guide-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.guide-icon {
+  font-size: 36px;
+  color: #409EFF;
+}
+
+.guide-content h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #303133;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.guide-title-link:hover {
+  color: #409EFF;
+}
+
+.guide-content p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #606266;
+  line-height: 1.6;
+}
+
+.guide-meta {
+  font-size: 12px;
+  color: #909399;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.guide-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 文章网格 */
+.article-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.article-card {
+  border: 1px solid #e4e7ed;
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.article-image {
+  margin-bottom: 16px;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 120px;
+  background-color: #f5f7fa;
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #909399;
+  font-size: 24px;
+}
+
+.article-card h4 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #303133;
+}
+
+.article-card p {
+  font-size: 13px;
+  color: #606266;
+  line-height: 1.7;
+  margin: 0 0 16px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.tag-list {
+  display: flex;
+  gap: 8px;
+}
+
+.tag-list span {
+  font-size: 12px;
+  background-color: #f5f7fa;
+  color: #606266;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+/* 案例讨论 */
+.case-study-card {
+  border: 1px solid #fceecf;
+  background-color: #fefcf5;
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.case-study-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.case-study-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #303133;
+}
+
+.case-study-header .tag-hot {
+  font-size: 12px;
+  color: #E6A23C;
+  background-color: #fdf6ec;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.case-study-body {
+  font-size: 14px;
+  color: #606266;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.case-study-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #909399;
+}
+
+.case-study-footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.case-study-actions {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px dashed #e4e7ed;
+  font-size: 13px;
+  display: flex;
+  gap: 20px;
+}
+
+.case-study-actions a {
+  text-decoration: none;
+  color: #606266;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.case-study-actions a:hover {
+  color: #409EFF;
+}
+
+/* Q&A 模块 */
+.qa-section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+}
+
+.qa-section h3 {
+  font-size: 18px;
+  margin: 0 0 20px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e4e7ed;
+  color: #303133;
+}
+
+.qa-item {
+  margin-bottom: 24px;
+  border-bottom: 1px dashed #e4e7ed;
+  padding-bottom: 24px;
+}
+
+.qa-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.qa-question, .qa-answer {
+  display: flex;
+  align-items: flex-start;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #606266;
+}
+
+.qa-question {
+  margin-bottom: 16px;
+  color: #303133;
+  font-weight: 500;
+}
+
+.qa-question p, .qa-answer p {
+  margin: 0;
+  padding: 0;
+}
+
+.qa-icon {
+  flex-shrink: 0;
+  font-weight: 700;
+  margin-right: 10px;
+  font-size: 16px;
+  width: 20px;
+}
+
+.qa-icon.q {
+  color: #409EFF;
+}
+
+.qa-icon.a {
+  color: #67C23A;
+}
+
+/* 页面头部样式 */
+.page-header {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.back-to-dashboard-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #409EFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-to-dashboard-btn:hover {
+  background-color: #337ecc;
+  transform: translateY(-1px);
+}
+
+.back-to-dashboard-btn i {
   font-size: 12px;
 }
 
-.detail-stats {
-  display: flex;
-  gap: 20px;
-  color: #666;
+/* 确保知识库标题为黑色 */
+.page-header h1 {
+  color: #000000 !important;
+}
+
+/* 指南详情页 */
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #e4e7ed;
+  background-color: #ffffff;
+  color: #606266;
+  text-decoration: none;
+  border-radius: 4px;
   font-size: 14px;
-}
-
-.detail-stats span {
   cursor: pointer;
-  transition: color 0.3s;
+  transition: all 0.2s ease;
 }
 
-.detail-stats span:hover {
-  color: #f56c6c;
+.btn-back:hover {
+  color: #409EFF;
+  border-color: #ecf5ff;
+  background-color: #ecf5ff;
 }
 
-.detail-body {
-  color: #333;
-  margin-bottom: 20px;
+.guide-content-full {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 32px 40px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
 }
 
-.detail-body h4 {
-  color: #1890ff;
-  margin-top: 20px;
-  margin-bottom: 10px;
+.guide-content-full h1 {
+  font-size: 24px;
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #303133;
 }
 
-.detail-body p {
-  margin-bottom: 10px;
+.guide-content-full h3 {
+  font-size: 18px;
+  margin: 24px 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e4e7ed;
+  color: #303133;
 }
 
-.detail-body ul,
-.detail-body ol {
-  margin-bottom: 10px;
-  padding-left: 20px;
+.guide-content-full p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #606266;
+  margin-bottom: 16px;
 }
 
-.detail-tags {
-  padding-top: 20px;
-  border-top: 1px solid #e8e8e8;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.detail-tags .el-tag {
-  cursor: pointer;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .patient-knowledge-base {
-    padding: 10px;
-  }
-  
-  .category-list {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .category-item {
-    min-width: auto;
-    flex: 1;
-    min-width: 60px;
-  }
-  
-  .hot-tags {
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  
-  .item-header {
+@media (max-width: 1024px) {
+  .patient-knowledge {
+    margin-left: 0;
+    padding: 16px;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
   }
   
-  .item-meta {
-    flex-wrap: wrap;
-    gap: 10px;
+  .knowledge-sidebar {
+    width: 100%;
+    order: 2;
   }
   
-  .detail-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+  .content-area {
+    order: 1;
   }
   
-  .detail-meta {
-    flex-wrap: wrap;
-    gap: 10px;
+  .quick-links-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .article-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

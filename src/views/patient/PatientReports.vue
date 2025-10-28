@@ -1,22 +1,23 @@
 <template>
-  <div class="patient-reports">
-    <div class="page-header">
-      <div>
-        <h1 class="text-2xl font-semibold text-gray-800 mb-1">我的影像报告</h1>
-        <p class="text-sm text-gray-500">在这里您可以查看您的影像检查报告详情，并且支持在线打印和保存</p>
-      </div>
-      <button 
-        class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-200"
-        @click="handleLogout"
-      >
-        <i class="fas fa-sign-out-alt"></i>
-        <span>退出登录</span>
-      </button>
-    </div>
+  <div class="patient-layout">
+    <!-- 患者侧边栏 -->
+    <PatientSidebar 
+      :active-tab="'reports'" 
+      @tab-change="handleTabChange"
+    />
+    
+    <div class="patient-reports">
+      <div class="reports-content">
+        <div class="page-header">
+          <div>
+            <h1 class="text-2xl font-semibold text-gray-800 mb-1">我的影像报告</h1>
+            <p class="text-sm text-gray-500">在这里您可以查看您的影像检查报告详情，并且支持在线打印和保存</p>
+          </div>
+        </div>
 
-    <!-- 筛选区域 -->
-    <div class="bg-white rounded-lg border border-gray-200 p-5 mb-6">
-      <div class="grid grid-cols-4 gap-4 mb-4">
+        <!-- 筛选区域 -->
+        <div class="bg-white rounded-lg border border-gray-200 p-5 mb-6">
+          <div class="grid grid-cols-4 gap-4 mb-4">
         <div>
           <label class="text-sm text-gray-600 mb-2 block">影像类型</label>
           <select 
@@ -98,54 +99,8 @@
       </div>
     </div>
 
-    <div class="flex gap-6">
-      <!-- 左侧边栏 -->
-      <div class="w-64 space-y-6">
-        <!-- 时间轴 -->
-        <div class="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 class="text-gray-800 font-medium mb-4">报告时间轴</h3>
-          <div class="space-y-3">
-            <div 
-              v-for="year in timeline" 
-              :key="year.year"
-              :class="['flex items-center gap-3 p-3 rounded-lg cursor-pointer',
-                year.active ? 'bg-blue-50' : 'hover:bg-gray-50'
-              ]"
-              @click="selectYear(year.year)"
-            >
-              <i :class="['fas fa-calendar', year.active ? 'text-blue-600' : 'text-gray-400']"></i>
-              <div>
-                <div class="text-sm font-medium text-gray-800">{{ year.year }}年</div>
-                <div class="text-xs text-gray-500">{{ year.count }}次影像检查报告</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 检查类型分析 -->
-        <div class="bg-white rounded-lg border border-gray-200 p-5">
-          <h3 class="text-gray-800 font-medium mb-4">检查类型分析</h3>
-          <div class="space-y-3">
-            <div v-for="analysis in analysisData" :key="analysis.type">
-              <div class="flex items-center justify-between text-sm mb-1">
-                <span class="text-gray-600">{{ analysis.type }}</span>
-                <span class="text-gray-800 font-medium">{{ analysis.count }} 次</span>
-              </div>
-              <div class="w-full bg-gray-100 rounded-full h-2">
-                <div 
-                  :class="analysis.bgClass" 
-                  class="h-2 rounded-full" 
-                  :style="{ width: analysis.percentage + '%' }"
-                ></div>
-              </div>
-          </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 主报告列表 -->
-      <div class="flex-1">
-        <div class="bg-white rounded-lg border border-gray-200">
+    <!-- 主报告列表 -->
+    <div class="bg-white rounded-lg border border-gray-200">
           <div class="p-5 border-b border-gray-200 flex items-center justify-between">
             <h2 class="text-lg font-semibold text-gray-800">报告列表</h2>
             <div class="flex gap-2">
@@ -287,11 +242,11 @@
             <div class="text-center">
               <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-2">
                 <i class="fas fa-cloud text-orange-600 text-xl"></i>
-        </div>
+              </div>
               <div class="text-sm font-medium text-gray-800 mb-1">云端储存</div>
               <div class="text-xs text-gray-500">所有报告云端存储，永久保存，随时随地可以查看</div>
-        </div>
-        </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -303,6 +258,7 @@ import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useAuthStore } from '@/stores/auth'
+import PatientSidebar from '@/components/patient/PatientSidebar.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -333,20 +289,6 @@ const currentPage = ref(1)
 const totalPages = ref(3)
 const totalReports = ref(15)
 
-// 时间轴数据
-const timeline = ref([
-  { year: 2023, count: 5, active: true },
-  { year: 2022, count: 3, active: false },
-  { year: 2021, count: 1, active: false }
-])
-
-// 分析数据
-const analysisData = ref([
-  { type: 'MRI检查', count: 5, percentage: 100, bgClass: 'bg-blue-500' },
-  { type: 'CT检查', count: 3, percentage: 60, bgClass: 'bg-blue-400' },
-  { type: 'X光检查', count: 2, percentage: 40, bgClass: 'bg-blue-300' },
-  { type: '超声检查', count: 1, percentage: 20, bgClass: 'bg-blue-200' }
-])
 
 // 报告数据
 const reports = ref([
@@ -447,11 +389,6 @@ const searchReports = () => {
   ElMessage.success('搜索完成')
 }
 
-const selectYear = (year: number) => {
-  timeline.value.forEach(item => {
-    item.active = item.year === year
-  })
-}
 
 const getStatusClass = (status: string) => {
   switch (status) {
@@ -516,14 +453,47 @@ const handleLogout = async () => {
     // 用户取消退出
   }
 }
+
+const handleTabChange = (tab: string) => {
+  switch (tab) {
+    case 'dashboard':
+      router.push('/dashboard/patient');
+      break;
+    case 'reports':
+      router.push('/dashboard/patient/reports');
+      break;
+    case 'appointment':
+      router.push('/dashboard/patient/appointment');
+      break;
+    case 'knowledge':
+      router.push('/dashboard/patient/knowledge');
+      break;
+    case 'settings':
+      router.push('/dashboard/patient/settings');
+      break;
+    case 'help':
+      router.push('/dashboard/patient/help');
+      break;
+  }
+}
 </script>
 
 <style scoped>
-.patient-reports {
+.patient-layout {
   min-height: 100vh;
   background: #f9fafb;
+}
+
+.patient-reports {
   margin-left: 224px;
   padding: 24px;
+  min-height: 100vh;
+  width: calc(100% - 224px);
+}
+
+.reports-content {
+  max-width: 1200px;
+  width: 100%;
 }
 
 .page-header {

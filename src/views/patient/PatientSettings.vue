@@ -1,396 +1,242 @@
 <template>
-  <div class="patient-settings">
-    <div class="page-header">
-      <div>
-        <h1 class="text-2xl font-semibold text-gray-800 mb-1">账户设置</h1>
-        <p class="text-sm text-gray-500">管理您的个人信息和账户安全设置</p>
-      </div>
-      <button 
-        class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-200"
-        @click="handleLogout"
-      >
-        <i class="fas fa-sign-out-alt"></i>
-        <span>退出登录</span>
-      </button>
-    </div>
-
-    <div class="flex gap-6">
-      <!-- 设置导航 -->
-      <div class="w-56">
-        <div class="bg-white rounded-lg border border-gray-200 p-2">
-          <nav class="space-y-1">
-            <a 
-              href="#" 
-              :class="['flex items-center gap-3 px-3 py-2 rounded-lg',
-                activeTab === 'profile' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50'
-              ]"
-              @click.prevent="activeTab = 'profile'"
-            >
-              <i class="fas fa-user"></i>
-              <span>个人信息</span>
-            </a>
-            <a 
-              href="#" 
-              :class="['flex items-center gap-3 px-3 py-2 rounded-lg',
-                activeTab === 'security' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50'
-              ]"
-              @click.prevent="activeTab = 'security'"
-            >
-              <i class="fas fa-lock"></i>
-              <span>安全设置</span>
-            </a>
-            <a 
-              href="#" 
-              :class="['flex items-center gap-3 px-3 py-2 rounded-lg',
-                activeTab === 'notification' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50'
-              ]"
-              @click.prevent="activeTab = 'notification'"
-            >
-              <i class="fas fa-bell"></i>
-              <span>通知设置</span>
-            </a>
-            <a 
-              href="#" 
-              :class="['flex items-center gap-3 px-3 py-2 rounded-lg',
-                activeTab === 'privacy' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50'
-              ]"
-              @click.prevent="activeTab = 'privacy'"
-            >
-              <i class="fas fa-shield-alt"></i>
-              <span>隐私设置</span>
-            </a>
-          </nav>
+  <div class="patient-layout">
+    <!-- 患者侧边栏 -->
+    <PatientSidebar 
+      :active-tab="'settings'" 
+      @tab-change="handleTabChange"
+    />
+    
+    <div class="patient-settings">
+      <div class="page-header">
+        <div>
+          <h1 class="text-2xl font-semibold text-gray-800 mb-1">账户设置</h1>
+          <p class="text-sm text-gray-500">管理您的个人资料、安全设置和偏好</p>
         </div>
       </div>
 
-      <!-- 设置内容 -->
-      <div class="flex-1 space-y-6">
-        <!-- 个人信息 -->
-        <div v-if="activeTab === 'profile'" class="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 class="text-lg font-semibold text-gray-800 mb-4">个人信息</h2>
+      <!-- 两栏布局 -->
+      <div class="settings-container">
+        <!-- 左侧主内容区（可滚动） -->
+        <div class="settings-list">
           
-          <!-- 头像 -->
-          <div class="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200">
-            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
-              <span class="text-blue-600 text-2xl">{{ userInfo.name.charAt(0) }}</span>
+          <!-- 卡片1: 个人资料 -->
+          <div class="setting-card" id="profile">
+            <div class="setting-card-icon">
+              <i class="fas fa-user"></i>
             </div>
-            <div>
-              <button 
-                class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"
-                @click="changeAvatar"
-              >
-                更换头像
-              </button>
-              <p class="text-xs text-gray-500 mt-2">支持 JPG、PNG 格式，文件大小不超过 2MB</p>
-            </div>
-          </div>
+            <div class="setting-card-content">
+              <h2 class="setting-card-title">个人资料</h2>
+              
+              <!-- 头像 -->
+              <div class="setting-item">
+                <label class="setting-label">头像</label>
+                <div class="flex items-center gap-4">
+                  <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-blue-600 text-xl">{{ userInfo.name.charAt(0) }}</span>
+                  </div>
+                  <div>
+                    <button 
+                      class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"
+                      @click="changeAvatar"
+                    >
+                      上传新头像
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-          <!-- 表单字段 -->
-          <div class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">姓名</label>
+              <!-- 表单字段 -->
+              <div class="setting-item">
+                <label class="setting-label">昵称</label>
                 <input 
                   v-model="userInfo.name"
                   type="text" 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="setting-input"
+                  placeholder="请输入昵称"
                 >
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">性别</label>
+
+              <div class="setting-item">
+                <label class="setting-label">电子邮箱</label>
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-600">j***@example.com</span>
+                  <a href="#" class="text-blue-600 hover:underline text-sm">更改</a>
+                </div>
+              </div>
+
+              <div class="setting-item">
+                <label class="setting-label">性别</label>
                 <select 
                   v-model="userInfo.gender"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="setting-input"
                 >
                   <option value="男">男</option>
                   <option value="女">女</option>
                 </select>
               </div>
-            </div>
 
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">出生日期</label>
+              <div class="setting-item">
+                <label class="setting-label">出生日期</label>
                 <input 
                   v-model="userInfo.birthDate"
                   type="date" 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="setting-input"
                 >
               </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">身份证号</label>
-                <input 
-                  v-model="userInfo.idCard"
-                  type="text" 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-              </div>
-            </div>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">手机号码</label>
-              <div class="flex gap-2">
+              <div class="setting-item">
+                <label class="setting-label">手机号码</label>
                 <input 
                   v-model="userInfo.phone"
                   type="tel" 
-                  class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="setting-input"
                 >
-                <button 
-                  class="text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50"
-                  @click="changePhone"
-                >
-                  修改
-                </button>
               </div>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">电子邮箱</label>
-              <div class="flex gap-2">
-                <input 
-                  v-model="userInfo.email"
-                  type="email" 
-                  class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                <button 
-                  class="text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50"
-                  @click="changeEmail"
-                >
-                  修改
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">联系地址</label>
-              <input 
-                v-model="userInfo.address"
-                type="text" 
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
             </div>
           </div>
 
-          <div class="flex justify-end gap-3 mt-6 pt-6 border-t border-gray-200">
+          <!-- 卡片2: 安全设置 -->
+          <div class="setting-card" id="security">
+            <div class="setting-card-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="setting-card-content">
+              <h2 class="setting-card-title">安全设置</h2>
+              
+              <div class="setting-item">
+                <label class="setting-label">登录密码</label>
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-600">********</span>
+                  <a href="#" class="text-blue-600 hover:underline text-sm">更改</a>
+                </div>
+              </div>
+
+              <div class="setting-item">
+                <label class="setting-label">两步验证 (2FA)</label>
+                <div class="flex items-center justify-between">
+                  <span class="text-green-600">已启用</span>
+                  <button class="setting-btn-secondary">管理</button>
+                </div>
+              </div>
+
+              <div class="setting-item">
+                <label class="setting-label">登录设备管理</label>
+                <p class="text-sm text-gray-500 mb-3">当前有 2 台设备登录</p>
+                <button class="setting-btn-secondary">查看所有设备</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 卡片3: 通知设置 -->
+          <div class="setting-card" id="notification">
+            <div class="setting-card-icon">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div class="setting-card-content">
+              <h2 class="setting-card-title">通知设置</h2>
+              
+              <div class="setting-item">
+                <label class="checkbox-label">
+                  <input 
+                    v-model="notificationSettings.email"
+                    type="checkbox"
+                    class="setting-checkbox"
+                  >
+                  <span>邮件通知（活动与更新）</span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <label class="checkbox-label">
+                  <input 
+                    v-model="notificationSettings.inApp"
+                    type="checkbox"
+                    class="setting-checkbox"
+                  >
+                  <span>站内信通知（系统消息）</span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <label class="checkbox-label">
+                  <input 
+                    v-model="notificationSettings.sms"
+                    type="checkbox"
+                    class="setting-checkbox"
+                  >
+                  <span>短信通知（重要安全警报）</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 卡片4: 偏好设置 -->
+          <div class="setting-card" id="preference">
+            <div class="setting-card-icon">
+              <i class="fas fa-cog"></i>
+            </div>
+            <div class="setting-card-content">
+              <h2 class="setting-card-title">偏好设置</h2>
+              
+              <div class="setting-item">
+                <label class="setting-label">语言</label>
+                <select class="setting-input">
+                  <option>简体中文</option>
+                  <option>English</option>
+                </select>
+              </div>
+
+              <div class="setting-item">
+                <label class="setting-label">时区</label>
+                <select class="setting-input">
+                  <option>中国标准时间 (UTC+8)</option>
+                  <option>美国东部时间 (UTC-5)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 右侧导航与操作区（固定） -->
+        <div class="settings-sidebar">
+          <div class="sidebar-card">
+            <h3 class="sidebar-title">页面导航</h3>
+            <div class="sidebar-nav">
+              <a href="#profile" class="sidebar-nav-item" @click.prevent="scrollToSection('profile')">
+                <i class="fas fa-circle"></i>
+                <span>个人资料</span>
+              </a>
+              <a href="#security" class="sidebar-nav-item" @click.prevent="scrollToSection('security')">
+                <i class="fas fa-circle"></i>
+                <span>安全设置</span>
+              </a>
+              <a href="#notification" class="sidebar-nav-item" @click.prevent="scrollToSection('notification')">
+                <i class="fas fa-circle"></i>
+                <span>通知设置</span>
+              </a>
+              <a href="#preference" class="sidebar-nav-item" @click.prevent="scrollToSection('preference')">
+                <i class="fas fa-circle"></i>
+                <span>偏好设置</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="sidebar-actions">
             <button 
-              class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-              @click="resetProfile"
+              class="sidebar-btn-primary"
+              @click="saveSettings"
             >
-              取消
+              <i class="fas fa-save mr-2"></i>
+              保存更改
             </button>
             <button 
-              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              @click="saveProfile"
+              class="sidebar-btn-secondary"
+              @click="goBack"
             >
-              保存修改
+              <i class="fas fa-arrow-left mr-2"></i>
+              返回
             </button>
-          </div>
-        </div>
-
-        <!-- 安全设置 -->
-        <div v-if="activeTab === 'security'" class="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 class="text-lg font-semibold text-gray-800 mb-4">安全设置</h2>
-          
-          <div class="space-y-4">
-            <div class="flex items-center justify-between py-3 border-b border-gray-200">
-              <div>
-                <div class="font-medium text-gray-800">登录密码</div>
-                <div class="text-sm text-gray-500">定期更换密码可以提高账户安全性</div>
-              </div>
-              <button 
-                class="text-blue-600 hover:underline"
-                @click="changePassword"
-              >
-                修改
-              </button>
-            </div>
-
-            <div class="flex items-center justify-between py-3 border-b border-gray-200">
-              <div>
-                <div class="font-medium text-gray-800">手机验证</div>
-                <div class="text-sm text-gray-500">已绑定手机：{{ userInfo.phone }}</div>
-              </div>
-              <button 
-                class="text-blue-600 hover:underline"
-                @click="changePhone"
-              >
-                更换
-              </button>
-            </div>
-
-            <div class="flex items-center justify-between py-3 border-b border-gray-200">
-              <div>
-                <div class="font-medium text-gray-800">邮箱验证</div>
-                <div class="text-sm text-gray-500">已绑定邮箱：{{ userInfo.email }}</div>
-              </div>
-              <button 
-                class="text-blue-600 hover:underline"
-                @click="changeEmail"
-              >
-                更换
-              </button>
-            </div>
-
-            <div class="flex items-center justify-between py-3">
-              <div>
-                <div class="font-medium text-gray-800">两步验证</div>
-                <div class="text-sm text-gray-500">开启后登录需要额外验证码</div>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input 
-                  v-model="securitySettings.twoFactorAuth"
-                  type="checkbox" 
-                  class="sr-only peer"
-                >
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 通知设置 -->
-        <div v-if="activeTab === 'notification'" class="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 class="text-lg font-semibold text-gray-800 mb-4">通知设置</h2>
-          
-          <div class="space-y-4">
-            <div class="flex items-center justify-between py-3 border-b border-gray-200">
-              <div>
-                <div class="font-medium text-gray-800">检查结果通知</div>
-                <div class="text-sm text-gray-500">检查完成后通过短信和邮件通知</div>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input 
-                  v-model="notificationSettings.examResult"
-                  type="checkbox" 
-                  class="sr-only peer"
-                >
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-
-            <div class="flex items-center justify-between py-3 border-b border-gray-200">
-              <div>
-                <div class="font-medium text-gray-800">预约提醒</div>
-                <div class="text-sm text-gray-500">预约前24小时和2小时提醒</div>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input 
-                  v-model="notificationSettings.appointmentReminder"
-                  type="checkbox" 
-                  class="sr-only peer"
-                >
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-
-            <div class="flex items-center justify-between py-3 border-b border-gray-200">
-              <div>
-                <div class="font-medium text-gray-800">健康建议</div>
-                <div class="text-sm text-gray-500">定期推送健康知识和建议</div>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input 
-                  v-model="notificationSettings.healthTips"
-                  type="checkbox" 
-                  class="sr-only peer"
-                >
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-
-            <div class="flex items-center justify-between py-3">
-              <div>
-                <div class="font-medium text-gray-800">系统通知</div>
-                <div class="text-sm text-gray-500">系统维护和重要更新通知</div>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input 
-                  v-model="notificationSettings.systemNotification"
-                  type="checkbox" 
-                  class="sr-only peer"
-                >
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 隐私设置 -->
-        <div v-if="activeTab === 'privacy'" class="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 class="text-lg font-semibold text-gray-800 mb-4">隐私设置</h2>
-          
-          <div class="space-y-4">
-            <div class="flex items-center justify-between py-3 border-b border-gray-200">
-              <div>
-                <div class="font-medium text-gray-800">数据收集</div>
-                <div class="text-sm text-gray-500">允许收集匿名使用数据以改善服务</div>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input 
-                  v-model="privacySettings.dataCollection"
-                  type="checkbox" 
-                  class="sr-only peer"
-                >
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-
-            <div class="flex items-center justify-between py-3 border-b border-gray-200">
-              <div>
-                <div class="font-medium text-gray-800">个性化推荐</div>
-                <div class="text-sm text-gray-500">基于您的健康数据提供个性化建议</div>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input 
-                  v-model="privacySettings.personalizedRecommendation"
-                  type="checkbox" 
-                  class="sr-only peer"
-                >
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-
-            <div class="flex items-center justify-between py-3">
-              <div>
-                <div class="font-medium text-gray-800">第三方分享</div>
-                <div class="text-sm text-gray-500">允许与医疗机构分享您的健康数据</div>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input 
-                  v-model="privacySettings.thirdPartySharing"
-                  type="checkbox" 
-                  class="sr-only peer"
-                >
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <!-- 账户信息 -->
-        <div class="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 class="text-lg font-semibold text-gray-800 mb-4">账户信息</h2>
-          
-          <div class="space-y-3">
-            <div class="flex justify-between py-2">
-              <span class="text-gray-600">账户ID</span>
-              <span class="text-gray-800">{{ userInfo.id }}</span>
-            </div>
-            <div class="flex justify-between py-2">
-              <span class="text-gray-600">注册时间</span>
-              <span class="text-gray-800">{{ userInfo.registerDate }}</span>
-            </div>
-            <div class="flex justify-between py-2">
-              <span class="text-gray-600">最后登录</span>
-              <span class="text-gray-800">{{ userInfo.lastLogin }}</span>
-            </div>
-            <div class="flex justify-between py-2">
-              <span class="text-gray-600">账户状态</span>
-              <span class="text-green-600 flex items-center gap-1">
-                <i class="fas fa-check-circle"></i>
-                正常
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -401,557 +247,327 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { useAuthStore } from '@/stores/auth'
+import { ElMessage } from 'element-plus'
+import PatientSidebar from '@/components/patient/PatientSidebar.vue'
 
 const router = useRouter()
-const authStore = useAuthStore()
-
-// 当前活跃的标签页
-const activeTab = ref('profile')
 
 // 用户信息
 const userInfo = reactive({
   name: '张老师',
   gender: '男',
-  birthDate: '1985-06-15',
-  idCard: '320***********1234',
-  phone: '138****5678',
-  email: 'zhang***@email.com',
-  address: '江苏省南京市玄武区中山路123号',
-  id: '2023051008',
-  registerDate: '2023年5月10日',
-  lastLogin: '2023年8月20日 14:32'
-})
-
-// 安全设置
-const securitySettings = reactive({
-  twoFactorAuth: false
+  birthDate: '1990-01-01',
+  phone: '13800138000'
 })
 
 // 通知设置
 const notificationSettings = reactive({
-  examResult: true,
-  appointmentReminder: true,
-  healthTips: false,
-  systemNotification: true
-})
-
-// 隐私设置
-const privacySettings = reactive({
-  dataCollection: true,
-  personalizedRecommendation: true,
-  thirdPartySharing: false
+  email: true,
+  inApp: true,
+  sms: false
 })
 
 // 方法
-const changeAvatar = () => {
-  ElMessage.info('头像更换功能开发中...')
-}
-
-const changePhone = () => {
-  ElMessageBox.prompt('请输入新的手机号码', '修改手机号', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    inputPattern: /^1[3-9]\d{9}$/,
-    inputErrorMessage: '请输入正确的手机号码'
-  }).then(({ value }) => {
-    userInfo.phone = value
-    ElMessage.success('手机号码修改成功')
-  }).catch(() => {
-    // 用户取消
-  })
-}
-
-const changeEmail = () => {
-  ElMessageBox.prompt('请输入新的邮箱地址', '修改邮箱', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    inputPattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    inputErrorMessage: '请输入正确的邮箱地址'
-  }).then(({ value }) => {
-    userInfo.email = value
-    ElMessage.success('邮箱地址修改成功')
-  }).catch(() => {
-    // 用户取消
-  })
-}
-
-const changePassword = () => {
-  ElMessageBox.prompt('请输入新密码', '修改密码', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    inputType: 'password'
-  }).then(({ value }) => {
-    ElMessage.success('密码修改成功')
-  }).catch(() => {
-    // 用户取消
-  })
-}
-
-const saveProfile = () => {
-  ElMessage.success('个人信息保存成功')
-}
-
-const resetProfile = () => {
-  ElMessage.info('已重置为原始信息')
-}
-
-const handleLogout = async () => {
-  try {
-    await ElMessageBox.confirm('确定要退出登录吗？', '退出确认', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    })
-    
-    authStore.logout()
-    ElMessage.success('已退出登录')
-    router.push('/')
-  } catch (error) {
-    // 用户取消退出
+const handleTabChange = (tab: string) => {
+  switch (tab) {
+    case 'dashboard':
+      router.push('/dashboard/patient')
+      break
+    case 'reports':
+      router.push('/dashboard/patient/reports')
+      break
+    case 'appointment':
+      router.push('/dashboard/patient/appointment')
+      break
+    case 'settings':
+      router.push('/dashboard/patient/settings')
+      break
+    case 'help':
+      router.push('/dashboard/patient/help')
+      break
+    case 'knowledge':
+      router.push('/dashboard/patient/knowledge')
+      break
   }
+}
+
+const changeAvatar = () => {
+  ElMessage.info('头像更换功能开发中')
+}
+
+const scrollToSection = (sectionId: string) => {
+  const element = document.getElementById(sectionId)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
+
+const saveSettings = () => {
+  ElMessage.success('设置保存成功')
+}
+
+const goBack = () => {
+  router.push('/dashboard/patient')
 }
 </script>
 
 <style scoped>
-.patient-settings {
+.patient-layout {
   min-height: 100vh;
   background: #f9fafb;
+}
+
+.patient-settings {
   margin-left: 224px;
   padding: 24px;
+  min-height: 100vh;
+  width: calc(100% - 224px);
 }
 
 .page-header {
   margin-bottom: 24px;
 }
 
-.page-header h1 {
-  margin: 0;
-  color: #1f2937;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.page-header p {
-  margin: 4px 0 0 0;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-.flex {
-  display: flex;
-}
-
-.gap-6 {
+/* 两栏布局容器 */
+.settings-container {
+  display: grid;
+  grid-template-columns: 1fr 300px;
   gap: 24px;
 }
 
-.w-56 {
-  width: 224px;
-}
-
-.bg-white {
-  background-color: #ffffff;
-}
-
-.rounded-lg {
-  border-radius: 8px;
-}
-
-.border {
-  border-width: 1px;
-}
-
-.border-gray-200 {
-  border-color: #e5e7eb;
-}
-
-.p-2 {
-  padding: 8px;
-}
-
-.p-6 {
-  padding: 24px;
-}
-
-.space-y-1 > * + * {
-  margin-top: 4px;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.gap-3 {
-  gap: 12px;
-}
-
-.px-3 {
-  padding-left: 12px;
-  padding-right: 12px;
-}
-
-.py-2 {
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
-.text-blue-600 {
-  color: #2563eb;
-}
-
-.bg-blue-50 {
-  background-color: #eff6ff;
-}
-
-.text-gray-700 {
-  color: #374151;
-}
-
-.hover\:bg-gray-50:hover {
-  background-color: #f9fafb;
-}
-
-.flex-1 {
-  flex: 1 1 0%;
-}
-
-.space-y-6 > * + * {
-  margin-top: 24px;
-}
-
-.text-lg {
-  font-size: 18px;
-  line-height: 28px;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.text-gray-800 {
-  color: #1f2937;
-}
-
-.mb-4 {
-  margin-bottom: 16px;
-}
-
-.mb-6 {
-  margin-bottom: 24px;
-}
-
-.pb-6 {
-  padding-bottom: 24px;
-}
-
-.border-b {
-  border-bottom-width: 1px;
-}
-
-.border-gray-200 {
-  border-color: #e5e7eb;
-}
-
-.w-20 {
-  width: 80px;
-}
-
-.h-20 {
-  height: 80px;
-}
-
-.bg-blue-100 {
-  background-color: #dbeafe;
-}
-
-.text-blue-600 {
-  color: #2563eb;
-}
-
-.text-2xl {
-  font-size: 24px;
-  line-height: 32px;
-}
-
-.bg-blue-600 {
-  background-color: #2563eb;
-}
-
-.text-white {
-  color: #ffffff;
-}
-
-.text-sm {
-  font-size: 14px;
-  line-height: 20px;
-}
-
-.hover\:bg-blue-700:hover {
-  background-color: #1d4ed8;
-}
-
-.text-xs {
-  font-size: 12px;
-  line-height: 16px;
-}
-
-.text-gray-500 {
-  color: #6b7280;
-}
-
-.mt-2 {
-  margin-top: 8px;
-}
-
-.space-y-4 > * + * {
-  margin-top: 16px;
-}
-
-.grid {
-  display: grid;
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.gap-4 {
+/* 左侧列表区 */
+.settings-list {
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 
-.block {
+/* 设置卡片 */
+.setting-card {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  display: flex;
+  transition: all 0.2s ease;
+}
+
+.setting-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* 卡片图标 */
+.setting-card-icon {
+  width: 60px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.setting-card-icon i {
+  font-size: 24px;
+  color: #3b82f6;
+}
+
+/* 卡片内容 */
+.setting-card-content {
+  flex: 1;
+  padding: 24px;
+}
+
+.setting-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 20px;
+}
+
+/* 设置项 */
+.setting-item {
+  margin-bottom: 20px;
+}
+
+.setting-label {
   display: block;
-}
-
-.font-medium {
+  font-size: 14px;
   font-weight: 500;
-}
-
-.text-gray-700 {
   color: #374151;
-}
-
-.mb-2 {
   margin-bottom: 8px;
 }
 
-.w-full {
+.setting-input {
   width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-.px-3 {
-  padding-left: 12px;
-  padding-right: 12px;
+.setting-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.py-2 {
-  padding-top: 8px;
-  padding-bottom: 8px;
+.setting-btn-secondary {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.border-gray-300 {
-  border-color: #d1d5db;
+.setting-btn-secondary:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
 }
 
-.focus\:outline-none:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+/* 复选框样式 */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
 }
 
-.focus\:ring-2:focus {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-}
-
-.focus\:ring-blue-500:focus {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-}
-
-.border-blue-600 {
-  border-color: #2563eb;
-}
-
-.hover\:bg-blue-50:hover {
-  background-color: #eff6ff;
-}
-
-.justify-end {
-  justify-content: flex-end;
-}
-
-.gap-3 {
-  gap: 12px;
-}
-
-.mt-6 {
-  margin-top: 24px;
-}
-
-.pt-6 {
-  padding-top: 24px;
-}
-
-.border-t {
-  border-top-width: 1px;
-}
-
-.hover\:bg-gray-50:hover {
-  background-color: #f9fafb;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.py-3 {
-  padding-top: 12px;
-  padding-bottom: 12px;
-}
-
-.text-gray-600 {
-  color: #4b5563;
-}
-
-.hover\:underline:hover {
-  text-decoration: underline;
-}
-
-.relative {
-  position: relative;
-}
-
-.inline-flex {
-  display: inline-flex;
-}
-
-.cursor-pointer {
+.setting-checkbox {
+  width: 16px;
+  height: 16px;
   cursor: pointer;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
+/* 右侧边栏 */
+.settings-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 24px;
+  height: fit-content;
 }
 
-.peer:focus ~ .peer-focus\:outline-none {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+.sidebar-card {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  padding: 16px;
 }
 
-.peer:focus ~ .peer-focus\:ring-4 {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+.sidebar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 12px;
 }
 
-.peer:focus ~ .peer-focus\:ring-blue-300 {
-  box-shadow: 0 0 0 2px rgba(147, 197, 253, 0.5);
-}
-
-.w-11 {
-  width: 44px;
-}
-
-.h-6 {
-  height: 24px;
-}
-
-.bg-gray-200 {
-  background-color: #e5e7eb;
-}
-
-.peer-checked\:after\:translate-x-full:checked::after {
-  transform: translateX(100%);
-}
-
-.peer-checked\:after\:border-white:checked::after {
-  border-color: #ffffff;
-}
-
-.peer-checked\:bg-blue-600:checked {
-  background-color: #2563eb;
-}
-
-.after\:content-\[\'\'\]:after {
-  content: '';
-}
-
-.after\:absolute:after {
-  position: absolute;
-}
-
-.after\:top-\[2px\]:after {
-  top: 2px;
-}
-
-.after\:left-\[2px\]:after {
-  left: 2px;
-}
-
-.after\:bg-white:after {
-  background-color: #ffffff;
-}
-
-.after\:border-gray-300:after {
-  border-color: #d1d5db;
-}
-
-.after\:border:after {
-  border-width: 1px;
-}
-
-.after\:rounded-full:after {
-  border-radius: 9999px;
-}
-
-.after\:h-5:after {
-  height: 20px;
-}
-
-.after\:w-5:after {
-  width: 20px;
-}
-
-.after\:transition-all:after {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-.space-y-3 > * + * {
-  margin-top: 12px;
-}
-
-.text-green-600 {
-  color: #16a34a;
-}
-
-.gap-1 {
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
   gap: 4px;
 }
 
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  color: #6b7280;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav-item:hover {
+  background: #f3f4f6;
+  color: #3b82f6;
+}
+
+.sidebar-nav-item i {
+  font-size: 6px;
+}
+
+/* 操作按钮 */
+.sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-btn-primary:hover {
+  background: #2563eb;
+}
+
+.sidebar-btn-secondary {
+  width: 100%;
+  padding: 12px;
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-btn-secondary:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+/* 响应式设计 */
 @media (max-width: 1024px) {
+  .settings-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .settings-sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
   .patient-settings {
     margin-left: 0;
     padding: 16px;
-  }
-  
-  .flex {
-    flex-direction: column;
-  }
-  
-  .w-56 {
     width: 100%;
   }
   
-  .grid-cols-2 {
-    grid-template-columns: 1fr;
+  .setting-card {
+    flex-direction: column;
+  }
+  
+  .setting-card-icon {
+    width: 100%;
+    height: 60px;
   }
 }
 </style>

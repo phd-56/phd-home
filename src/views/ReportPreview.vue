@@ -335,16 +335,22 @@ const getPrintStyles = () => `
     padding: 20px;
     background: #f5f5f5;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
   .preview-toolbar {
     display: flex;
+    justify-content: center;
     gap: 12px;
     margin-bottom: 20px;
     padding: 16px;
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-width: 210mm;
+    width: 100%;
   }
   
   .print-content {
@@ -357,6 +363,7 @@ const getPrintStyles = () => `
     line-height: 2;
     min-height: 297mm;
     font-size: 16pt;
+    width: 100%;
   }
   
   .printing {
@@ -486,6 +493,42 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.report-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+.preview-toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width: 210mm;
+  width: 100%;
+}
+
+.print-content {
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 25mm;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'SimSun', '宋体', serif;
+  line-height: 2;
+  min-height: 297mm;
+  font-size: 16pt;
+  width: 100%;
+}
+
 /* 移动端适配 */
 @media (max-width: 768px) {
   .report-preview {

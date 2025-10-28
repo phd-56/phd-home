@@ -6,6 +6,8 @@ import router from './router'
 import './assets/main.css'  // 引入Tailwind样式
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/display.css'
+// 引入Font Awesome图标库
+import '@fortawesome/fontawesome-free/css/all.min.css'
 
 // Element Plus 导入
 import ElementPlus from 'element-plus'

@@ -18,22 +18,15 @@
             <h1 class="text-2xl font-semibold text-gray-800 mb-1">我的工作台</h1>
             <p class="text-sm text-gray-500">欢迎回来，张老师！在这里您可以查看您的健康管理中心</p>
           </div>
-          <div class="header-actions">
-            <button 
-              class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
-              @click="goToAppointment"
-            >
-              <i class="fas fa-calendar-plus"></i>
-              <span>预约检查</span>
-            </button>
-            <button 
-              class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-200 ml-3"
-              @click="handleLogout"
-            >
-              <i class="fas fa-sign-out-alt"></i>
-              <span>退出登录</span>
-            </button>
-          </div>
+                  <div class="header-actions">
+                    <button 
+                      class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
+                      @click="goToAppointment"
+                    >
+                      <i class="fas fa-calendar-plus"></i>
+                      <span>预约检查</span>
+                    </button>
+                  </div>
         </div>
 
         <div class="flex gap-6">
@@ -310,6 +303,9 @@ const handleTabChange = (tab: string) => {
     case 'appointment':
       router.push('/dashboard/patient/appointment');
       break;
+    case 'knowledge':
+      router.push('/dashboard/patient/knowledge');
+      break;
     case 'settings':
       router.push('/dashboard/patient/settings');
       break;
@@ -328,13 +324,11 @@ const handleLogout = () => {
 
 <style scoped>
 .patient-layout {
-  display: flex;
   min-height: 100vh;
   background: #f9fafb;
 }
 
 .patient-dashboard {
-  flex: 1;
   margin-left: 224px;
   padding: 24px;
   min-height: 100vh;
