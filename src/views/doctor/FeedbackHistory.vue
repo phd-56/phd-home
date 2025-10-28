@@ -1,637 +1,885 @@
 <template>
-  <div class="feedback-history-container">
+  <div class="feedback-history">
+    <!-- 顶部导航栏 -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">H</div>
+        <span class="header-title">医学影像诊断系统</span>
+      </div>
+      <div class="header-right">
+        <div class="notification">🔔</div>
+        <a href="#" class="edit-link">编辑车</a>
+      </div>
+    </header>
+
+    <div class="container">
     <!-- 页面标题 -->
     <div class="page-header">
-      <h1 class="text-2xl font-bold text-gray-800">反馈历史记录</h1>
-      <p class="text-gray-500 mt-1">查看和管理您提交的AI诊断反馈记录</p>
+        <h1 class="page-title">反馈历史</h1>
+        <p class="page-subtitle">查看您提交的所有反馈记录和处理状态</p>
     </div>
 
-    <!-- 搜索和筛选区域 -->
-    <div class="filter-bar bg-white rounded-lg shadow-sm p-4 mb-6">
-      <div class="flex flex-wrap gap-4">
-        <div class="flex-grow min-w-[200px]">
-          <el-input 
-            v-model="searchKeyword" 
-            placeholder="搜索病例ID、反馈内容..." 
-            prefix-icon="Search"
-            size="default"
-            class="w-full"
-          />
+      <!-- 筛选和搜索 -->
+      <div class="filter-section">
+        <div class="filter-row">
+          <div class="filter-item">
+            <label class="filter-label">状态筛选</label>
+            <select v-model="statusFilter" class="filter-select" @change="filterFeedbacks">
+              <option value="">全部状态</option>
+              <option value="pending">待处理</option>
+              <option value="processing">处理中</option>
+              <option value="resolved">已解决</option>
+              <option value="closed">已关闭</option>
+            </select>
         </div>
-        <div class="w-[200px]">
-          <el-select 
-            v-model="feedbackType" 
-            placeholder="反馈类型" 
-            size="default"
-            class="w-full"
-          >
-            <el-option label="全部类型" value="" />
-            <el-option label="诊断准确性" value="accuracy" />
-            <el-option label="病灶识别" value="detection" />
-            <el-option label="报告内容" value="report" />
-            <el-option label="系统功能" value="system" />
-          </el-select>
+          <div class="filter-item">
+            <label class="filter-label">分类筛选</label>
+            <select v-model="categoryFilter" class="filter-select" @change="filterFeedbacks">
+              <option value="">全部分类</option>
+              <option value="diagnosis">诊断准确性问题</option>
+              <option value="performance">系统性能问题</option>
+              <option value="interface">界面交互问题</option>
+              <option value="data">数据处理问题</option>
+            </select>
         </div>
-        <div class="w-[200px]">
-          <el-select 
-            v-model="feedbackStatus" 
-            placeholder="处理状态" 
-            size="default"
-            class="w-full"
-          >
-            <el-option label="全部状态" value="" />
-            <el-option label="待处理" value="pending" />
-            <el-option label="处理中" value="processing" />
-            <el-option label="已解决" value="resolved" />
-            <el-option label="已拒绝" value="rejected" />
-          </el-select>
-        </div>
-        <div class="w-[220px]">
-          <el-date-picker
-            v-model="dateRange"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            size="default"
-            class="w-full"
-          />
-        </div>
-        <div>
-          <el-button 
-            type="primary" 
-            size="default"
-            @click="fetchFeedbackList"
-          >
-            <el-icon><Search /></el-icon> 搜索
-          </el-button>
+          <div class="filter-item">
+            <label class="filter-label">搜索</label>
+            <input 
+              type="text" 
+              v-model="searchKeyword"
+              class="filter-input" 
+              placeholder="搜索反馈标题或内容"
+              @input="filterFeedbacks"
+            >
         </div>
       </div>
     </div>
 
     <!-- 反馈列表 -->
-    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-      <el-table 
-        v-loading="loading"
-        :data="feedbackList" 
-        border
-        stripe
-        class="w-full"
-        :header-cell-style="{ 'background-color': '#f5f7fa', 'font-weight': 'bold' }"
-      >
-        <el-table-column type="index" label="序号" width="60" align="center" />
-        <el-table-column prop="caseId" label="病例ID" width="140" align="center">
-          <template #default="scope">
-            <el-link type="primary" @click="viewCaseDetail(scope.row.caseId)">{{ scope.row.caseId }}</el-link>
-          </template>
-        </el-table-column>
-        <el-table-column prop="feedbackType" label="反馈类型" width="120" align="center">
-          <template #default="scope">
-            <el-tag :type="getFeedbackTypeTagType(scope.row.feedbackType)">
-              {{ getFeedbackTypeName(scope.row.feedbackType) }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="content" label="反馈内容" min-width="250">
-          <template #default="scope">
-            <div class="line-clamp-2" :title="scope.row.content">{{ scope.row.content }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="status" label="状态" width="120" align="center">
-          <template #default="scope">
-            <el-tag :type="getFeedbackStatusTagType(scope.row.status)">
-              {{ getFeedbackStatusName(scope.row.status) }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="submittedAt" label="提交时间" width="180" align="center" />
-        <el-table-column prop="processedAt" label="处理时间" width="180" align="center" />
-        <el-table-column label="操作" width="160" align="center">
-          <template #default="scope">
-            <el-button 
-              type="text" 
-              size="small" 
-              @click="viewFeedbackDetail(scope.row.id)"
-              v-if="scope.row.status !== 'pending'"
+      <div class="feedback-list">
+        <div v-if="filteredFeedbacks.length === 0" class="empty-state">
+          <div class="empty-icon">📝</div>
+          <h3>暂无反馈记录</h3>
+          <p>您还没有提交过任何反馈</p>
+          <button class="btn btn-primary" @click="goToFeedback">去提交反馈</button>
+        </div>
+
+        <div v-else>
+          <div 
+            v-for="feedback in paginatedFeedbacks" 
+            :key="feedback.id"
+            class="feedback-item"
+            @click="viewFeedbackDetail(feedback)"
+          >
+            <div class="feedback-header">
+              <div class="feedback-title">{{ feedback.title }}</div>
+              <div class="feedback-status" :class="feedback.status">
+                {{ getStatusText(feedback.status) }}
+              </div>
+            </div>
+            
+            <div class="feedback-meta">
+              <div class="meta-item">
+                <span class="meta-label">分类:</span>
+                <span class="meta-value">{{ getCategoryText(feedback.category) }}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">严重程度:</span>
+                <span class="meta-value">{{ getSeverityText(feedback.severity) }}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">提交时间:</span>
+                <span class="meta-value">{{ formatDate(feedback.timestamp) }}</span>
+              </div>
+            </div>
+
+            <div class="feedback-content">
+              <p>{{ feedback.description.substring(0, 100) }}{{ feedback.description.length > 100 ? '...' : '' }}</p>
+            </div>
+
+            <div class="feedback-actions">
+              <button 
+                class="action-btn view-btn"
+                @click.stop="viewFeedbackDetail(feedback)"
             >
               查看详情
-            </el-button>
-            <el-button 
-              type="text" 
-              size="small" 
-              @click="editFeedback(scope.row.id)"
-              v-if="scope.row.status === 'pending'"
-            >
-              编辑
-            </el-button>
-            <el-divider direction="vertical" v-if="scope.row.status === 'pending'" />
-            <el-button 
-              type="text" 
-              size="small" 
-              text-color="#ff4d4f"
-              @click="deleteFeedback(scope.row.id)"
-              v-if="scope.row.status === 'pending'"
-            >
-              删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+              </button>
+              <button 
+                v-if="feedback.status === 'pending'"
+                class="action-btn edit-btn"
+                @click.stop="editFeedback(feedback)"
+              >
+                编辑
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- 分页 -->
-      <div class="pagination-container p-4 flex justify-between items-center border-t">
-        <div class="text-gray-500 text-sm">
-          共 {{ total }} 条记录，当前显示第 {{ (currentPage - 1) * pageSize + 1 }}-{{ Math.min(currentPage * pageSize, total) }} 条
-        </div>
-        <el-pagination
-          v-model:current-page="currentPage"
-          v-model:page-size="pageSize"
-          :page-sizes="[10, 20, 50, 100]"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
+      <div v-if="totalPages > 1" class="pagination">
+        <button 
+          class="page-btn"
+          :disabled="currentPage === 1"
+          @click="goToPage(currentPage - 1)"
+        >
+          上一页
+        </button>
+        
+        <button 
+          v-for="page in visiblePages" 
+          :key="page"
+          class="page-btn"
+          :class="{ active: page === currentPage }"
+          @click="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+        
+        <button 
+          class="page-btn"
+          :disabled="currentPage === totalPages"
+          @click="goToPage(currentPage + 1)"
+        >
+          下一页
+        </button>
       </div>
     </div>
 
-    <!-- 反馈详情对话框 -->
-    <el-dialog 
-      v-model="detailDialogVisible" 
-      title="反馈详情" 
-      width="60%"
-      :close-on-click-modal="false"
-    >
-      <div v-if="currentFeedback" class="feedback-detail">
+    <!-- 反馈详情模态框 -->
+    <div v-if="showDetailModal" class="modal-overlay" @click="closeDetailModal">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>反馈详情</h3>
+          <button class="close-btn" @click="closeDetailModal">×</button>
+        </div>
+        <div class="modal-body">
+          <div v-if="selectedFeedback" class="feedback-detail">
+            <div class="detail-section">
+              <h4>基本信息</h4>
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <span class="detail-label">标题:</span>
+                  <span class="detail-value">{{ selectedFeedback.title }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">分类:</span>
+                  <span class="detail-value">{{ getCategoryText(selectedFeedback.category) }}</span>
+                </div>
         <div class="detail-item">
-          <span class="label">病例ID：</span>
-          <span class="value">{{ currentFeedback.caseId }}</span>
+                  <span class="detail-label">严重程度:</span>
+                  <span class="detail-value">{{ getSeverityText(selectedFeedback.severity) }}</span>
         </div>
         <div class="detail-item">
-          <span class="label">反馈类型：</span>
-          <span class="value">
-            <el-tag :type="getFeedbackTypeTagType(currentFeedback.feedbackType)">
-              {{ getFeedbackTypeName(currentFeedback.feedbackType) }}
-            </el-tag>
+                  <span class="detail-label">状态:</span>
+                  <span class="detail-value status" :class="selectedFeedback.status">
+                    {{ getStatusText(selectedFeedback.status) }}
           </span>
         </div>
         <div class="detail-item">
-          <span class="label">提交时间：</span>
-          <span class="value">{{ currentFeedback.submittedAt }}</span>
+                  <span class="detail-label">提交时间:</span>
+                  <span class="detail-value">{{ formatDate(selectedFeedback.timestamp) }}</span>
         </div>
         <div class="detail-item">
-          <span class="label">提交人：</span>
-          <span class="value">{{ currentFeedback.doctorName }} ({{ currentFeedback.doctorId }})</span>
+                  <span class="detail-label">联系方式:</span>
+                  <span class="detail-value">{{ selectedFeedback.contact || '未提供' }}</span>
+                </div>
         </div>
-        <div class="detail-item">
-          <span class="label">反馈内容：</span>
-          <div class="value feedback-content">{{ currentFeedback.content }}</div>
         </div>
         
-        <div class="detail-item" v-if="currentFeedback.images && currentFeedback.images.length > 0">
-          <span class="label">相关图片：</span>
-          <div class="value image-list">
-            <el-image 
-              v-for="(img, index) in currentFeedback.images" 
-              :key="index"
-              :src="img.url" 
-              :preview-src-list="currentFeedback.images.map(i => i.url)"
-              class="image-item"
-              fit="cover"
-            />
+            <div class="detail-section">
+              <h4>问题描述</h4>
+              <div class="detail-content">
+                {{ selectedFeedback.description }}
           </div>
         </div>
         
-        <div class="detail-item" v-if="currentFeedback.status !== 'pending'">
-          <span class="label">处理状态：</span>
-          <span class="value">
-            <el-tag :type="getFeedbackStatusTagType(currentFeedback.status)">
-              {{ getFeedbackStatusName(currentFeedback.status) }}
-            </el-tag>
-          </span>
+            <div v-if="selectedFeedback.files && selectedFeedback.files.length > 0" class="detail-section">
+              <h4>附件</h4>
+              <div class="file-list">
+                <div 
+                  v-for="(file, index) in selectedFeedback.files" 
+                  :key="index"
+                  class="file-item"
+                >
+                  📎 {{ file }}
         </div>
-        
-        <div class="detail-item" v-if="currentFeedback.processedAt">
-          <span class="label">处理时间：</span>
-          <span class="value">{{ currentFeedback.processedAt }}</span>
         </div>
-        
-        <div class="detail-item" v-if="currentFeedback.processedBy">
-          <span class="label">处理人：</span>
-          <span class="value">{{ currentFeedback.processedBy.name }} ({{ currentFeedback.processedBy.role }})</span>
         </div>
-        
-        <div class="detail-item" v-if="currentFeedback.processNote">
-          <span class="label">处理意见：</span>
-          <div class="value process-note">{{ currentFeedback.processNote }}</div>
         </div>
-        
-        <div class="detail-item" v-if="currentFeedback.optimizationPlan">
-          <span class="label">优化计划：</span>
-          <div class="value optimization-plan">
-            <el-card class="bg-blue-50 border-blue-100">
-              <h4 class="font-medium text-blue-800 mb-2">模型优化计划</h4>
-              <p>{{ currentFeedback.optimizationPlan.content }}</p>
-              <div class="mt-2 text-sm text-blue-600">
-                计划实施版本：{{ currentFeedback.optimizationPlan.targetVersion || '未确定' }}
               </div>
-            </el-card>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" @click="closeDetailModal">关闭</button>
           </div>
         </div>
       </div>
-      <template #footer>
-        <el-button @click="detailDialogVisible = false">关闭</el-button>
-      </template>
-    </el-dialog>
-
-    <!-- 编辑反馈对话框 -->
-    <el-dialog 
-      v-model="editDialogVisible" 
-      title="编辑反馈" 
-      width="50%"
-      :close-on-click-modal="false"
-    >
-      <feedback-form 
-        ref="feedbackFormRef"
-        :case-id="currentFeedback?.caseId"
-        :initial-data="currentFeedback"
-        @submit="handleFeedbackSubmit"
-      />
-      <template #footer>
-        <el-button @click="editDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitEditForm">保存</el-button>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, toRefs } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import FeedbackForm from '@/components/doctor/FeedbackForm.vue'
-import { useFeedbackStore } from '@/stores/feedbackStore'
+import { ElMessage } from 'element-plus'
 
-// 引入类型定义
-import type { 
-  FeedbackItem, 
-  FeedbackType, 
-  FeedbackStatus,
-  FeedbackDetail 
-} from '@/types/feedback'
-
-// 状态管理
-const state = reactive({
-  feedbackList: [] as FeedbackItem[],
-  total: 0,
-  currentPage: 1,
-  pageSize: 10,
-  loading: false,
-  searchKeyword: '',
-  feedbackType: '',
-  feedbackStatus: '',
-  dateRange: [] as [string, string] | [],
-  detailDialogVisible: false,
-  editDialogVisible: false,
-  currentFeedback: null as FeedbackDetail | null
-})
-
-// 解构响应式状态
-const { 
-  feedbackList, total, currentPage, pageSize, loading, 
-  searchKeyword, feedbackType, feedbackStatus, dateRange,
-  detailDialogVisible, editDialogVisible, currentFeedback
-} = toRefs(state)
-
-// 使用状态管理
-const feedbackStore = useFeedbackStore()
+// 响应式数据
 const router = useRouter()
+const feedbacks = ref<any[]>([])
+const filteredFeedbacks = ref<any[]>([])
+const statusFilter = ref('')
+const categoryFilter = ref('')
+const searchKeyword = ref('')
+const currentPage = ref(1)
+const pageSize = ref(10)
+const showDetailModal = ref(false)
+const selectedFeedback = ref<any>(null)
 
-// 表单引用
-const feedbackFormRef = ref<InstanceType<typeof FeedbackForm> | null>(null)
-
-// 页面加载时获取反馈列表
-onMounted(() => {
-  fetchFeedbackList()
+// 计算属性
+const totalPages = computed(() => {
+  return Math.ceil(filteredFeedbacks.value.length / pageSize.value)
 })
 
-// 获取反馈列表数据
-const fetchFeedbackList = async () => {
-  state.loading = true
-  try {
-    // 使用store获取反馈列表
-    await feedbackStore.fetchFeedbackHistory()
-    
-    // 将store中的数据转换为当前组件需要的格式
-    state.feedbackList = feedbackStore.feedbackHistory.map(feedback => ({
-      id: feedback.id,
-      caseId: feedback.caseId,
-      feedbackType: feedback.tags[0] as FeedbackType || 'other',
-      content: feedback.comment,
-      status: feedback.status as FeedbackStatus,
-      submittedAt: feedback.submittedAt,
-      processedAt: feedback.processedAt,
-      doctorId: feedback.doctorId,
-      doctorName: feedback.doctorName,
-      imageCount: feedback.imageCount
-    }))
-    
-    state.total = state.feedbackList.length
-  } catch (error) {
-    console.error('获取反馈列表失败:', error)
-    ElMessage.error('获取反馈列表失败，请重试')
-  } finally {
-    state.loading = false
+const paginatedFeedbacks = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value
+  const end = start + pageSize.value
+  return filteredFeedbacks.value.slice(start, end)
+})
+
+const visiblePages = computed(() => {
+  const pages = []
+  const total = totalPages.value
+  const current = currentPage.value
+  
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) {
+      pages.push(i)
+    }
+  } else {
+    if (current <= 4) {
+      for (let i = 1; i <= 5; i++) {
+        pages.push(i)
+      }
+      pages.push('...')
+      pages.push(total)
+    } else if (current >= total - 3) {
+      pages.push(1)
+      pages.push('...')
+      for (let i = total - 4; i <= total; i++) {
+        pages.push(i)
+      }
+    } else {
+      pages.push(1)
+      pages.push('...')
+      for (let i = current - 1; i <= current + 1; i++) {
+        pages.push(i)
+      }
+      pages.push('...')
+      pages.push(total)
+    }
   }
-}
+  
+  return pages
+})
 
-// 查看病例详情
-const viewCaseDetail = (caseId: string) => {
-  const router = useRouter()
-  router.push(`/doctor/cases/${caseId}`)
-}
-
-// 查看反馈详情
-const viewFeedbackDetail = async (id: string) => {
-  state.loading = true
-  try {
-    // 模拟API请求
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
-    // 模拟详情数据
-    state.currentFeedback = {
-      id,
-      caseId: `CASE-${Math.floor(Math.random() * 10000)}`,
-      feedbackType: ['accuracy', 'detection', 'report', 'system'][Math.floor(Math.random() * 4)] as FeedbackType,
-      content: 'AI系统对该病例的肺结节检测存在遗漏，3mm左右的小结节未能识别，建议优化小尺寸结节的检测算法。同时，报告生成的结构化程度可以进一步提高，增加更多量化指标。',
-      status: ['processing', 'resolved', 'rejected'][Math.floor(Math.random() * 3)] as FeedbackStatus,
-      submittedAt: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' '),
-      processedAt: new Date(Date.now() - Math.floor(Math.random() * 10) * 24 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' '),
-      doctorName: '张医生',
-      doctorId: 'DOC-001',
-      images: [
-        { url: 'https://picsum.photos/seed/med1/400/300', description: '胸部X光片' },
-        { url: 'https://picsum.photos/seed/med2/400/300', description: 'CT影像' }
-      ],
-      processedBy: {
-        name: '李工程师',
-        role: '算法专家'
+// 方法
+const loadFeedbacks = () => {
+  const storedFeedbacks = localStorage.getItem('feedbacks')
+  if (storedFeedbacks) {
+    feedbacks.value = JSON.parse(storedFeedbacks)
+    filteredFeedbacks.value = [...feedbacks.value]
+  } else {
+    // 如果没有数据，创建一些示例数据
+    feedbacks.value = [
+      {
+        id: 'FB-001',
+        title: '系统登录缓慢',
+        category: 'performance',
+        severity: 'medium',
+        description: '系统登录时响应时间过长，影响工作效率。',
+        status: 'resolved',
+        timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        contact: 'doctor@example.com',
+        files: ['screenshot1.png']
       },
-      processNote: '感谢您的反馈，我们已确认该问题存在。经分析，主要原因是小尺寸结节特征提取不足。我们计划在下个版本中优化特征提取网络，增加对<5mm结节的关注权重。',
-      optimizationPlan: Math.random() > 0.3 ? {
-        content: '1. 优化结节检测算法，增加小尺寸结节特征提取层\n2. 扩充小尺寸结节样本数据集\n3. 改进报告生成模板，增加量化指标展示',
-        targetVersion: 'v2.2.0'
-      } : undefined
-    }
-    
-    state.detailDialogVisible = true
-  } catch (error) {
-    console.error('获取反馈详情失败:', error)
-    message?.error('获取反馈详情失败，请重试')
-  } finally {
-    state.loading = false
-  }
-}
-
-// 编辑反馈
-const editFeedback = async (id: string) => {
-  // 获取当前反馈数据
-  const feedbackItem = state.feedbackList.find(item => item.id === id)
-  if (feedbackItem) {
-    // 从store中获取完整的反馈数据
-    const storeFeedback = feedbackStore.feedbackHistory.find(f => f.id === id)
-    state.currentFeedback = {
-      ...feedbackItem,
-      rating: storeFeedback?.rating || 0,
-      tags: storeFeedback?.tags || [],
-      comment: storeFeedback?.comment || '',
-      isPublic: storeFeedback?.isPublic || false
-    } as FeedbackDetail
-    state.editDialogVisible = true
-  }
-}
-
-// 删除反馈
-const deleteFeedback = async (id: string) => {
-  const confirmResult = await ElMessageBox.confirm(
-    '确定要删除这条反馈吗？删除后将无法恢复。',
-    '确认删除',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  ).catch(() => false)
-
-  if (confirmResult) {
-    state.loading = true
-    try {
-      // 模拟API请求
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      // 更新列表
-      state.feedbackList = state.feedbackList.filter(item => item.id !== id)
-      state.total--
-      
-      // 同时更新store中的数据
-      const storeIndex = feedbackStore.feedbackHistory.findIndex(f => f.id === id)
-      if (storeIndex !== -1) {
-        feedbackStore.feedbackHistory.splice(storeIndex, 1)
+      {
+        id: 'FB-002',
+        title: '影像显示异常',
+        category: 'interface',
+        severity: 'high',
+        description: '上传的DICOM影像在查看器中显示不完整，部分区域缺失。',
+        status: 'processing',
+        timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        contact: 'doctor2@example.com',
+        files: []
       }
-      
-      ElMessage.success('反馈已成功删除')
-    } catch (error) {
-      console.error('删除反馈失败:', error)
-      ElMessage.error('删除反馈失败，请重试')
-    } finally {
-      state.loading = false
-    }
+    ]
+    filteredFeedbacks.value = [...feedbacks.value]
+    localStorage.setItem('feedbacks', JSON.stringify(feedbacks.value))
   }
 }
 
-// 提交编辑表单
-const submitEditForm = async () => {
-  if (feedbackFormRef.value) {
-    const valid = await feedbackFormRef.value.validate()
-    if (valid && state.currentFeedback) {
-      // 提交表单
-      state.loading = true
-      try {
-        // 模拟API调用
-        await new Promise(resolve => setTimeout(resolve, 500))
-        
-        // 更新store中的数据
-        const storeIndex = feedbackStore.feedbackHistory.findIndex(f => f.id === state.currentFeedback!.id)
-        if (storeIndex !== -1) {
-          feedbackStore.feedbackHistory[storeIndex] = {
-            ...feedbackStore.feedbackHistory[storeIndex],
-            ...state.currentFeedback
-          }
-        }
-        
-        state.editDialogVisible = false
-        ElMessage.success('反馈已成功更新')
-        fetchFeedbackList() // 重新加载列表
-      } catch (error) {
-        console.error('更新反馈失败:', error)
-        ElMessage.error('更新失败，请稍后重试')
-      } finally {
-        state.loading = false
-      }
-    }
+const filterFeedbacks = () => {
+  let filtered = [...feedbacks.value]
+  
+  // 状态筛选
+  if (statusFilter.value) {
+    filtered = filtered.filter(f => f.status === statusFilter.value)
+  }
+  
+  // 分类筛选
+  if (categoryFilter.value) {
+    filtered = filtered.filter(f => f.category === categoryFilter.value)
+  }
+  
+  // 关键词搜索
+  if (searchKeyword.value.trim()) {
+    const keyword = searchKeyword.value.toLowerCase()
+    filtered = filtered.filter(f => 
+      f.title.toLowerCase().includes(keyword) ||
+      f.description.toLowerCase().includes(keyword)
+    )
+  }
+  
+  filteredFeedbacks.value = filtered
+  currentPage.value = 1 // 重置到第一页
+}
+
+const goToPage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
   }
 }
 
-// 处理表单提交
-const handleFeedbackSubmit = (formData: any) => {
-  // 表单提交逻辑由子组件处理
-}
-
-// 处理分页大小变化
-const handleSizeChange = (size: number) => {
-  state.pageSize = size
-  state.currentPage = 1
-  fetchFeedbackList()
-}
-
-// 处理页码变化
-const handleCurrentChange = (page: number) => {
-  state.currentPage = page
-  fetchFeedbackList()
-}
-
-// 辅助函数：获取反馈类型名称
-const getFeedbackTypeName = (type: FeedbackType | string): string => {
-  const typeMap: Record<string, string> = {
-    'accuracy': '诊断准确性',
-    'detection': '病灶识别',
-    'report': '报告内容',
-    'system': '系统功能'
+const getStatusText = (status: string) => {
+  const statusMap: { [key: string]: string } = {
+    pending: '待处理',
+    processing: '处理中',
+    resolved: '已解决',
+    closed: '已关闭'
   }
-  return typeMap[type as string] || '未知类型'
+  return statusMap[status] || status
 }
 
-// 辅助函数：获取反馈类型标签样式
-const getFeedbackTypeTagType = (type: FeedbackType | string): string => {
-  const typeMap: Record<string, string> = {
-    'accuracy': 'primary',
-    'detection': 'success',
-    'report': 'info',
-    'system': 'warning'
+const getCategoryText = (category: string) => {
+  const categoryMap: { [key: string]: string } = {
+    diagnosis: '诊断准确性问题',
+    performance: '系统性能问题',
+    interface: '界面交互问题',
+    data: '数据处理问题'
   }
-  return typeMap[type as string] || 'default'
+  return categoryMap[category] || category
 }
 
-// 辅助函数：获取反馈状态名称
-const getFeedbackStatusName = (status: FeedbackStatus | string): string => {
-  const statusMap: Record<string, string> = {
-    'pending': '待处理',
-    'processing': '处理中',
-    'resolved': '已解决',
-    'rejected': '已拒绝'
+const getSeverityText = (severity: string) => {
+  const severityMap: { [key: string]: string } = {
+    urgent: '紧急',
+    high: '高',
+    medium: '中',
+    low: '低'
   }
-  return statusMap[status as string] || '未知状态'
+  return severityMap[severity] || severity
 }
 
-// 辅助函数：获取反馈状态标签样式
-const getFeedbackStatusTagType = (status: FeedbackStatus | string): string => {
-  const statusMap: Record<string, string> = {
-    'pending': 'info',
-    'processing': 'primary',
-    'resolved': 'success',
-    'rejected': 'danger'
-  }
-  return statusMap[status as string] || 'default'
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString)
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
 }
 
-// 页面方法
-const pageMethods = {
-  fetchFeedbackList,
-  viewFeedbackDetail,
-  editFeedback,
-  deleteFeedback,
-  handleSizeChange: (size: number) => {
-    state.pageSize = size
-    fetchFeedbackList()
-  },
-  handleCurrentChange: (page: number) => {
-    state.currentPage = page
-    fetchFeedbackList()
-  },
-  submitEditForm
+const viewFeedbackDetail = (feedback: any) => {
+  selectedFeedback.value = feedback
+  showDetailModal.value = true
 }
 
-// 暴露方法和状态
-defineExpose(pageMethods)
+const editFeedback = (feedback: any) => {
+  ElMessage.info('编辑功能开发中...')
+}
+
+const closeDetailModal = () => {
+  showDetailModal.value = false
+  selectedFeedback.value = null
+}
+
+const goToFeedback = () => {
+  router.push({ name: 'doctor.feedbackCenter' })
+}
+
+// 生命周期
+onMounted(() => {
+  loadFeedbacks()
+})
 </script>
 
 <style scoped>
-.feedback-history-container {
-  padding: 20px;
+.feedback-history {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  color: #333;
+  line-height: 1.6;
 }
 
-.page-header {
-  margin-bottom: 20px;
-}
-
-.filter-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-}
-
-.pagination-container {
+.header {
+  background: white;
+  padding: 16px 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* 详情样式 */
-.feedback-detail {
-  .detail-item {
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 24px;
+  height: 24px;
+  background: #1677ff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.notification {
+  position: relative;
+  cursor: pointer;
+}
+
+.notification::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: #ff4d4f;
+  border-radius: 50%;
+}
+
+.edit-link {
+  color: #1677ff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.page-header {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  color: #666;
+  font-size: 14px;
+}
+
+.filter-section {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 20px;
+  align-items: end;
+}
+
+.filter-item {
+  flex: 1;
+}
+
+.filter-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.filter-select,
+.filter-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.feedback-list {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.feedback-item {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.feedback-item:hover {
+  background-color: #fafafa;
+}
+
+.feedback-item:last-child {
+  border-bottom: none;
+}
+
+.feedback-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.feedback-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.feedback-status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.feedback-status.pending {
+  background: #fff7e6;
+  color: #d46b08;
+}
+
+.feedback-status.processing {
+  background: #e6f7ff;
+  color: #1677ff;
+}
+
+.feedback-status.resolved {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.feedback-status.closed {
+  background: #f5f5f5;
+  color: #8c8c8c;
+}
+
+.feedback-meta {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.meta-label {
+  font-size: 12px;
+  color: #999;
+}
+
+.meta-value {
+  font-size: 12px;
+  color: #666;
+}
+
+.feedback-content {
+  margin-bottom: 16px;
+}
+
+.feedback-content p {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.feedback-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.action-btn {
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid #d9d9d9;
+  background: white;
+  transition: all 0.3s;
+}
+
+.view-btn {
+  color: #1677ff;
+  border-color: #1677ff;
+}
+
+.view-btn:hover {
+  background: #e6f7ff;
+}
+
+.edit-btn {
+  color: #52c41a;
+  border-color: #52c41a;
+}
+
+.edit-btn:hover {
+  background: #f6ffed;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 24px;
+}
+
+.empty-icon {
+  font-size: 48px;
     margin-bottom: 16px;
-    
-    .label {
-      display: inline-block;
-      width: 100px;
-      font-weight: 500;
-      color: #606266;
-      vertical-align: top;
-    }
-    
-    .value {
-      display: inline-block;
-      vertical-align: top;
-      max-width: calc(100% - 100px);
-    }
-    
-    .image-list {
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.pagination {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      
-      .image-item {
-        width: 120px;
-        height: 120px;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.page-btn {
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  background: white;
         border-radius: 4px;
         cursor: pointer;
-      }
-    }
-    
-    .process-note, .optimization-plan, .feedback-content {
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #1677ff;
+  color: #1677ff;
+}
+
+.page-btn.active {
+  background: #1677ff;
+  color: white;
+  border-color: #1677ff;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.detail-section {
+  margin-bottom: 24px;
+}
+
+.detail-section h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: #999;
+  min-width: 80px;
+}
+
+.detail-value {
+  font-size: 14px;
+  color: #333;
+}
+
+.detail-value.status {
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.detail-content {
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-item {
       padding: 8px 12px;
-      background-color: #f5f5f5;
+  background: #f5f5f5;
       border-radius: 4px;
-      border: 1px solid #e9e9e9;
-      line-height: 1.5;
-    }
-    
-    .optimization-plan {
-      .el-card {
-        margin-top: 8px;
-      }
-    }
+  font-size: 14px;
+  color: #666;
+}
+
+.modal-footer {
+  padding: 20px 24px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #d9d9d9;
+  background: white;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: #1677ff;
+  color: white;
+  border-color: #1677ff;
+}
+
+.btn-secondary {
+  color: #666;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .filter-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .feedback-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    width: 95%;
+    margin: 20px;
   }
 }
 </style>

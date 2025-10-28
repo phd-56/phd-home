@@ -29,8 +29,8 @@ const router = useRouter()
 
 // 跳转到新建报告页面
 const goToNewReport = () => {
-  // 使用相对路径，基于当前路由
-  router.push({ name: 'doctor.reportEditor' })
+  // 跳转到新的报告生成页面
+  router.push({ name: 'doctor.reportGeneration' })
 }
 
 // 跳转到报告记录页面
@@ -43,7 +43,7 @@ const goToReportRecords = () => {
 <style scoped>
 .doctor-reports-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #e6f7ff 0%, #f0f9ff 100%);
+  background: white;
   padding: 40px 20px;
   max-width: 1200px;
   margin: 0 auto;

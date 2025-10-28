@@ -4,7 +4,12 @@ const doctorRoutes: RouteRecordRaw[] = [
   {
     path: 'ai-diagnosis',
     name: 'doctor.aiDiagnosis',
-    component: () => import('@/components/doctor/components/AIDiagnosis.vue')
+    component: () => import('@/views/doctor/ImageDiagnosis.vue')
+  },
+  {
+    path: 'image-center',
+    name: 'doctor.imageCenter',
+    component: () => import('@/views/doctor/ImageDiagnosisCenter.vue')
   },
   {
     path: 'case-management',
@@ -12,17 +17,20 @@ const doctorRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/case-management/CaseList.vue')
   },
   {
-    path: 'case-management/create',
-    name: 'doctor.caseCreate',
-    component: () => import('@/views/case-management/CaseCreate.vue')
+    path: 'case-management/new',
+    name: 'doctor.newCase',
+    component: () => import('@/views/case-management/NewCase.vue')
+  },
+  {
+    path: 'case-management/status/:id',
+    name: 'doctor.caseStatusChange',
+    component: () => import('@/views/case-management/CaseStatusChange.vue')
   },
   {
     path: 'case-management/:id',
     name: 'doctor.caseDetail',
     component: () => import('@/views/case-management/CaseDetail.vue')
   },
-
-
   {
     path: 'reports',
     name: 'doctor.reports',
@@ -34,19 +42,34 @@ const doctorRoutes: RouteRecordRaw[] = [
     component: () => import('@/components/MedicalReportEditor.vue')
   },
   {
+    path: 'report-generation',
+    name: 'doctor.reportGeneration',
+    component: () => import('@/views/doctor/ReportGeneration.vue')
+  },
+  {
     path: 'knowledge-base',
     name: 'doctor.knowledgeBase',
     component: () => import('@/views/doctor/KnowledgeBase.vue')
   },
   {
     path: 'feedback',
+    name: 'doctor.feedbackCenter',
+    component: () => import('@/views/doctor/FeedbackCenter.vue')
+  },
+  {
+    path: 'feedback-history',
     name: 'doctor.feedbackHistory',
     component: () => import('@/views/doctor/FeedbackHistory.vue')
   },
   {
     path: 'statistics',
     name: 'doctor.statistics',
-    component: () => import('@/views/ReportPreview.vue') // 暂时使用报告预览页
+    component: () => import('@/views/doctor/Statistics.vue')
+  },
+  {
+    path: 'help',
+    name: 'doctor.help',
+    component: () => import('@/views/doctor/HelpDocumentation.vue')
   }
 ]
 

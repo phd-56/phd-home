@@ -2,19 +2,15 @@ import { RouteRecordRaw } from 'vue-router'
 import { defineAsyncComponent } from 'vue'
 
 // 异步加载管理员页面组件
-const AdminDashboard = defineAsyncComponent(() => import('@/views/AdminDashboard.vue'))
-const UserManagement = defineAsyncComponent(() => import('@/views/UserManagement.vue'))
-const ModelManagement = defineAsyncComponent(() => import('@/components/admin/ModelManagement.vue'))
-const ModelPerformance = defineAsyncComponent(() => import('@/components/admin/ModelPerformance.vue'))
-const OptimizationManagement = defineAsyncComponent(() => import('@/views/admin/OptimizationManagement.vue'))
-const ModelOptimizationComparison = defineAsyncComponent(() => import('@/components/admin/ModelOptimizationComparison.vue'))
-// SystemSettings组件暂时注释掉，因为文件不存在
-// const SystemSettings = defineAsyncComponent(() => import('@/views/admin/SystemSettings.vue'))
-// 使用现有的组件文件
-const SystemMonitor = defineAsyncComponent(() => import('@/views/admin/SystemMonitor.vue'))
-const BackupManagement = defineAsyncComponent(() => import('@/views/admin/BackupManagement.vue'))
-const AuditLogs = defineAsyncComponent(() => import('@/views/admin/AuditLogs.vue'))
-const ModelOptimization = defineAsyncComponent(() => import('@/views/admin/ModelOptimization.vue'))
+const AdminDashboard = defineAsyncComponent(() => import('@/views/admin/AdminDashboard.vue'))
+const DataAnalysis = defineAsyncComponent(() => import('@/views/admin/DataAnalysis.vue'))
+const DoctorData = defineAsyncComponent(() => import('@/views/admin/DoctorData.vue'))
+const PatientData = defineAsyncComponent(() => import('@/views/admin/PatientData.vue'))
+const FeedbackData = defineAsyncComponent(() => import('@/views/admin/FeedbackData.vue'))
+const SystemMonitoring = defineAsyncComponent(() => import('@/views/admin/SystemMonitoring.vue'))
+const UserManagement = defineAsyncComponent(() => import('@/views/admin/UserManagement.vue'))
+const RolesPermissions = defineAsyncComponent(() => import('@/views/admin/RolesPermissions.vue'))
+const SystemConfig = defineAsyncComponent(() => import('@/views/admin/SystemConfig.vue'))
 
 /**
  * 管理员路由配置
@@ -37,25 +33,55 @@ const adminRoutes: RouteRecordRaw[] = [
         name: 'admin.dashboard',
         component: AdminDashboard,
         meta: {
-          title: '管理控制台',
+          title: '管理仪表盘',
           icon: '📊',
-          breadcrumb: '管理控制台'
+          breadcrumb: '管理仪表盘'
         }
       },
       {
-        path: 'user-management',
-        name: 'admin.userManagement',
-        component: UserManagement,
+        path: 'data-analysis',
+        name: 'admin.dataAnalysis',
+        component: DataAnalysis,
         meta: {
-          title: '用户管理',
-          icon: '👥',
-          breadcrumb: '用户管理'
+          title: '数据统计分析',
+          icon: '📈',
+          breadcrumb: '数据统计分析'
         }
       },
       {
-        path: 'monitoring',
-        name: 'admin.monitoring',
-        component: SystemMonitor,
+        path: 'doctor-data',
+        name: 'admin.doctorData',
+        component: DoctorData,
+        meta: {
+          title: '医生数据',
+          icon: '👨‍⚕️',
+          breadcrumb: '医生数据'
+        }
+      },
+      {
+        path: 'patient-data',
+        name: 'admin.patientData',
+        component: PatientData,
+        meta: {
+          title: '患者数据',
+          icon: '👤',
+          breadcrumb: '患者数据'
+        }
+      },
+      {
+        path: 'feedback-data',
+        name: 'admin.feedbackData',
+        component: FeedbackData,
+        meta: {
+          title: '反馈数据统计',
+          icon: '💬',
+          breadcrumb: '反馈数据统计'
+        }
+      },
+      {
+        path: 'system-monitoring',
+        name: 'admin.systemMonitoring',
+        component: SystemMonitoring,
         meta: {
           title: '系统监控',
           icon: '📊',
@@ -63,96 +89,33 @@ const adminRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: 'backups',
-        name: 'admin.backups',
-        component: BackupManagement,
+        path: 'user-management',
+        name: 'admin.userManagement',
+        component: UserManagement,
         meta: {
-          title: '数据备份',
-          icon: '💾',
-          breadcrumb: '数据备份'
+          title: '用户账号管理',
+          icon: '👥',
+          breadcrumb: '用户账号管理'
         }
       },
       {
-        path: 'audit-logs',
-        name: 'admin.auditLogs',
-        component: AuditLogs,
+        path: 'roles-permissions',
+        name: 'admin.rolesPermissions',
+        component: RolesPermissions,
         meta: {
-          title: '操作日志',
-          icon: '📝',
-          breadcrumb: '操作日志'
+          title: '角色与权限',
+          icon: '🔐',
+          breadcrumb: '角色与权限'
         }
       },
       {
-        path: 'model-optimization',
-        name: 'admin.modelOptimization',
-        component: ModelOptimization,
+        path: 'system-config',
+        name: 'admin.systemConfig',
+        component: SystemConfig,
         meta: {
-          title: '模型优化',
+          title: '系统参数配置',
           icon: '⚙️',
-          breadcrumb: '模型优化'
-        }
-      },
-      {
-        path: 'models',
-        name: 'admin.models',
-        component: ModelManagement,
-        meta: {
-          title: '模型管理',
-          icon: '🤖',
-          breadcrumb: '模型管理'
-        }
-      },
-      {
-        path: 'model-performance',
-        name: 'admin.modelPerformance',
-        component: ModelPerformance,
-        meta: {
-          title: '模型性能监控',
-          icon: '📈',
-          breadcrumb: '模型性能监控'
-        }
-      },
-      {
-        path: 'optimization-management',
-        name: 'admin.optimizationManagement',
-        component: OptimizationManagement,
-        meta: {
-          title: '优化管理',
-          icon: '⚙️',
-          breadcrumb: '优化管理'
-        }
-      },
-      {
-        path: 'model-optimization-comparison',
-        name: 'admin.modelOptimizationComparison',
-        component: ModelOptimizationComparison,
-        meta: {
-          title: '模型优化对比',
-          icon: '📉',
-          breadcrumb: '模型优化对比'
-        }
-      },
-      // 知识库管理路由已移除，因为组件导入不可用
-      // 系统设置路由暂时注释掉，因为SystemSettings组件不存在
-      /*{
-        path: 'system-settings',
-        name: 'admin.systemSettings',
-        component: SystemSettings,
-        meta: {
-          title: '系统设置',
-          icon: '⚙️',
-          breadcrumb: '系统设置'
-        }
-      },*/
-      // 保留原有的优化管理路由作为别名
-      {
-        path: 'optimization-management',
-        name: 'admin.optimizationManagement',
-        component: OptimizationManagement,
-        meta: {
-          title: '优化管理',
-          icon: '⚙️',
-          breadcrumb: '优化管理'
+          breadcrumb: '系统参数配置'
         }
       }
     ]

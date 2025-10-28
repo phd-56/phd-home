@@ -97,7 +97,7 @@ const router = createRouter({
         // 医生仪表板
         {
           path: 'doctor',
-          component: () => import('@/components/AppLayout.vue'),
+          component: () => import('@/views/DoctorDashboard.vue'),
           meta: { role: 'doctor' },
           children: [
             {
