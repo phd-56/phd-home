@@ -1,250 +1,256 @@
 <template>
-  <div class="app-layout">
-    <!-- 侧边栏 -->
-    <div class="sidebar">
-      <div class="sidebar-header">
-        <h2 class="logo">AI骨龄诊断系统</h2>
-        <p class="user-info">{{ getUserDisplayName() }} ({{ getRoleName(authStore.user?.role) }})</p>
+  <!-- 顶部导航栏 -->
+  <div class="navbar">
+    <div class="navbar-left">
+      <div class="logo">🦴</div>
+      <div class="brand-name">BoneAI Diagnostics</div>
+    </div>
+    <div class="navbar-right">
+      <div class="notification">
+        🔔
+        <div class="notification-badge">3</div>
       </div>
-      
-      <div class="sidebar-menu">
-        <!-- 根据用户角色显示不同的菜单 -->
-        <div v-for="section in menuSections" :key="section.title" class="menu-section">
-          <h3 class="section-title">{{ section.title }}</h3>
-          <el-menu
-            :default-active="activeMenu"
-            class="sidebar-menu-list"
-            @select="handleMenuSelect"
-          >
-            <el-menu-item 
-              v-for="item in section.items" 
-              :key="item.key"
-              :index="item.key"
-              :disabled="!isMenuVisible(item)"
-            >
-              <span class="menu-icon">{{ item.icon }}</span>
-              <span class="menu-text">{{ item.name }}</span>
-            </el-menu-item>
-          </el-menu>
+      <div class="user-info">
+        <div class="user-avatar">张</div>
+        <div class="user-details">
+          <div class="user-name">张医生</div>
+          <div class="user-role">主任医师</div>
         </div>
       </div>
-      
-      <div class="sidebar-footer">
-        <el-button type="primary" @click="handleLogout" class="logout-btn">
-          🚪 退出登录
-        </el-button>
+      <button class="logout-btn">退出登录</button>
+    </div>
+  </div>
+
+  <!-- 主容器 -->
+  <div class="container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">主导航</div>
+        <div class="sidebar-item active">
+          ⏱️ 工作台
+        </div>
+        <div class="sidebar-item">
+          🖼️ 影像诊断
+        </div>
+        <div class="sidebar-item">
+          📋 病例管理
+          <span class="sidebar-badge">12</span>
+        </div>
+        <div class="sidebar-item">
+          📚 知识库
+        </div>
+        <div class="sidebar-item">
+          📊 报告中心
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">辅助功能</div>
+        <div class="sidebar-item">
+          📈 数据统计
+        </div>
+        <div class="sidebar-item">
+          💬 反馈中心
+        </div>
+        <div class="sidebar-item">
+          ❓ 帮助文档
+        </div>
       </div>
     </div>
-    
-    <!-- 主内容区 -->
+
+    <!-- 主内容区域 -->
     <div class="main-content">
       <router-view />
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { ElMessage } from 'element-plus'
-
-const router = useRouter()
-const route = useRoute()
-const authStore = useAuthStore()
-
-const activeMenu = ref('')
-
-// 根据当前路由设置激活的菜单
-onMounted(() => {
-  activeMenu.value = route.path
-})
-
-// 菜单数据结构 - 修正为正确的路由路径格式
-const menuSections = [
-  {
-    title: '系统管理',
-    items: [
-      { key: '/dashboard/admin/user-management', name: '用户管理', icon: '👥', roles: ['admin'] },
-      { key: '/dashboard/admin/system-monitor', name: '数据监控', icon: '📊', roles: ['admin'] },
-      { key: '/dashboard/admin/data-backup', name: '数据备份', icon: '💾', roles: ['admin'] },
-      { key: '/dashboard/admin/audit-logs', name: '操作日志', icon: '📝', roles: ['admin'] },
-    ]
+<script>
+export default {
+  name: 'AppLayout',
+  data() {
+    return {
+      // 静态数据
+    }
   },
-  {
-    title: '模型管理',
-    items: [
-      { key: '/dashboard/admin/model-optimization', name: '模型优化', icon: '⚙️', roles: ['admin'] },
-    ]
+  methods: {
+    // 可以在这里添加需要的方法
   }
-]
-
-// 检查菜单是否对当前用户可见
-const isMenuVisible = (menuItem: any) => {
-  const userRole = authStore.user?.role
-  return userRole ? menuItem.roles.includes(userRole) : false
-}
-
-// 获取角色中文名 - 修复类型错误
-const getRoleName = (role: string | undefined): string => {
-  if (!role) return '未知角色'
-  
-  const roleMap: Record<string, string> = {
-    patient: '患者',
-    doctor: '医生',
-    admin: '管理员'
-  }
-  return roleMap[role] || '用户'
-}
-
-// 获取用户显示名称 - 安全地处理可能的undefined
-const getUserDisplayName = (): string => {
-  return authStore.user?.fullName || authStore.user?.username || '未知用户'
-}
-
-// 菜单选择处理
-const handleMenuSelect = (key: string) => {
-  try {
-    // 直接使用key作为完整路径，因为已经包含了/admin前缀
-    router.push(key)
-  } catch (error) {
-    console.error('菜单跳转错误:', error)
-    ElMessage.error('页面跳转失败，请检查系统设置')
-  }
-}
-
-// 退出登录
-const handleLogout = () => {
-  authStore.logout()
-  ElMessage.success('已退出登录')
-  router.push('/')
 }
 </script>
 
 <style scoped>
-.app-layout {
-  display: flex;
-  min-height: 100vh;
+/* 全局样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* 侧边栏样式 */
-.sidebar {
-  width: 280px;
-  background: #1f2937;
+/* 顶部导航栏样式 */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 60px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.brand-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.notification {
+  position: relative;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff4757;
   color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background-color: #3498db;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.user-details {
   display: flex;
   flex-direction: column;
 }
 
-.sidebar-header {
-  padding: 24px 20px;
-  border-bottom: 1px solid #374151;
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.logo {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #3b82f6;
-  margin-bottom: 8px;
+.user-role {
+  font-size: 12px;
+  color: #666;
 }
 
-.user-info {
-  font-size: 0.875rem;
-  color: #9ca3af;
+.logout-btn {
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
 }
 
-.sidebar-menu {
-  flex: 1;
+.logout-btn:hover {
+  background-color: #2980b9;
+}
+
+/* 主容器样式 */
+.container {
+  display: flex;
+  height: calc(100vh - 60px);
+}
+
+/* 侧边栏样式 */
+.sidebar {
+  width: 240px;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e9ecef;
   padding: 20px 0;
   overflow-y: auto;
 }
 
-.menu-section {
-  margin-bottom: 24px;
+.sidebar-section {
+  margin-bottom: 20px;
 }
 
-.section-title {
-  font-size: 0.75rem;
+.sidebar-title {
+  font-size: 12px;
   font-weight: 600;
-  color: #6b7280;
+  color: #6c757d;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0 20px 8px;
-  margin: 0;
+  padding: 0 20px 10px;
+  letter-spacing: 0.5px;
 }
 
-/* Element Plus 菜单样式重写 */
-:deep(.sidebar-menu-list) {
-  background: transparent;
-  border: none;
-}
-
-:deep(.sidebar-menu-list .el-menu-item) {
-  height: 44px;
-  line-height: 44px;
-  color: #d1d5db;
-  background: transparent;
-  border: none;
-  margin: 2px 12px;
-  border-radius: 6px;
+.sidebar-item {
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #495057;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  justify-content: space-between;
+  transition: background-color 0.2s;
 }
 
-:deep(.sidebar-menu-list .el-menu-item:hover) {
-  background: #374151;
+.sidebar-item:hover {
+  background-color: #e9ecef;
+}
+
+.sidebar-item.active {
+  background-color: #3498db;
   color: white;
 }
 
-:deep(.sidebar-menu-list .el-menu-item.is-active) {
-  background: #3b82f6;
+.sidebar-badge {
+  background-color: #ff4757;
   color: white;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
 }
 
-:deep(.sidebar-menu-list .el-menu-item.is-disabled) {
-  opacity: 0.4;
-  cursor: not-allowed;
+.sidebar-item.active .sidebar-badge {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
-.menu-icon {
-  margin-right: 12px;
-  font-size: 1.1rem;
-}
-
-.menu-text {
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.sidebar-footer {
-  padding: 20px;
-  border-top: 1px solid #374151;
-}
-
-.logout-btn {
-  width: 100%;
-  background: #ef4444;
-  border: none;
-  border-radius: 6px;
-  padding: 12px;
-}
-
-.logout-btn:hover {
-  background: #dc2626;
-}
-
-/* 主内容区 */
+/* 主内容区域样式 */
 .main-content {
   flex: 1;
-  background: #f8fafc;
+  padding: 20px;
   overflow-y: auto;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 240px;
-  }
+  background-color: #ffffff;
 }
 </style>

@@ -1,25 +1,12 @@
 <template>
-  <el-form 
-    :model="form" 
-    :rules="rules" 
-    ref="registerForm" 
-    class="register-form"
-    @submit.prevent="handleRegister"
-  >
-    <!-- 角色选择 -->
-    <div class="form-group">
-      <label class="form-label">选择角色</label>
-      <el-select 
-        v-model="form.role" 
-        placeholder="请选择您的角色"
-        class="form-control"
-        size="large"
-      >
-        <el-option label="患者" value="patient" />
-        <el-option label="医生" value="doctor" />
-        <el-option label="管理员" value="admin" />
-      </el-select>
-    </div>
+  <div class="register-form-wrapper">
+    <el-form 
+      :model="form" 
+      :rules="rules" 
+      ref="registerForm" 
+      class="register-form"
+      @submit.prevent="handleRegister"
+    >
 
     <!-- 姓名 -->
     <div class="form-group">
@@ -81,38 +68,48 @@
     </div>
 
     <!-- 注册按钮 -->
-    <el-button 
-      type="primary" 
-      size="large" 
-      class="register-btn"
-      :loading="loading"
-      @click="handleRegister"
-    >
-      {{ loading ? '注册中...' : '注册' }}
-    </el-button>
-
-    <!-- 登录链接 -->
-    <div class="login-section">
-      <span class="login-text">已有账号？</span>
-      <router-link to="/login" class="login-link">立即登录</router-link>
+    <div class="form-actions">
+      <el-button 
+        class="btn-secondary"
+        size="large"
+        @click="$emit('back')"
+      >
+        上一步
+      </el-button>
+      <el-button 
+        type="primary" 
+        size="large" 
+        class="register-btn btn-primary"
+        :loading="loading"
+        @click="handleRegister"
+      >
+        {{ loading ? '注册中...' : '下一步' }}
+      </el-button>
     </div>
-  </el-form>
+    </el-form>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { useAuthStore } from '@/stores/auth'
 
-const router = useRouter()
+const props = defineProps<{
+  role: 'patient' | 'doctor' | 'admin'
+}>()
+
+const emit = defineEmits<{
+  next: []
+  back: []
+}>()
+
 const authStore = useAuthStore()
 
 const registerForm = ref<FormInstance>()
 const loading = ref(false)
 
-interface RegisterForm {
-  role: 'patient' | 'doctor' | 'admin'
+interface RegisterFormData {
   fullName: string
   username: string
   email: string
@@ -120,8 +117,7 @@ interface RegisterForm {
   confirmPassword: string
 }
 
-const form = reactive<RegisterForm>({
-  role: 'patient',
+const form = reactive<RegisterFormData>({
   fullName: '',
   username: '',
   email: '',
@@ -138,9 +134,6 @@ const validateConfirmPassword = (rule: any, value: string, callback: any) => {
 }
 
 const rules: FormRules = {
-  role: [
-    { required: true, message: '请选择角色', trigger: 'change' }
-  ],
   fullName: [
     { required: true, message: '请输入姓名', trigger: 'blur' }
   ],
@@ -174,13 +167,12 @@ const handleRegister = async () => {
       email: form.email,
       password: form.password,
       fullName: form.fullName,
-      role: form.role
+      role: props.role
     }
     
     await authStore.register(userData)
-    
     ElMessage.success('注册成功！')
-    router.push('/login')
+    emit('next')
     
   } catch (error: any) {
     if (error?.errors) {
@@ -195,29 +187,41 @@ const handleRegister = async () => {
 </script>
 
 <style scoped>
+.register-form-wrapper {
+  flex: 1;
+}
+
 .register-form {
   width: 100%;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 20px;
 }
 
 .form-label {
   display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #374151;
-  font-size: 0.9rem;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 14px;
 }
 
 .form-control {
   width: 100%;
 }
 
-:deep(.el-input__inner) {
+:deep(.el-input__wrapper) {
   height: 48px;
   border-radius: 8px;
+
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+:deep(.el-input__wrapper:hover) {
+  border-color: #2563eb;
+
   border: none;
   background-color: #f9fafb;
   transition: all 0.3s;
@@ -233,48 +237,43 @@ const handleRegister = async () => {
 :deep(.el-input) {
   background-color: #f9fafb;
   border-radius: 8px;
+
 }
 
-:deep(.el-select .el-input__inner) {
-  height: 48px;
+:deep(.el-input.is-focus .el-input__wrapper) {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.btn-secondary {
+  flex: 1;
+  background: #f3f4f6;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-primary {
+  flex: 1;
+}
+
+:deep(.el-button--primary) {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+:deep(.el-button--primary:hover) {
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
 }
 
 .register-btn {
   width: 100%;
-  height: 50px;
+  height: 48px;
   border-radius: 8px;
-  font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  transition: all 0.3s;
-}
-
-.register-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.login-section {
-  text-align: center;
-  padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.login-text {
-  color: #6b7280;
-  font-size: 0.9rem;
-}
-
-.login-link {
-  color: #667eea;
-  text-decoration: none;
-  font-weight: 600;
-  margin-left: 0.5rem;
-}
-
-.login-link:hover {
-  text-decoration: underline;
 }
 </style>
