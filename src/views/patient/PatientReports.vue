@@ -5,6 +5,13 @@
         <h1 class="text-2xl font-semibold text-gray-800 mb-1">我的影像报告</h1>
         <p class="text-sm text-gray-500">在这里您可以查看您的影像检查报告详情，并且支持在线打印和保存</p>
       </div>
+      <button 
+        class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-200"
+        @click="handleLogout"
+      >
+        <i class="fas fa-sign-out-alt"></i>
+        <span>退出登录</span>
+      </button>
     </div>
 
     <!-- 筛选区域 -->
@@ -294,9 +301,11 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 // 筛选条件
 const filters = reactive({
@@ -490,6 +499,22 @@ const printReport = (report: any) => {
 
 const goToAppointment = () => {
   router.push('/dashboard/patient/appointment')
+}
+
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm('确定要退出登录吗？', '退出确认', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    
+    authStore.logout()
+    ElMessage.success('已退出登录')
+    router.push('/')
+  } catch (error) {
+    // 用户取消退出
+  }
 }
 </script>
 

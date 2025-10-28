@@ -5,6 +5,13 @@
         <h1 class="text-2xl font-semibold text-gray-800 mb-1">账户设置</h1>
         <p class="text-sm text-gray-500">管理您的个人信息和账户安全设置</p>
       </div>
+      <button 
+        class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-200"
+        @click="handleLogout"
+      >
+        <i class="fas fa-sign-out-alt"></i>
+        <span>退出登录</span>
+      </button>
     </div>
 
     <div class="flex gap-6">
@@ -393,7 +400,12 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useAuthStore } from '@/stores/auth'
+
+const router = useRouter()
+const authStore = useAuthStore()
 
 // 当前活跃的标签页
 const activeTab = ref('profile')
@@ -483,6 +495,22 @@ const saveProfile = () => {
 
 const resetProfile = () => {
   ElMessage.info('已重置为原始信息')
+}
+
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm('确定要退出登录吗？', '退出确认', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    
+    authStore.logout()
+    ElMessage.success('已退出登录')
+    router.push('/')
+  } catch (error) {
+    // 用户取消退出
+  }
 }
 </script>
 
