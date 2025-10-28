@@ -28,20 +28,21 @@ interface Props {
   options?: any
 }
 
-// 默认数据函数
-const defaultData = () => ({
-  labels: [] as string[],
-  datasets: [{
-    label: '',
-    data: [] as number[],
-    backgroundColor: '#36A2EB',
-    borderColor: '#36A2EB',
-    borderWidth: 1
-  }] as BarDataset[]
-})
-
+// 定义组件属性
 const props = withDefaults(defineProps<Props>(), {
-  data: defaultData,
+  data: () => {
+    const defaultData = {
+      labels: ['1月', '2月', '3月', '4月', '5月', '6月'] as string[],
+      datasets: [
+        {
+          label: '诊断数量',
+          data: [120, 190, 150, 180, 220, 250] as number[],
+          backgroundColor: 'rgba(64, 158, 255, 0.7)'
+        } as BarDataset
+      ]
+    }
+    return defaultData
+  },
   options: () => ({})
 })
 

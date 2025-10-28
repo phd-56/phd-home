@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>医学影像诊断系统 - 诊断项目</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
+    <div class="flex items-center gap-2">
+      <i class="fas fa-hospital text-blue-600 text-xl"></i>
+      <span class="text-gray-800 font-medium">医学影像诊断系统</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <i class="fas fa-bell text-gray-600 text-xl cursor-pointer"></i>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+          <span class="text-blue-600 text-sm">张</span>
+        </div>
+        <div class="text-sm">
+          <div class="text-gray-800">张老师</div>
+          <div class="text-gray-400 text-xs">账号: ID 2023051008</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="flex pt-16">
+    <!-- Sidebar -->
+    <aside class="w-56 bg-white border-r border-gray-200 fixed left-0 top-16 bottom-0 overflow-y-auto">
+      <div class="p-4">
+        <div class="text-xs text-gray-400 mb-3">患者管理</div>
+        <nav class="space-y-1">
+          <a href="index.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-desktop"></i>
+            <span>我的工作台</span>
+          </a>
+          <a href="reports-list.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-file-medical"></i>
+            <span>影像报告</span>
+          </a>
+          <a href="diagnosis.html" class="flex items-center gap-3 px-3 py-2 text-blue-600 bg-blue-50 rounded-lg">
+            <i class="fas fa-stethoscope"></i>
+            <span>诊断项目</span>
+          </a>
+        </nav>
+
+        <div class="text-xs text-gray-400 mb-3 mt-6">账户管理</div>
+        <nav class="space-y-1">
+          <a href="account-settings.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-cog"></i>
+            <span>账户设置</span>
+          </a>
+          <a href="help-center.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-question-circle"></i>
+            <span>帮助中心</span>
+          </a>
+          <a href="#" onclick="if(confirm('确定要退出登录吗？')) { alert('已退出登录'); window.location.href='index.html'; } return false;" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>退出登录</span>
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-56 flex-1 p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Page Header -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-semibold text-gray-800 mb-1">诊断项目</h1>
+          <p class="text-sm text-gray-500">浏览所有可用的医学影像诊断项目，选择适合您的检查服务</p>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="bg-white rounded-lg border border-gray-200 p-5 mb-6">
+          <div class="flex gap-4 mb-4">
+            <div class="flex-1">
+              <div class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input type="text" placeholder="搜索诊断项目、科室或关键词..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              </div>
+            </div>
+            <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2">
+              <i class="fas fa-search"></i>
+              <span>搜索</span>
+            </button>
+          </div>
+
+          <!-- Category Tabs -->
+          <div class="flex gap-2 overflow-x-auto">
+            <button class="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm whitespace-nowrap">全部项目</button>
+            <button class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg text-sm whitespace-nowrap">MRI检查</button>
+            <button class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg text-sm whitespace-nowrap">CT检查</button>
+            <button class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg text-sm whitespace-nowrap">X光检查</button>
+            <button class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg text-sm whitespace-nowrap">超声检查</button>
+            <button class="px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg text-sm whitespace-nowrap">实验室检查</button>
+          </div>
+        </div>
+
+        <div class="flex gap-6">
+          <!-- Main Content Area -->
+          <div class="flex-1">
+            <!-- Diagnosis Items Grid -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+              <!-- Item 1: Brain MRI -->
+              <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-start gap-4 mb-4">
+                  <div class="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-brain text-purple-600 text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-gray-800 font-medium mb-1">颅脑MRI检查</h3>
+                    <p class="text-sm text-gray-500 mb-2">高分辨率脑部成像，用于诊断脑部疾病和损伤</p>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                      <span class="bg-purple-50 text-purple-600 text-xs px-2 py-1 rounded">MRI</span>
+                      <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">神经科</span>
+                      <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded">45分钟</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-gray-400 text-sm line-through mr-2">¥1200.00</span>
+                    <span class="text-green-600 font-semibold text-lg">¥850.00</span>
+                  </div>
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">立即预约</button>
+                </div>
+              </div>
+
+              <!-- Item 2: Chest CT -->
+              <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-start gap-4 mb-4">
+                  <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-lungs text-blue-600 text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-gray-800 font-medium mb-1">胸部CT检查</h3>
+                    <p class="text-sm text-gray-500 mb-2">详细的胸部断层扫描，检查肺部和心脏健康</p>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                      <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded">CT</span>
+                      <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">呼吸科</span>
+                      <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded">30分钟</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-gray-400 text-sm line-through mr-2">¥600.00</span>
+                    <span class="text-green-600 font-semibold text-lg">¥420.00</span>
+                  </div>
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">立即预约</button>
+                </div>
+              </div>
+
+              <!-- Item 3: Lumbar X-ray -->
+              <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-start gap-4 mb-4">
+                  <div class="w-12 h-12 bg-orange-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-x-ray text-orange-600 text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-gray-800 font-medium mb-1">腰椎X光检查</h3>
+                    <p class="text-sm text-gray-500 mb-2">快速检查腰椎结构，诊断骨骼问题</p>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                      <span class="bg-orange-50 text-orange-600 text-xs px-2 py-1 rounded">X光</span>
+                      <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">骨科</span>
+                      <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded">15分钟</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-gray-400 text-sm line-through mr-2">¥350.00</span>
+                    <span class="text-green-600 font-semibold text-lg">¥230.00</span>
+                  </div>
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">立即预约</button>
+                </div>
+              </div>
+
+              <!-- Item 4: Abdominal Ultrasound -->
+              <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-start gap-4 mb-4">
+                  <div class="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-heartbeat text-green-600 text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-gray-800 font-medium mb-1">腹部超声检查</h3>
+                    <p class="text-sm text-gray-500 mb-2">无创检查腹部器官，包括肝、胆、脾、肾等</p>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                      <span class="bg-green-50 text-green-600 text-xs px-2 py-1 rounded">超声</span>
+                      <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">消化科</span>
+                      <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded">20分钟</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-gray-400 text-sm line-through mr-2">¥380.00</span>
+                    <span class="text-green-600 font-semibold text-lg">¥280.00</span>
+                  </div>
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">立即预约</button>
+                </div>
+              </div>
+
+              <!-- Item 5: Cardiac MRI -->
+              <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-start gap-4 mb-4">
+                  <div class="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-heart text-red-600 text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-gray-800 font-medium mb-1">心脏MRI检查</h3>
+                    <p class="text-sm text-gray-500 mb-2">精确评估心脏结构和功能，诊断心脏疾病</p>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                      <span class="bg-purple-50 text-purple-600 text-xs px-2 py-1 rounded">MRI</span>
+                      <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">心内科</span>
+                      <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded">60分钟</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-gray-400 text-sm line-through mr-2">¥1500.00</span>
+                    <span class="text-green-600 font-semibold text-lg">¥1080.00</span>
+                  </div>
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">立即预约</button>
+                </div>
+              </div>
+
+              <!-- Item 6: Bone Density Test -->
+              <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-start gap-4 mb-4">
+                  <div class="w-12 h-12 bg-yellow-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-bone text-yellow-600 text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-gray-800 font-medium mb-1">骨密度检测</h3>
+                    <p class="text-sm text-gray-500 mb-2">评估骨质健康状况，预防骨质疏松</p>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                      <span class="bg-orange-50 text-orange-600 text-xs px-2 py-1 rounded">X光</span>
+                      <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">骨科</span>
+                      <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded">10分钟</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-gray-400 text-sm line-through mr-2">¥280.00</span>
+                    <span class="text-green-600 font-semibold text-lg">¥180.00</span>
+                  </div>
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">立即预约</button>
+                </div>
+              </div>
+
+              <!-- Item 7: Mammography -->
+              <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-start gap-4 mb-4">
+                  <div class="w-12 h-12 bg-pink-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-user-md text-pink-600 text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-gray-800 font-medium mb-1">乳腺钼靶检查</h3>
+                    <p class="text-sm text-gray-500 mb-2">乳腺癌早期筛查，女性健康必备检查</p>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                      <span class="bg-orange-50 text-orange-600 text-xs px-2 py-1 rounded">X光</span>
+                      <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">妇科</span>
+                      <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded">20分钟</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-gray-400 text-sm line-through mr-2">¥450.00</span>
+                    <span class="text-green-600 font-semibold text-lg">¥320.00</span>
+                  </div>
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">立即预约</button>
+                </div>
+              </div>
+
+              <!-- Item 8: Blood Test -->
+              <div class="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-start gap-4 mb-4">
+                  <div class="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-vial text-indigo-600 text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="text-gray-800 font-medium mb-1">全血细胞分析</h3>
+                    <p class="text-sm text-gray-500 mb-2">全面检查血液成分，评估整体健康状况</p>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                      <span class="bg-indigo-50 text-indigo-600 text-xs px-2 py-1 rounded">实验室</span>
+                      <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">检验科</span>
+                      <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded">5分钟</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-gray-400 text-sm line-through mr-2">¥150.00</span>
+                    <span class="text-green-600 font-semibold text-lg">¥98.00</span>
+                  </div>
+                  <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">立即预约</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-between bg-white rounded-lg border border-gray-200 p-4">
+              <div class="text-sm text-gray-500">共有 24 个诊断项目</div>
+              <div class="flex gap-2">
+                <button class="px-3 py-1 border border-gray-300 rounded text-gray-600 hover:bg-gray-50">上一页</button>
+                <button class="px-3 py-1 bg-blue-600 text-white rounded">1</button>
+                <button class="px-3 py-1 border border-gray-300 rounded text-gray-600 hover:bg-gray-50">2</button>
+                <button class="px-3 py-1 border border-gray-300 rounded text-gray-600 hover:bg-gray-50">3</button>
+                <button class="px-3 py-1 border border-gray-300 rounded text-gray-600 hover:bg-gray-50">下一页</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Sidebar -->
+          <div class="w-80 space-y-4">
+            <!-- Popular Items -->
+            <div class="bg-white rounded-lg border border-gray-200 p-5">
+              <h3 class="text-gray-800 font-medium mb-4 flex items-center gap-2">
+                <i class="fas fa-fire text-orange-500"></i>
+                <span>热门项目</span>
+              </h3>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-brain text-purple-600"></i>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-sm font-medium text-gray-800">颅脑MRI检查</div>
+                    <div class="text-xs text-green-600">¥850.00</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-lungs text-blue-600"></i>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-sm font-medium text-gray-800">胸部CT检查</div>
+                    <div class="text-xs text-green-600">¥420.00</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-heartbeat text-green-600"></i>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-sm font-medium text-gray-800">腹部超声检查</div>
+                    <div class="text-xs text-green-600">¥280.00</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Department Quick Access -->
+            <div class="bg-white rounded-lg border border-gray-200 p-5">
+              <h3 class="text-gray-800 font-medium mb-4">科室导航</h3>
+              <div class="grid grid-cols-2 gap-2">
+                <button class="p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 text-sm text-gray-700 hover:text-blue-600 transition-colors">
+                  <i class="fas fa-brain block mb-1"></i>
+                  神经科
+                </button>
+                <button class="p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 text-sm text-gray-700 hover:text-blue-600 transition-colors">
+                  <i class="fas fa-heart block mb-1"></i>
+                  心内科
+                </button>
+                <button class="p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 text-sm text-gray-700 hover:text-blue-600 transition-colors">
+                  <i class="fas fa-lungs block mb-1"></i>
+                  呼吸科
+                </button>
+                <button class="p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 text-sm text-gray-700 hover:text-blue-600 transition-colors">
+                  <i class="fas fa-bone block mb-1"></i>
+                  骨科
+                </button>
+                <button class="p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 text-sm text-gray-700 hover:text-blue-600 transition-colors">
+                  <i class="fas fa-stomach block mb-1"></i>
+                  消化科
+                </button>
+                <button class="p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 text-sm text-gray-700 hover:text-blue-600 transition-colors">
+                  <i class="fas fa-user-md block mb-1"></i>
+                  妇科
+                </button>
+              </div>
+            </div>
+
+            <!-- Booking Tips -->
+            <div class="bg-blue-50 rounded-lg border border-blue-200 p-5">
+              <h3 class="text-gray-800 font-medium mb-3 flex items-center gap-2">
+                <i class="fas fa-info-circle text-blue-600"></i>
+                <span>预约须知</span>
+              </h3>
+              <ul class="space-y-2 text-sm text-gray-600">
+                <li class="flex items-start gap-2">
+                  <i class="fas fa-check text-blue-600 mt-1 text-xs"></i>
+                  <span>请提前1-3天预约检查项目</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fas fa-check text-blue-600 mt-1 text-xs"></i>
+                  <span>部分检查需要空腹，请注意准备</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fas fa-check text-blue-600 mt-1 text-xs"></i>
+                  <span>携带身份证和医保卡到院检查</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i class="fas fa-check text-blue-600 mt-1 text-xs"></i>
+                  <span>检查报告将在1-3个工作日内出具</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Customer Support -->
+            <div class="bg-white rounded-lg border border-gray-200 p-5">
+              <h3 class="text-gray-800 font-medium mb-3">需要帮助？</h3>
+              <p class="text-sm text-gray-600 mb-4">如有疑问，请联系我们的客服团队</p>
+              <div class="space-y-2">
+                <a href="tel:400-123-4567" class="flex items-center gap-2 text-sm text-blue-600 hover:underline">
+                  <i class="fas fa-phone"></i>
+                  <span>400-123-4567</span>
+                </a>
+                <a href="mailto:support@hospital.com" class="flex items-center gap-2 text-sm text-blue-600 hover:underline">
+                  <i class="fas fa-envelope"></i>
+                  <span>support@hospital.com</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -13,8 +13,7 @@ export interface User {
 export interface LoginForm {
   username: string
   password: string
-  role: 'patient' | 'doctor' | 'admin'
-  rememberMe?: boolean
+  remember: boolean
 }
 
 export interface RegisterForm {

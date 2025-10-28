@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import doctorRoutes from './doctorRoutes'
+// 静态导入Login组件以测试加载问题
+import LoginView from '@/views/Login.vue'
 
 
 
@@ -14,19 +16,14 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: () => import('@/views/Login.vue')
+      component: LoginView
     },
     {
       path: '/register',
       name: 'Register',
       component: () => import('@/views/Register.vue')
     },
-    {
-      path: '/upload',
-      name: 'Upload',
-      component: () => import('@/views/Upload.vue'),
-      meta: { requiresAuth: true }
-    },
+    // {      path: '/upload',      name: 'Upload',      component: () => import('@/views/Upload.vue'),      meta: { requiresAuth: true }    },
     {
       path: '/report-preview',
       name: 'ReportPreview',
@@ -46,15 +43,34 @@ const router = createRouter({
           meta: { role: 'patient', requiresAuth: true },
           children: [
             {
-              path: 'image-upload',
-              name: 'PatientImageUpload',
-              component: () => import('@/views/patient/PatientImageUpload.vue'),
-              meta: { role: 'patient', requiresAuth: true }
-            },
-            {
               path: 'reports',
               name: 'PatientReports',
               component: () => import('@/views/patient/PatientReports.vue'),
+              meta: { role: 'patient', requiresAuth: true }
+            },
+            {
+              path: 'appointment',
+              name: 'PatientAppointment',
+              component: () => import('@/views/patient/PatientAppointment.vue'),
+              meta: { role: 'patient', requiresAuth: true }
+            },
+            {
+              path: 'settings',
+              name: 'PatientSettings',
+              component: () => import('@/views/patient/PatientSettings.vue'),
+              meta: { role: 'patient', requiresAuth: true }
+            },
+            {
+              path: 'help',
+              name: 'PatientHelp',
+              component: () => import('@/views/patient/PatientHelp.vue'),
+              meta: { role: 'patient', requiresAuth: true }
+            },
+            // 保留原有的路由以兼容性
+            {
+              path: 'image-upload',
+              name: 'PatientImageUpload',
+              component: () => import('@/views/patient/PatientImageUpload.vue'),
               meta: { role: 'patient', requiresAuth: true }
             },
             {
@@ -63,7 +79,18 @@ const router = createRouter({
               component: () => import('@/views/patient/PatientKnowledgeBase.vue'),
               meta: { role: 'patient', requiresAuth: true }
             },
-            {              path: 'feedback',              name: 'PatientFeedback',              component: () => import('@/views/patient/PatientFeedback.vue'),              meta: { role: 'patient', requiresAuth: true }            },            {              path: 'image-history',              name: 'PatientImageHistory',              component: () => import('@/views/patient/ImageHistory.vue'),              meta: { role: 'patient', requiresAuth: true }            }
+            {
+              path: 'feedback',
+              name: 'PatientFeedback',
+              component: () => import('@/views/patient/PatientFeedback.vue'),
+              meta: { role: 'patient', requiresAuth: true }
+            },
+            {
+              path: 'image-history',
+              name: 'PatientImageHistory',
+              component: () => import('@/views/patient/ImageHistory.vue'),
+              meta: { role: 'patient', requiresAuth: true }
+            }
           ]
         },
 
@@ -97,11 +124,7 @@ const router = createRouter({
             },
 
             // 上传功能
-            {
-              path: 'upload',
-              name: 'AdminUpload',
-              component: () => import('@/views/Upload.vue')
-            },
+            // {              path: 'upload',              name: 'AdminUpload',              component: () => import('@/views/Upload.vue')            },
 
             // 诊断相关路由
             {
@@ -136,11 +159,12 @@ const router = createRouter({
               name: 'AdminCaseDetail',
               component: () => import('@/views/case-management/CaseDetail.vue')
             },
-            {
-              path: 'cases/import',
-              name: 'AdminCaseImport',
-              component: () => import('@/views/case-management/HisImport.vue')
-            },
+            // 病例管理路由 - 注释掉因为文件不存在
+            // {
+            //   path: 'cases/import',
+            //   name: 'AdminCaseImport',
+            //   component: () => import('@/views/case-management/HisImport.vue')
+            // },
             {
               path: 'cases/document-upload',
               name: 'AdminDocumentUpload',

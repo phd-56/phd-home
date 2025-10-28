@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>医学影像诊断系统 - 我的影像报告</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
+    <div class="flex items-center gap-2">
+      <i class="fas fa-hospital text-blue-600 text-xl"></i>
+      <span class="text-gray-800 font-medium">医学影像诊断系统</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <i class="fas fa-bell text-gray-600 text-xl cursor-pointer"></i>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+          <span class="text-blue-600 text-sm">张</span>
+        </div>
+        <div class="text-sm">
+          <div class="text-gray-800">张老师</div>
+          <div class="text-gray-400 text-xs">账号: ID 2023051008</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="flex pt-16">
+    <!-- Sidebar -->
+    <aside class="w-56 bg-white border-r border-gray-200 fixed left-0 top-16 bottom-0 overflow-y-auto">
+      <div class="p-4">
+        <div class="text-xs text-gray-400 mb-3">患者管理</div>
+        <nav class="space-y-1">
+          <a href="index.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-desktop"></i>
+            <span>我的工作台</span>
+          </a>
+          <a href="reports-list.html" class="flex items-center gap-3 px-3 py-2 text-blue-600 bg-blue-50 rounded-lg">
+            <i class="fas fa-file-medical"></i>
+            <span>影像报告</span>
+          </a>
+          <a href="diagnosis.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-stethoscope"></i>
+            <span>诊断项目</span>
+          </a>
+        </nav>
+
+        <div class="text-xs text-gray-400 mb-3 mt-6">账户管理</div>
+        <nav class="space-y-1">
+          <a href="account-settings.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-cog"></i>
+            <span>账户设置</span>
+          </a>
+          <a href="help-center.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-question-circle"></i>
+            <span>帮助中心</span>
+          </a>
+          <a href="#" onclick="if(confirm('确定要退出登录吗？')) { alert('已退出登录'); window.location.href='index.html'; } return false;" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>退出登录</span>
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-56 flex-1 p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Page Header -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-semibold text-gray-800 mb-1">我的影像报告</h1>
+          <p class="text-sm text-gray-500">在这里您可以查看您的影像检查报告详情，并且支持在线打印和保存</p>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="bg-white rounded-lg border border-gray-200 p-5 mb-6">
+          <div class="grid grid-cols-4 gap-4 mb-4">
+            <div>
+              <label class="text-sm text-gray-600 mb-2 block">影像类型</label>
+              <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700">
+                <option>全部影像类型</option>
+                <option>MRI检查</option>
+                <option>CT检查</option>
+                <option>X光检查</option>
+                <option>超声检查</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-sm text-gray-600 mb-2 block">医院名称</label>
+              <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700">
+                <option>全部医院</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-sm text-gray-600 mb-2 block">检查时间</label>
+              <select class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700">
+                <option>最近一年</option>
+                <option>最近三个月</option>
+                <option>最近一个月</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-sm text-gray-600 mb-2 block">检索报告</label>
+              <input type="text" placeholder="搜索影像报告、检查项目等" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <div class="flex gap-2">
+              <button class="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium">MRI检查</button>
+              <button class="px-4 py-1.5 text-gray-600 hover:bg-gray-50 rounded-lg text-sm">CT检查</button>
+              <button class="px-4 py-1.5 text-gray-600 hover:bg-gray-50 rounded-lg text-sm">X光检查</button>
+              <button class="px-4 py-1.5 text-gray-600 hover:bg-gray-50 rounded-lg text-sm">超声检查</button>
+              <button class="px-4 py-1.5 text-gray-600 hover:bg-gray-50 rounded-lg text-sm">健康体检</button>
+            </div>
+            <div class="flex gap-2">
+              <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-50">
+                <i class="fas fa-search mr-1"></i>
+                查询报告
+              </button>
+              <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
+                <i class="fas fa-calendar-plus mr-1"></i>
+                我的预约
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-6">
+          <!-- Left Sidebar -->
+          <div class="w-64 space-y-6">
+            <!-- Timeline -->
+            <div class="bg-white rounded-lg border border-gray-200 p-5">
+              <h3 class="text-gray-800 font-medium mb-4">报告时间轴</h3>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg cursor-pointer">
+                  <i class="fas fa-calendar text-blue-600"></i>
+                  <div>
+                    <div class="text-sm font-medium text-gray-800">2023年</div>
+                    <div class="text-xs text-gray-500">如影像检查报告</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <i class="fas fa-calendar text-gray-400"></i>
+                  <div>
+                    <div class="text-sm font-medium text-gray-800">2022年</div>
+                    <div class="text-xs text-gray-500">3次影像检查报告</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+                  <i class="fas fa-calendar text-gray-400"></i>
+                  <div>
+                    <div class="text-sm font-medium text-gray-800">2021年</div>
+                    <div class="text-xs text-gray-500">1次影像检查报告</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Analytics Chart -->
+            <div class="bg-white rounded-lg border border-gray-200 p-5">
+              <h3 class="text-gray-800 font-medium mb-4">检查类型分析</h3>
+              <div class="space-y-3">
+                <div>
+                  <div class="flex items-center justify-between text-sm mb-1">
+                    <span class="text-gray-600">MRI检查</span>
+                    <span class="text-gray-800 font-medium">5 次</span>
+                  </div>
+                  <div class="w-full bg-gray-100 rounded-full h-2">
+                    <div class="bg-blue-500 h-2 rounded-full" style="width: 100%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between text-sm mb-1">
+                    <span class="text-gray-600">CT检查</span>
+                    <span class="text-gray-800 font-medium">3 次</span>
+                  </div>
+                  <div class="w-full bg-gray-100 rounded-full h-2">
+                    <div class="bg-blue-400 h-2 rounded-full" style="width: 60%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between text-sm mb-1">
+                    <span class="text-gray-600">X光检查</span>
+                    <span class="text-gray-800 font-medium">2 次</span>
+                  </div>
+                  <div class="w-full bg-gray-100 rounded-full h-2">
+                    <div class="bg-blue-300 h-2 rounded-full" style="width: 40%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between text-sm mb-1">
+                    <span class="text-gray-600">超声检查</span>
+                    <span class="text-gray-800 font-medium">1 次</span>
+                  </div>
+                  <div class="w-full bg-gray-100 rounded-full h-2">
+                    <div class="bg-blue-200 h-2 rounded-full" style="width: 20%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Report List -->
+          <div class="flex-1">
+            <div class="bg-white rounded-lg border border-gray-200">
+              <div class="p-5 border-b border-gray-200 flex items-center justify-between">
+                <h2 class="text-lg font-semibold text-gray-800">报告列表</h2>
+                <div class="flex gap-2">
+                  <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                    <i class="fas fa-list"></i>
+                  </button>
+                  <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                    <i class="fas fa-th"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Report Items -->
+              <div class="divide-y divide-gray-200">
+                <!-- Report 1 -->
+                <div class="p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-gray-800 font-medium">腰关节MRI检查</h3>
+                        <span class="bg-green-50 text-green-600 text-xs px-2 py-1 rounded">已完成</span>
+                      </div>
+                      <div class="flex items-center gap-4 text-sm text-gray-500">
+                        <span><i class="far fa-calendar mr-1"></i>检查: 2023-06-15</span>
+                        <span><i class="far fa-file-alt mr-1"></i>报告: 2023-06-16</span>
+                        <span><i class="fas fa-user-md mr-1"></i>李医生 (骨科)</span>
+                      </div>
+                    </div>
+                    <div class="flex gap-2">
+                      <button class="p-2 text-blue-600 hover:bg-blue-50 rounded">
+                        <i class="far fa-eye"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-download"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-share-alt"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-print"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-3">诊断意见：左膝关节半月板损伤合并积液（上图），关节囊肿胀，建议进一步治疗。请遵医嘱进行后续治疗，如有疑问，请咨询主治医生。</p>
+                  <div class="flex gap-2">
+                    <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">腰关节</span>
+                    <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">半月板损伤</span>
+                  </div>
+                </div>
+
+                <!-- Report 2 -->
+                <div class="p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-gray-800 font-medium">胸部CT检查</h3>
+                        <span class="bg-green-50 text-green-600 text-xs px-2 py-1 rounded">已完成</span>
+                      </div>
+                      <div class="flex items-center gap-4 text-sm text-gray-500">
+                        <span><i class="far fa-calendar mr-1"></i>检查: 2023-07-22</span>
+                        <span><i class="far fa-file-alt mr-1"></i>报告: 2023-07-23</span>
+                        <span><i class="fas fa-user-md mr-1"></i>王医生 (呼科)</span>
+                      </div>
+                    </div>
+                    <div class="flex gap-2">
+                      <button class="p-2 text-blue-600 hover:bg-blue-50 rounded">
+                        <i class="far fa-eye"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-download"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-share-alt"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-print"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-3">诊断意见：1.右肺中叶结节性病变，建议进行活检。2.纵隔淋巴结肿大，需进一步检查。3.请遵医嘱进行后续治疗，如有疑问，请咨询主治医生。</p>
+                  <div class="flex gap-2">
+                    <span class="px-2 py-1 bg-green-50 text-green-600 text-xs rounded">CT</span>
+                    <span class="px-2 py-1 bg-green-50 text-green-600 text-xs rounded">肺部</span>
+                    <span class="px-2 py-1 bg-green-50 text-green-600 text-xs rounded">肺部感染</span>
+                  </div>
+                </div>
+
+                <!-- Report 3 -->
+                <div class="p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-gray-800 font-medium">颅部X光检查</h3>
+                        <span class="bg-green-50 text-green-600 text-xs px-2 py-1 rounded">已完成</span>
+                      </div>
+                      <div class="flex items-center gap-4 text-sm text-gray-500">
+                        <span><i class="far fa-calendar mr-1"></i>检查: 2023-06-30</span>
+                        <span><i class="far fa-file-alt mr-1"></i>报告: 2023-07-01</span>
+                        <span><i class="fas fa-user-md mr-1"></i>张医生 (神经科)</span>
+                      </div>
+                    </div>
+                    <div class="flex gap-2">
+                      <button class="p-2 text-blue-600 hover:bg-blue-50 rounded">
+                        <i class="far fa-eye"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-download"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-share-alt"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-print"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-3">诊断意见：颅骨未见明显异常，心影大小正常，双肺纹理清晰，未见明显异常，肋骨及脊柱，均未见明显异常，诊断结果正常，定期复查即可。</p>
+                  <div class="flex gap-2">
+                    <span class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded">关节</span>
+                    <span class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded">颅部</span>
+                    <span class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded">平衡</span>
+                  </div>
+                </div>
+
+                <!-- Report 4 -->
+                <div class="p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-gray-800 font-medium">头部MRI扫描</h3>
+                        <span class="bg-green-50 text-green-600 text-xs px-2 py-1 rounded">已完成</span>
+                      </div>
+                      <div class="flex items-center gap-4 text-sm text-gray-500">
+                        <span><i class="far fa-calendar mr-1"></i>检查: 2023-05-10</span>
+                        <span><i class="far fa-file-alt mr-1"></i>报告: 2023-05-11</span>
+                        <span><i class="fas fa-user-md mr-1"></i>刘医生 (神经科)</span>
+                      </div>
+                    </div>
+                    <div class="flex gap-2">
+                      <button class="p-2 text-blue-600 hover:bg-blue-50 rounded">
+                        <i class="far fa-eye"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-download"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-share-alt"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-print"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-3">诊断意见：头部MRI扫描未见异常，大脑皮层正常，双侧脑室对称，未见占位性病变，血管系统正常，建议定期复查，如有不适请及时就医。</p>
+                  <div class="flex gap-2">
+                    <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">MRI</span>
+                    <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">头部</span>
+                    <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">平衡</span>
+                  </div>
+                </div>
+
+                <!-- Report 5 -->
+                <div class="p-5">
+                  <div class="flex items-start justify-between mb-3">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <h3 class="text-gray-800 font-medium">胸关节超声检查</h3>
+                        <span class="bg-green-50 text-green-600 text-xs px-2 py-1 rounded">已完成</span>
+                      </div>
+                      <div class="flex items-center gap-4 text-sm text-gray-500">
+                        <span><i class="far fa-calendar mr-1"></i>检查: 2023-03-18</span>
+                        <span><i class="far fa-file-alt mr-1"></i>报告: 2023-03-18</span>
+                        <span><i class="fas fa-user-md mr-1"></i>赵医生 (骨科)</span>
+                      </div>
+                    </div>
+                    <div class="flex gap-2">
+                      <button class="p-2 text-blue-600 hover:bg-blue-50 rounded">
+                        <i class="far fa-eye"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-download"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-share-alt"></i>
+                      </button>
+                      <button class="p-2 text-gray-600 hover:bg-gray-50 rounded">
+                        <i class="fas fa-print"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="text-sm text-gray-600 mb-3">诊断意见：右肩关节超声检查，关节囊未见明显异常，肌腱未见明显损伤，关节腔内未见积液，少量关节积液，建议定期复查，如有不适请及时就医。</p>
+                  <div class="flex gap-2">
+                    <span class="px-2 py-1 bg-yellow-50 text-yellow-600 text-xs rounded">超声</span>
+                    <span class="px-2 py-1 bg-yellow-50 text-yellow-600 text-xs rounded">胸关节</span>
+                    <span class="px-2 py-1 bg-yellow-50 text-yellow-600 text-xs rounded">肌腱损伤</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pagination -->
+              <div class="p-5 border-t border-gray-200 flex items-center justify-between">
+                <div class="text-sm text-gray-500">共有15条，共12条报告</div>
+                <div class="flex gap-2">
+                  <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">1</button>
+                  <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">2</button>
+                  <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">3</button>
+                  <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Usage Guide -->
+            <div class="bg-white rounded-lg border border-gray-200 p-5 mt-6">
+              <h3 class="text-gray-800 font-medium mb-4">报告使用指南</h3>
+              <div class="grid grid-cols-4 gap-4">
+                <div class="text-center">
+                  <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-eye text-blue-600 text-xl"></i>
+                  </div>
+                  <div class="text-sm font-medium text-gray-800 mb-1">可在线查看报告</div>
+                  <div class="text-xs text-gray-500">点击报告卡片，可查看完整报告内容，可在线浏览报告详情</div>
+                </div>
+                <div class="text-center">
+                  <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-download text-green-600 text-xl"></i>
+                  </div>
+                  <div class="text-sm font-medium text-gray-800 mb-1">下载报告文件</div>
+                  <div class="text-xs text-gray-500">支持下载PDF格式，可用于打印或存档，方便随时查看</div>
+                </div>
+                <div class="text-center">
+                  <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-share-alt text-purple-600 text-xl"></i>
+                  </div>
+                  <div class="text-sm font-medium text-gray-800 mb-1">分享给医生</div>
+                  <div class="text-xs text-gray-500">通过系统分享给医生，方便医生查看，可用于远程会诊</div>
+                </div>
+                <div class="text-center">
+                  <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fas fa-cloud text-orange-600 text-xl"></i>
+                  </div>
+                  <div class="text-sm font-medium text-gray-800 mb-1">云端储存</div>
+                  <div class="text-xs text-gray-500">所有报告云端存储，永久保存，随时随地可以查看</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

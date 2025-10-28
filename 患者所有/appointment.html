@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>影像检查预约 - 医学影像诊断系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+                    <span class="text-white text-sm font-bold">医</span>
+                </div>
+                <span class="text-gray-800 font-medium">医学影像诊断系统</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button class="p-2 hover:bg-gray-100 rounded-lg relative">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-blue-600 text-sm">张</span>
+                    </div>
+                    <div class="text-sm">
+                        <div class="text-gray-800">张老师</div>
+                        <div class="text-gray-400 text-xs">患者 ID: 2023051008</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="pt-16 px-6 py-6">
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-semibold text-gray-800 mb-2">影像检查预约</h1>
+            <p class="text-gray-500 text-sm">轻松预约您需要的影像学检查项目，选择合适的时间和地点</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="bg-white rounded-lg p-6 mb-6">
+            <div class="flex items-center justify-between max-w-3xl mx-auto">
+                <!-- Step 1 - Active -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium mb-2">
+                        1
+                    </div>
+                    <span class="text-sm text-blue-600 font-medium">选择检查项目</span>
+                </div>
+                <div class="flex-1 h-px bg-gray-200 mx-4 mb-8"></div>
+                
+                <!-- Step 2 -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-medium mb-2">
+                        2
+                    </div>
+                    <span class="text-sm text-gray-500">选择时间</span>
+                </div>
+                <div class="flex-1 h-px bg-gray-200 mx-4 mb-8"></div>
+                
+                <!-- Step 3 -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-medium mb-2">
+                        3
+                    </div>
+                    <span class="text-sm text-gray-500">确认信息</span>
+                </div>
+                <div class="flex-1 h-px bg-gray-200 mx-4 mb-8"></div>
+                
+                <!-- Step 4 -->
+                <div class="flex flex-col items-center flex-1">
+                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-medium mb-2">
+                        4
+                    </div>
+                    <span class="text-sm text-gray-500">预约完成</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-3 gap-6">
+            <!-- Left Section - Examination Selection -->
+            <div class="col-span-2">
+                <div class="bg-white rounded-lg p-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-2">选择检查项目</h2>
+                    <p class="text-gray-500 text-sm mb-6">请选择您需要进行的影像学检查项目，可在右侧查看检查须知</p>
+                    
+                    <!-- Filter Tabs -->
+                    <div class="flex gap-2 mb-6 border-b border-gray-200">
+                        <button class="px-4 py-2 text-blue-600 border-b-2 border-blue-600 font-medium">全部检查</button>
+                        <button class="px-4 py-2 text-gray-600 hover:text-gray-800">MRI检查</button>
+                        <button class="px-4 py-2 text-gray-600 hover:text-gray-800">CT检查</button>
+                        <button class="px-4 py-2 text-gray-600 hover:text-gray-800">X光检查</button>
+                        <button class="px-4 py-2 text-gray-600 hover:text-gray-800">超声检查</button>
+                    </div>
+
+                    <!-- Examination Cards Grid -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Card 1 - Brain MRI -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer relative">
+                            <div class="absolute top-4 right-4">
+                                <input type="radio" name="examination" class="w-4 h-4 text-blue-600">
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-gray-800 mb-1">颅脑MRI检查</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed">对颅脑进行磁共振成像检查，清晰显示脑部结构，适用于脑部疾病诊断</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">脑部</span>
+                                <span class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded">头部</span>
+                                <span class="px-2 py-1 bg-green-50 text-green-600 text-xs rounded">3D成像</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-gray-400 text-sm line-through mr-2">标准价格</span>
+                                    <span class="text-lg font-semibold text-gray-800">¥850.00</span>
+                                </div>
+                                <div class="text-green-600 text-sm">
+                                    会员价 ¥680.00
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 - Chest CT -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer relative">
+                            <div class="absolute top-4 right-4">
+                                <input type="radio" name="examination" class="w-4 h-4 text-blue-600">
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-gray-800 mb-1">胸部CT检查</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed">对胸部进行CT扫描检查，可清晰显示肺部、纵隔等结构</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">CT</span>
+                                <span class="px-2 py-1 bg-green-50 text-green-600 text-xs rounded">胸部</span>
+                                <span class="px-2 py-1 bg-orange-50 text-orange-600 text-xs rounded">1小时</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-gray-400 text-sm line-through mr-2">标准价格</span>
+                                    <span class="text-lg font-semibold text-gray-800">¥420.00</span>
+                                </div>
+                                <div class="text-green-600 text-sm">
+                                    会员价 ¥336.00
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 - Lumbar X-ray -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer relative">
+                            <div class="absolute top-4 right-4">
+                                <input type="radio" name="examination" class="w-4 h-4 text-blue-600">
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-gray-800 mb-1">腰关节X光检查</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed">采用X光对腰关节进行检查，可快速诊断骨骼相关疾病</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded">关节</span>
+                                <span class="px-2 py-1 bg-orange-50 text-orange-600 text-xs rounded">腰关节</span>
+                                <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">10分钟</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-gray-400 text-sm line-through mr-2">标准价格</span>
+                                    <span class="text-lg font-semibold text-gray-800">¥230.00</span>
+                                </div>
+                                <div class="text-green-600 text-sm">
+                                    会员价 ¥184.00
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 - Abdominal Ultrasound -->
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer relative">
+                            <div class="absolute top-4 right-4">
+                                <input type="radio" name="examination" class="w-4 h-4 text-blue-600">
+                            </div>
+                            <div class="flex items-start gap-3 mb-3">
+                                <div class="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-gray-800 mb-1">腹部超声检查</h3>
+                                    <p class="text-xs text-gray-500 leading-relaxed">对腹部进行超声检查，可检查肝、胆、胰、脾、肾等脏器情况</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mb-3">
+                                <span class="px-2 py-1 bg-orange-50 text-orange-600 text-xs rounded">超声</span>
+                                <span class="px-2 py-1 bg-yellow-50 text-yellow-600 text-xs rounded">腹部</span>
+                                <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">20分钟</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="text-gray-400 text-sm line-through mr-2">标准价格</span>
+                                    <span class="text-lg font-semibold text-gray-800">¥280.00</span>
+                                </div>
+                                <div class="text-green-600 text-sm">
+                                    会员价 ¥224.00
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Doctor Information -->
+                <div class="bg-white rounded-lg p-6 mt-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-800">开单医生信息</h2>
+                        <button class="text-blue-600 text-sm hover:underline">
+                            <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-blue-600 text-lg font-medium">王</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-medium text-gray-800 mb-1">王医生</h3>
+                            <p class="text-sm text-gray-500">神经科 - 脑部专家组</p>
+                            <p class="text-xs text-gray-400 mt-1">开单日期：2023.08.20</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section - Appointment Notice -->
+            <div class="col-span-1">
+                <div class="bg-white rounded-lg p-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">预约须知</h2>
+                    <div class="space-y-4 text-sm text-gray-600">
+                        <div class="flex gap-2">
+                            <span class="text-blue-600 flex-shrink-0">•</span>
+                            <p>请提前30分钟到达检查地点，携带身份证和预约凭证</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="text-blue-600 flex-shrink-0">•</span>
+                            <p>部分检查需要空腹，请提前咨询医生</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="text-blue-600 flex-shrink-0">•</span>
+                            <p>如需取消或改期，请至少提前24小时联系我们</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="text-blue-600 flex-shrink-0">•</span>
+                            <p>检查结果将在3-5个工作日内出具</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-6 space-y-3">
+                    <button class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                        下一步：选择时间
+                    </button>
+                    <button onclick="window.location.href='index.html'" class="w-full bg-white border border-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-50 transition-colors">
+                        返回工作台
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

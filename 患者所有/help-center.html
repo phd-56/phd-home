@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>医学影像诊断系统 - 帮助中心</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
+    <div class="flex items-center gap-2">
+      <i class="fas fa-hospital text-blue-600 text-xl"></i>
+      <span class="text-gray-800 font-medium">医学影像诊断系统</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <i class="fas fa-bell text-gray-600 text-xl cursor-pointer"></i>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+          <span class="text-blue-600 text-sm">张</span>
+        </div>
+        <div class="text-sm">
+          <div class="text-gray-800">张老师</div>
+          <div class="text-gray-400 text-xs">账号: ID 2023051008</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="flex pt-16">
+    <!-- Sidebar -->
+    <aside class="w-56 bg-white border-r border-gray-200 fixed left-0 top-16 bottom-0 overflow-y-auto">
+      <div class="p-4">
+        <div class="text-xs text-gray-400 mb-3">患者管理</div>
+        <nav class="space-y-1">
+          <a href="index.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-desktop"></i>
+            <span>我的工作台</span>
+          </a>
+          <a href="reports-list.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-file-medical"></i>
+            <span>影像报告</span>
+          </a>
+          <a href="diagnosis.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-stethoscope"></i>
+            <span>诊断项目</span>
+          </a>
+        </nav>
+
+        <div class="text-xs text-gray-400 mb-3 mt-6">账户管理</div>
+        <nav class="space-y-1">
+          <a href="account-settings.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-user-cog"></i>
+            <span>账户设置</span>
+          </a>
+          <a href="help-center.html" class="flex items-center gap-3 px-3 py-2 text-blue-600 bg-blue-50 rounded-lg">
+            <i class="fas fa-question-circle"></i>
+            <span>帮助中心</span>
+          </a>
+          <a href="#" onclick="if(confirm('确定要退出登录吗？')) { alert('已退出登录'); }" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>退出登录</span>
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-56 flex-1 p-6">
+      <div class="max-w-5xl mx-auto">
+        <!-- Page Header -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-semibold text-gray-800 mb-1">帮助中心</h1>
+          <p class="text-sm text-gray-500">查找常见问题解答和使用指南</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+          <div class="relative">
+            <input type="text" placeholder="搜索您遇到的问题..." class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="grid grid-cols-4 gap-4 mb-6">
+          <a href="#" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow text-center">
+            <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <i class="fas fa-book text-blue-600 text-xl"></i>
+            </div>
+            <div class="text-sm font-medium text-gray-800">使用指南</div>
+          </a>
+          <a href="#" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow text-center">
+            <div class="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <i class="fas fa-video text-green-600 text-xl"></i>
+            </div>
+            <div class="text-sm font-medium text-gray-800">视频教程</div>
+          </a>
+          <a href="#" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow text-center">
+            <div class="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <i class="fas fa-comments text-purple-600 text-xl"></i>
+            </div>
+            <div class="text-sm font-medium text-gray-800">在线客服</div>
+          </a>
+          <a href="#" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow text-center">
+            <div class="w-12 h-12 bg-orange-50 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <i class="fas fa-phone text-orange-600 text-xl"></i>
+            </div>
+            <div class="text-sm font-medium text-gray-800">联系我们</div>
+          </a>
+        </div>
+
+        <!-- FAQ Sections -->
+        <div class="space-y-6">
+          <!-- Common Questions -->
+          <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <i class="fas fa-question-circle text-blue-600"></i>
+              常见问题
+            </h2>
+            <div class="space-y-3">
+              <details class="group">
+                <summary class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-200">
+                  <span class="text-gray-800">如何预约影像检查？</span>
+                  <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <div class="py-3 text-sm text-gray-600">
+                  <p class="mb-2">您可以通过以下步骤预约影像检查：</p>
+                  <ol class="list-decimal list-inside space-y-1 ml-2">
+                    <li>点击首页的"预约检查"按钮</li>
+                    <li>选择您需要的检查项目</li>
+                    <li>选择合适的时间段</li>
+                    <li>确认预约信息并提交</li>
+                    <li>等待系统确认，您将收到短信通知</li>
+                  </ol>
+                </div>
+              </details>
+
+              <details class="group">
+                <summary class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-200">
+                  <span class="text-gray-800">如何查看我的检查报告？</span>
+                  <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <div class="py-3 text-sm text-gray-600">
+                  <p class="mb-2">查看检查报告的方法：</p>
+                  <ol class="list-decimal list-inside space-y-1 ml-2">
+                    <li>进入"影像报告"页面</li>
+                    <li>在报告列表中找到您需要查看的报告</li>
+                    <li>点击"查看详情"按钮</li>
+                    <li>您也可以下载PDF格式的报告保存到本地</li>
+                  </ol>
+                </div>
+              </details>
+
+              <details class="group">
+                <summary class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-200">
+                  <span class="text-gray-800">检查前需要做哪些准备？</span>
+                  <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <div class="py-3 text-sm text-gray-600">
+                  <p class="mb-2">不同的检查项目有不同的准备要求：</p>
+                  <ul class="list-disc list-inside space-y-1 ml-2">
+                    <li>CT检查：部分检查需要空腹4-6小时</li>
+                    <li>MRI检查：需要取下所有金属物品</li>
+                    <li>超声检查：腹部超声需要空腹，膀胱超声需要憋尿</li>
+                    <li>X光检查：一般无特殊要求</li>
+                  </ul>
+                  <p class="mt-2">具体要求请查看预约确认短信或咨询医护人员。</p>
+                </div>
+              </details>
+
+              <details class="group">
+                <summary class="flex items-center justify-between cursor-pointer py-3 border-b border-gray-200">
+                  <span class="text-gray-800">如何取消或修改预约？</span>
+                  <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <div class="py-3 text-sm text-gray-600">
+                  <p class="mb-2">取消或修改预约的步骤：</p>
+                  <ol class="list-decimal list-inside space-y-1 ml-2">
+                    <li>进入"我的工作台"或"检查预约"页面</li>
+                    <li>找到您要修改的预约记录</li>
+                    <li>点击"修改"或"取消"按钮</li>
+                    <li>请注意：检查前24小时内无法取消预约</li>
+                  </ol>
+                </div>
+              </details>
+
+              <details class="group">
+                <summary class="flex items-center justify-between cursor-pointer py-3">
+                  <span class="text-gray-800">报告多久可以出来？</span>
+                  <i class="fas fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <div class="py-3 text-sm text-gray-600">
+                  <p class="mb-2">不同检查的报告时间：</p>
+                  <ul class="list-disc list-inside space-y-1 ml-2">
+                    <li>X光检查：通常1-2小时内出报告</li>
+                    <li>CT检查：通常24小时内出报告</li>
+                    <li>MRI检查：通常24-48小时内出报告</li>
+                    <li>超声检查：通常当天出报告</li>
+                  </ul>
+                  <p class="mt-2">报告完成后，系统会通过短信通知您。</p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- Account & Security -->
+          <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <i class="fas fa-shield-alt text-green-600"></i>
+              账户与安全
+            </h2>
+            <div class="space-y-3">
+              <a href="#" class="flex items-center justify-between py-3 border-b border-gray-200 hover:bg-gray-50 px-2 rounded">
+                <span class="text-gray-800">如何修改登录密码？</span>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+              </a>
+              <a href="#" class="flex items-center justify-between py-3 border-b border-gray-200 hover:bg-gray-50 px-2 rounded">
+                <span class="text-gray-800">如何绑定/更换手机号？</span>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+              </a>
+              <a href="#" class="flex items-center justify-between py-3 border-b border-gray-200 hover:bg-gray-50 px-2 rounded">
+                <span class="text-gray-800">忘记密码怎么办？</span>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+              </a>
+              <a href="#" class="flex items-center justify-between py-3 hover:bg-gray-50 px-2 rounded">
+                <span class="text-gray-800">如何开启两步验证？</span>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Contact Support -->
+          <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <i class="fas fa-headset text-purple-600"></i>
+              联系客服
+            </h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-phone text-blue-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-600">客服热线</div>
+                    <div class="font-semibold text-gray-800">400-123-4567</div>
+                  </div>
+                </div>
+                <p class="text-xs text-gray-500">工作时间：周一至周日 8:00-20:00</p>
+              </div>
+
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-envelope text-green-600"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-600">客服邮箱</div>
+                    <div class="font-semibold text-gray-800">support@hospital.com</div>
+                  </div>
+                </div>
+                <p class="text-xs text-gray-500">我们会在24小时内回复您的邮件</p>
+              </div>
+            </div>
+
+            <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+              <div class="flex items-start gap-3">
+                <i class="fas fa-info-circle text-blue-600 mt-1"></i>
+                <div class="text-sm text-gray-700">
+                  <p class="font-medium mb-1">在线客服</p>
+                  <p class="text-gray-600">如需即时帮助，您可以点击页面右下角的在线客服图标，我们的客服人员将为您提供实时帮助。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Floating Chat Button -->
+  <button class="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 flex items-center justify-center">
+    <i class="fas fa-comments text-xl"></i>
+  </button>
+</body>
+</html>

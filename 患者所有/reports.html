@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>医学影像诊断系统 - 影像报告</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
+    <div class="flex items-center gap-2">
+      <i class="fas fa-hospital text-blue-600 text-xl"></i>
+      <span class="text-gray-800 font-medium">医学影像诊断系统</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <i class="fas fa-bell text-gray-600 text-xl cursor-pointer"></i>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+          <span class="text-blue-600 text-sm">张</span>
+        </div>
+        <div class="text-sm">
+          <div class="text-gray-800">张老师</div>
+          <div class="text-gray-400 text-xs">账号: ID 2023051008</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="flex pt-16">
+    <!-- Sidebar -->
+    <aside class="w-56 bg-white border-r border-gray-200 fixed left-0 top-16 bottom-0 overflow-y-auto">
+      <div class="p-4">
+        <div class="text-xs text-gray-400 mb-3">患者管理</div>
+        <nav class="space-y-1">
+          <a href="index.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-desktop"></i>
+            <span>我的工作台</span>
+          </a>
+          <a href="reports-list.html" class="flex items-center gap-3 px-3 py-2 text-blue-600 bg-blue-50 rounded-lg">
+            <i class="fas fa-file-medical"></i>
+            <span>影像报告</span>
+          </a>
+          <a href="diagnosis.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-stethoscope"></i>
+            <span>诊断项目</span>
+          </a>
+        </nav>
+
+        <div class="text-xs text-gray-400 mb-3 mt-6">账户管理</div>
+        <nav class="space-y-1">
+          <a href="account-settings.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-cog"></i>
+            <span>账户设置</span>
+          </a>
+          <a href="help-center.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-question-circle"></i>
+            <span>帮助中心</span>
+          </a>
+          <a href="#" onclick="if(confirm('确定要退出登录吗？')) { alert('已退出登录'); window.location.href='index.html'; } return false;" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>退出登录</span>
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-56 flex-1 p-6">
+      <div class="max-w-7xl mx-auto">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6">影像报告</h1>
+        <div class="bg-white rounded-lg border border-gray-200 p-8 text-center">
+          <i class="fas fa-file-medical text-gray-300 text-6xl mb-4"></i>
+          <p class="text-gray-500">这是影像报告页面</p>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

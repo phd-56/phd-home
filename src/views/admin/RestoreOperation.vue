@@ -247,7 +247,6 @@ const backupStore = useBackupStore();
 
 // 步骤控制
 const activeStep = ref(0);
-const activeStep = ref(0);
 const selectedPoint = ref<any>(null);
 const confirmRestore = ref(false);
 const isRestoring = ref(false);
@@ -361,10 +360,6 @@ const retryRestore = () => {
   activeStep.value = 0;
   restoreSuccess.value = false;
   restoreError.value = '';
-};
-
-const rowClassName = ({ row }: any) => {
-  return row === selectedPoint.value ? 'selected-row' : '';
 };
 </script>
 

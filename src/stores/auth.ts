@@ -52,27 +52,57 @@ export const useAuthStore = defineStore('auth', () => {
     }
   ]
 
-  const login = async (username: string, password: string, role: string): Promise<AuthUser> => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const foundUser = mockUsers.find(u =>
-          u.username === username && u.role === role
-        )
+  interface LoginFormData {
+    username: string;
+    password: string;
+    remember?: boolean;
+  }
 
-        if (foundUser && password === '123456') {
-          user.value = foundUser
-          token.value = 'mock-jwt-token-' + Date.now()
+  const login = async (loginForm: LoginFormData): Promise<{ success: boolean; message?: string; user?: AuthUser }> => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+          const { username, password } = loginForm;
+          
+          // 查找用户（只通过username查找，不检查role）
+          const foundUser = mockUsers.find(u => u.username === username);
+
+          if (foundUser && password === '123456') {
+            user.value = foundUser;
+            token.value = 'mock-jwt-token-' + Date.now();
+
+            // 保存到localStorage
+            localStorage.setItem('token', token.value);
+            localStorage.setItem('userInfo', JSON.stringify(foundUser));
+
+            resolve({ success: true, user: foundUser });
+          } else {
+            resolve({ success: false, message: '用户名或密码错误' });
+          }
+        }, 1000);
+      });
+  }
+
+  const loginByPhone = async (phoneForm: { phone: string; code: string; remember?: boolean }): Promise<{ success: boolean; message?: string; user?: AuthUser }> => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // 模拟手机号登录，这里可以根据手机号匹配用户
+        // 为了演示，我们使用第一个患者用户
+        const foundUser = mockUsers.find(u => u.role === 'patient');
+
+        if (foundUser && phoneForm.code === '123456') {
+          user.value = foundUser;
+          token.value = 'mock-jwt-token-' + Date.now();
 
           // 保存到localStorage
-          localStorage.setItem('token', token.value)
-          localStorage.setItem('userInfo', JSON.stringify(foundUser))
+          localStorage.setItem('token', token.value);
+          localStorage.setItem('userInfo', JSON.stringify(foundUser));
 
-          resolve(foundUser)
+          resolve({ success: true, user: foundUser });
         } else {
-          reject(new Error('用户名或密码错误'))
+          resolve({ success: false, message: '手机号或验证码错误' });
         }
-      }, 1000)
-    })
+      }, 1000);
+    });
   }
 
   const register = async (userData: Omit<AuthUser, 'id' | 'createdAt'>): Promise<AuthUser> => {
@@ -118,6 +148,7 @@ export const useAuthStore = defineStore('auth', () => {
     token,
     isAuthenticated,
     login,
+    loginByPhone,
     register,
     logout,
     checkAuth,

@@ -1,42 +1,98 @@
-<template>
-  <div class="patient-layout">
-    <!-- 患者侧边栏 -->
-    <PatientSidebar 
-      :active-tab="currentTab" 
-      @tab-change="handleTabChange"
-    />
-    
-    <div class="patient-dashboard">
-      <!-- 路由出口 - 始终存在，用于显示子路由内容 -->
-      <router-view />
-      
-      <!-- 只有当访问根路径时才显示主页内容 -->
-      <div v-if="$route.path === '/dashboard/patient'" class="dashboard-content">
-        <!-- 页面头部 -->
-        <div class="page-header">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>医学影像诊断系统 - 我的工作台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between fixed top-0 left-0 right-0 z-50">
+    <div class="flex items-center gap-2">
+      <i class="fas fa-hospital text-blue-600 text-xl"></i>
+      <span class="text-gray-800 font-medium">医学影像诊断系统</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <i class="fas fa-bell text-gray-600 text-xl cursor-pointer"></i>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+          <span class="text-blue-600 text-sm">张</span>
+        </div>
+        <div class="text-sm">
+          <div class="text-gray-800">张老师</div>
+          <div class="text-gray-400 text-xs">账号: ID 2023051008</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="flex pt-16">
+    <!-- Sidebar -->
+    <aside class="w-56 bg-white border-r border-gray-200 fixed left-0 top-16 bottom-0 overflow-y-auto">
+      <div class="p-4">
+        <div class="text-xs text-gray-400 mb-3">患者管理</div>
+        <nav class="space-y-1">
+          <a href="index.html" class="flex items-center gap-3 px-3 py-2 text-blue-600 bg-blue-50 rounded-lg">
+            <i class="fas fa-desktop"></i>
+            <span>我的工作台</span>
+          </a>
+          <a href="reports-list.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-file-medical"></i>
+            <span>影像报告</span>
+          </a>
+          <a href="diagnosis.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-stethoscope"></i>
+            <span>诊断项目</span>
+          </a>
+        </nav>
+
+        <!-- Changed "医疗管理" to "账户管理" with new sub-modules -->
+        <div class="text-xs text-gray-400 mb-3 mt-6">账户管理</div>
+        <nav class="space-y-1">
+          <a href="account-settings.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-user-cog"></i>
+            <span>账户设置</span>
+          </a>
+          <a href="help-center.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-question-circle"></i>
+            <span>帮助中心</span>
+          </a>
+          <a href="#" onclick="if(confirm('确定要退出登录吗？')) { alert('已退出登录'); }" class="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>退出登录</span>
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-56 flex-1 p-6">
+      <div class="max-w-7xl mx-auto">
+        <!-- Page Header -->
+        <div class="mb-6 flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-semibold text-gray-800 mb-1">我的工作台</h1>
             <p class="text-sm text-gray-500">欢迎回来，张老师！在这里您可以查看您的健康管理中心</p>
           </div>
-          <button 
-            class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
-            @click="goToAppointment"
-          >
+          <a href="appointment.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700">
             <i class="fas fa-calendar-plus"></i>
             <span>预约检查</span>
-          </button>
+          </a>
         </div>
 
         <div class="flex gap-6">
-          <!-- 左侧主要内容 -->
+          <!-- Left Column -->
           <div class="flex-1">
-            <!-- 快速访问卡片 -->
+            <!-- Quick Access Cards -->
             <div class="grid grid-cols-2 gap-4 mb-6">
-              <!-- 我的报告卡片 -->
-              <div 
-                class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
-                @click="goToReports"
-              >
+              <!-- My Reports Card -->
+              <a href="reports-list.html" class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
                 <div class="flex items-start justify-between mb-3">
                   <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
                     <i class="fas fa-file-alt text-blue-600 text-lg"></i>
@@ -48,13 +104,9 @@
                   <span class="text-gray-400">共 5 份报告</span>
                   <i class="fas fa-arrow-right text-gray-400"></i>
                 </div>
-              </div>
+              </a>
 
-              <!-- 检查预约卡片 -->
-              <div 
-                class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
-                @click="goToAppointment"
-              >
+              <a href="appointment.html" class="bg-white rounded-lg p-5 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
                 <div class="flex items-start justify-between mb-3">
                   <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
                     <i class="fas fa-calendar-check text-green-600 text-lg"></i>
@@ -66,25 +118,22 @@
                   <span class="text-gray-400">1 个待检查</span>
                   <i class="fas fa-arrow-right text-gray-400"></i>
                 </div>
-              </div>
+              </a>
             </div>
 
-            <!-- 近期影像报告 -->
+            <!-- Recent Reports Section -->
             <div class="bg-white rounded-lg border border-gray-200">
               <div class="p-5 border-b border-gray-200 flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-gray-800">近期影像报告</h2>
-                <button 
-                  class="text-blue-600 text-sm hover:underline flex items-center gap-1"
-                  @click="goToReports"
-                >
+                <a href="#" class="text-blue-600 text-sm hover:underline flex items-center gap-1">
                   <span>查看全部</span>
                   <i class="fas fa-arrow-right text-xs"></i>
-                </button>
+                </a>
               </div>
 
-              <!-- 报告列表 -->
+              <!-- Report Items -->
               <div class="divide-y divide-gray-200">
-                <!-- 报告1 -->
+                <!-- Report 1 -->
                 <div class="p-5">
                   <div class="flex items-start justify-between mb-3">
                     <div>
@@ -115,7 +164,7 @@
                   </div>
                 </div>
 
-                <!-- 报告2 -->
+                <!-- Report 2 -->
                 <div class="p-5">
                   <div class="flex items-start justify-between mb-3">
                     <div>
@@ -146,7 +195,7 @@
                   </div>
                 </div>
 
-                <!-- 报告3 -->
+                <!-- Report 3 -->
                 <div class="p-5">
                   <div class="flex items-start justify-between mb-3">
                     <div>
@@ -160,9 +209,9 @@
             </div>
           </div>
 
-          <!-- 右侧边栏 -->
+          <!-- Right Sidebar -->
           <div class="w-80 space-y-4">
-            <!-- 检查预约 -->
+            <!-- Examination Appointment -->
             <div class="bg-white rounded-lg border border-gray-200 p-5">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-gray-800 font-medium">检查预约</h3>
@@ -171,7 +220,7 @@
               <p class="text-sm text-gray-500 mb-3">您的影像检查已安排</p>
             </div>
 
-            <!-- AI问诊 -->
+            <!-- AI Consultation -->
             <div class="bg-white rounded-lg border border-gray-200 p-5">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-gray-800 font-medium">继续AI问诊</h3>
@@ -203,7 +252,7 @@
               <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">联系问诊</button>
             </div>
 
-            <!-- 即将到来的检查 -->
+            <!-- Upcoming Examination -->
             <div class="bg-white rounded-lg border border-gray-200 p-5">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-gray-800 font-medium">胸部CT检查</h3>
@@ -219,7 +268,7 @@
               <button class="w-full text-blue-600 border border-blue-600 py-2 rounded-lg hover:bg-blue-50">查看报告</button>
             </div>
 
-            <!-- 健康提示 -->
+            <!-- Health Tips -->
             <div class="bg-white rounded-lg border border-gray-200 p-5">
               <h3 class="text-gray-800 font-medium mb-4">健康提示</h3>
               <div class="space-y-3">
@@ -249,407 +298,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
-</template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
-import { ElMessage } from 'element-plus';
-import PatientSidebar from '@/components/patient/PatientSidebar.vue';
-
-const router = useRouter();
-const route = useRoute();
-const authStore = useAuthStore();
-
-// 根据当前路由确定活动标签
-const currentTab = computed(() => {
-  const path = route.path;
-  if (path.includes('/reports')) return 'reports';
-  if (path.includes('/appointment')) return 'appointment';
-  if (path.includes('/settings')) return 'settings';
-  if (path.includes('/help')) return 'help';
-  return 'dashboard';
-});
-
-const goToReports = () => {
-  router.push('/dashboard/patient/reports');
-};
-
-const goToAppointment = () => {
-  router.push('/dashboard/patient/appointment');
-};
-
-const goToSettings = () => {
-  router.push('/dashboard/patient/settings');
-};
-
-const goToHelp = () => {
-  router.push('/dashboard/patient/help');
-};
-
-const handleTabChange = (tab: string) => {
-  switch (tab) {
-    case 'dashboard':
-      router.push('/dashboard/patient');
-      break;
-    case 'reports':
-      router.push('/dashboard/patient/reports');
-      break;
-    case 'appointment':
-      router.push('/dashboard/patient/appointment');
-      break;
-    case 'settings':
-      router.push('/dashboard/patient/settings');
-      break;
-    case 'help':
-      router.push('/dashboard/patient/help');
-      break;
-  }
-};
-
-const handleLogout = () => {
-  authStore.logout();
-  ElMessage.success('已退出登录');
-  router.push('/');
-};
-</script>
-
-<style scoped>
-.patient-layout {
-  display: flex;
-  min-height: 100vh;
-  background: #f9fafb;
-}
-
-.patient-dashboard {
-  flex: 1;
-  margin-left: 224px;
-  padding: 24px;
-  min-height: 100vh;
-}
-
-.dashboard-content {
-  max-width: 1280px;
-  margin: 0 auto;
-}
-
-.page-header {
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.page-header h1 {
-  margin: 0;
-  color: #1f2937;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-.page-header p {
-  margin: 4px 0 0 0;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-.grid {
-  display: grid;
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.gap-4 {
-  gap: 16px;
-}
-
-.gap-6 {
-  gap: 24px;
-}
-
-.mb-6 {
-  margin-bottom: 24px;
-}
-
-.bg-white {
-  background-color: #ffffff;
-}
-
-.rounded-lg {
-  border-radius: 8px;
-}
-
-.border {
-  border-width: 1px;
-}
-
-.border-gray-200 {
-  border-color: #e5e7eb;
-}
-
-.p-5 {
-  padding: 20px;
-}
-
-.hover\:shadow-md:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.transition-shadow {
-  transition-property: box-shadow;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.flex {
-  display: flex;
-}
-
-.items-start {
-  align-items: flex-start;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-.w-10 {
-  width: 40px;
-}
-
-.h-10 {
-  height: 40px;
-}
-
-.bg-blue-50 {
-  background-color: #eff6ff;
-}
-
-.text-blue-600 {
-  color: #2563eb;
-}
-
-.text-lg {
-  font-size: 18px;
-  line-height: 28px;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-.text-gray-800 {
-  color: #1f2937;
-}
-
-.text-gray-500 {
-  color: #6b7280;
-}
-
-.text-gray-400 {
-  color: #9ca3af;
-}
-
-.text-sm {
-  font-size: 14px;
-  line-height: 20px;
-}
-
-.mb-1 {
-  margin-bottom: 4px;
-}
-
-.mb-3 {
-  margin-bottom: 12px;
-}
-
-.text-xs {
-  font-size: 12px;
-  line-height: 16px;
-}
-
-.px-2 {
-  padding-left: 8px;
-  padding-right: 8px;
-}
-
-.py-1 {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-.rounded {
-  border-radius: 4px;
-}
-
-.bg-green-50 {
-  background-color: #f0fdf4;
-}
-
-.text-green-600 {
-  color: #16a34a;
-}
-
-.w-20 {
-  width: 80px;
-}
-
-.h-20 {
-  height: 80px;
-}
-
-.object-cover {
-  object-fit: cover;
-}
-
-.text-gray-600 {
-  color: #4b5563;
-}
-
-.hover\:text-blue-600:hover {
-  color: #2563eb;
-}
-
-.gap-1 {
-  gap: 4px;
-}
-
-.gap-2 {
-  gap: 8px;
-}
-
-.gap-3 {
-  gap: 12px;
-}
-
-.w-80 {
-  width: 320px;
-}
-
-.space-y-4 > * + * {
-  margin-top: 16px;
-}
-
-.space-y-3 > * + * {
-  margin-top: 12px;
-}
-
-.bg-yellow-50 {
-  background-color: #fefce8;
-}
-
-.text-yellow-600 {
-  color: #ca8a04;
-}
-
-.text-yellow-400 {
-  color: #facc15;
-}
-
-.text-blue-400 {
-  color: #60a5fa;
-}
-
-.text-green-400 {
-  color: #4ade80;
-}
-
-.bg-blue-600 {
-  background-color: #2563eb;
-}
-
-.text-white {
-  color: #ffffff;
-}
-
-.px-4 {
-  padding-left: 16px;
-  padding-right: 16px;
-}
-
-.py-2 {
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
-.hover\:bg-blue-700:hover {
-  background-color: #1d4ed8;
-}
-
-.hover\:bg-blue-50:hover {
-  background-color: #eff6ff;
-}
-
-.border-blue-600 {
-  border-color: #2563eb;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.text-2xl {
-  font-size: 24px;
-  line-height: 32px;
-}
-
-.border-b {
-  border-bottom-width: 1px;
-}
-
-.divide-y > * + * {
-  border-top-width: 1px;
-}
-
-.divide-gray-200 > * + * {
-  border-color: #e5e7eb;
-}
-
-.pl-5 {
-  padding-left: 20px;
-}
-
-@media (max-width: 1024px) {
-  .patient-dashboard {
-    margin-left: 0;
-    padding: 16px;
-  }
-  
-  .flex {
-    flex-direction: column;
-  }
-  
-  .w-80 {
-    width: 100%;
-  }
-  
-  .grid-cols-2 {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
+</body>
+</html>
