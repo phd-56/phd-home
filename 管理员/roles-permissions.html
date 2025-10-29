@@ -1,0 +1,495 @@
+ <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>角色与权限管理 - 医疗影像管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .nav-item {
+            transition: all 0.2s;
+        }
+        .nav-item:hover {
+            background-color: #f0f4ff;
+        }
+        .nav-item.active {
+            background-color: #e6f0ff;
+            color: #2563eb;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <span class="text-lg font-semibold text-gray-800">医疗影像管理系统</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button class="p-2 hover:bg-gray-100 rounded-lg relative">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                </div>
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="User" class="w-9 h-9 rounded-full border-2 border-gray-200">
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-14">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-gray-200 fixed left-0 top-14 bottom-0 overflow-y-auto">
+            <nav class="p-4 space-y-1">
+                <a href="index.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>管理仪表盘</span>
+                </a>
+
+                <div class="space-y-1">
+                    <a href="data-analysis.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span>数据统计分析</span>
+                    </a>
+                    <a href="doctor-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">医生数据</span>
+                    </a>
+                    <a href="patient-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">患者数据</span>
+                    </a>
+                    <a href="feedback-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">反馈数据统计</span>
+                    </a>
+                </div>
+
+                <a href="system-monitoring.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>系统监控</span>
+                </a>
+
+                <a href="user-management.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <span>用户账号管理</span>
+                </a>
+
+                <a href="roles-permissions.html" class="nav-item active flex items-center gap-3 px-4 py-2.5 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    <span>角色与权限</span>
+                </a>
+
+                <a href="system-config.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>系统参数配置</span>
+                </a>
+            </nav>
+
+            <div class="p-4 mt-8 border-t border-gray-200">
+                <div class="text-xs text-gray-500 space-y-1">
+                    <div class="flex justify-between">
+                        <span>系统版本</span>
+                        <span class="font-medium">v2.3.1</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>最近更新</span>
+                        <span class="font-medium">2023-08-15</span>
+                    </div>
+                </div>
+                <button class="w-full mt-3 px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                    查看更新日志
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1 p-8">
+            <div class="max-w-7xl mx-auto">
+                <!-- Page Header -->
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">角色与权限管理</h1>
+                    <p class="text-gray-600">管理系统角色与权限分配，灵活控制用户访问权限</p>
+                </div>
+
+                <div class="grid grid-cols-12 gap-6">
+                    <!-- Left: Role List -->
+                    <div class="col-span-4 bg-white rounded-xl border border-gray-200 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900">角色列表</h3>
+                            <button class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
+                                添加角色
+                            </button>
+                        </div>
+
+                        <div class="mb-4">
+                            <input type="text" placeholder="搜索角色..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="p-4 border-2 border-blue-200 bg-blue-50 rounded-lg cursor-pointer">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-900">超级管理员</h4>
+                                    <span class="text-sm text-blue-600">1人</span>
+                                </div>
+                                <p class="text-sm text-gray-600">拥有所有权限</p>
+                            </div>
+
+                            <div class="p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-200 hover:bg-blue-50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-900">医生</h4>
+                                    <span class="text-sm text-gray-600">86人</span>
+                                </div>
+                                <p class="text-sm text-gray-600">可查看和管理患者</p>
+                            </div>
+
+                            <div class="p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-200 hover:bg-blue-50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-900">医师</h4>
+                                    <span class="text-sm text-gray-600">32人</span>
+                                </div>
+                                <p class="text-sm text-gray-600">可查看上传影像资料</p>
+                            </div>
+
+                            <div class="p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-200 hover:bg-blue-50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-900">财务人员</h4>
+                                    <span class="text-sm text-gray-600">5人</span>
+                                </div>
+                                <p class="text-sm text-gray-600">财务管理人员</p>
+                            </div>
+
+                            <div class="p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-200 hover:bg-blue-50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-900">普通用户</h4>
+                                    <span class="text-sm text-gray-600">8人</span>
+                                </div>
+                                <p class="text-sm text-gray-600">基础访问权限</p>
+                            </div>
+
+                            <div class="p-4 border border-gray-200 rounded-lg cursor-pointer hover:border-blue-200 hover:bg-blue-50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-900">实习医生</h4>
+                                    <span class="text-sm text-gray-600">3人</span>
+                                </div>
+                                <p class="text-sm text-gray-600">实习医生，监督指导</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 text-center">
+                            <button class="text-blue-600 text-sm hover:underline">共7个角色</button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Permissions -->
+                    <div class="col-span-8 bg-white rounded-xl border border-gray-200 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">系统权限 - 权限管理</h3>
+                                <p class="text-sm text-gray-600">配置角色的访问权限</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50">
+                                    取消修改
+                                </button>
+                                <button class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
+                                    保存权限
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 max-h-[600px] overflow-y-auto">
+                            <!-- 仪表盘 -->
+                            <div class="border-b border-gray-200 pb-4">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="font-semibold text-gray-900">仪表盘</span>
+                                </div>
+                                <div class="ml-6 space-y-2">
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看概览</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看统计数据</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">导出仪表盘数据</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">配置仪表盘</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 数据管理 -->
+                            <div class="border-b border-gray-200 pb-4">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="font-semibold text-gray-900">数据管理</span>
+                                </div>
+                                <div class="ml-6 space-y-2">
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看数据工具</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看数据工具</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">导出数据工具</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">评审数据工具</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 正在管理 -->
+                            <div class="border-b border-gray-200 pb-4">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="font-semibold text-gray-900">正在管理</span>
+                                </div>
+                                <div class="ml-6 space-y-2">
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看患者列表</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看患者详情</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">编辑患者信息</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">删除患者信息</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 用户管理 -->
+                            <div class="border-b border-gray-200 pb-4">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="font-semibold text-gray-900">用户管理</span>
+                                </div>
+                                <div class="ml-6 space-y-2">
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看用户列表</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">人员管理</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">删除用户</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">编辑</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">导出用户数据</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 系统管理 -->
+                            <div class="border-b border-gray-200 pb-4">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="font-semibold text-gray-900">系统管理</span>
+                                </div>
+                                <div class="ml-6 space-y-2">
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看系统</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">用户配置</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">用户配置</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">解除权限</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 其他权限 -->
+                            <div class="pb-4">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="font-semibold text-gray-900">其他权限</span>
+                                </div>
+                                <div class="ml-6 space-y-2">
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看系统日志</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看系统日志</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看系统日志</span>
+                                    </label>
+                                    <label class="flex items-center gap-2">
+                                        <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                        <span class="text-sm text-gray-700">查看系统日志</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role Users Table -->
+                <div class="mt-6 bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">无用户的角色</h3>
+                        <button class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
+                            添加用户
+                        </button>
+                    </div>
+
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">图片头像</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">用户名</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">所属部门</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">最近登录</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">最近登录</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">管理员账户</div>
+                                        <div class="text-xs text-gray-500">admin@mail.com</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">admin</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">超级管理员</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">
+                                    <div class="flex items-center gap-1">
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">在线</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-21 08:42</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="flex items-center justify-between mt-4">
+                        <div class="text-sm text-gray-600">显示 1 至 1 条，共 1 条</div>
+                        <div class="flex gap-2">
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">上一页</button>
+                            <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">1</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Change Log -->
+                <div class="mt-6 bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">权限变更日志</h3>
+                        <button class="text-blue-600 text-sm hover:underline">查看全部日志</button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex gap-4 pb-4 border-b border-gray-100">
+                            <div class="text-sm text-gray-500 w-32">2023-08-21 14:23</div>
+                            <div class="flex-1">
+                                <div class="text-sm text-gray-900 mb-1">管理员账户 为 用户"李医生"授予了"医生"角色权限</div>
+                                <div class="text-xs text-gray-500">操作者: 192.168.1.100 | 操作IP: 操作者: 用户管理员</div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 pb-4 border-b border-gray-100">
+                            <div class="text-sm text-gray-500 w-32">2023-08-21 10:15</div>
+                            <div class="flex-1">
+                                <div class="text-sm text-gray-900 mb-1">管理员账户 为 用户"王医生"修改了"医生"角色权限</div>
+                                <div class="text-xs text-gray-500">操作者: 192.168.1.101 | 操作IP: 操作者: 用户管理员</div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="text-sm text-gray-500 w-32">2023-08-17 16:45</div>
+                            <div class="flex-1">
+                                <div class="text-sm text-gray-900 mb-1">管理员账户 为 用户"张医生"授予了"医生"角色权限</div>
+                                <div class="text-xs text-gray-500">操作者: 192.168.1.102 | 操作IP: 操作者: 用户管理员</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

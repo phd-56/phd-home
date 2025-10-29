@@ -11,20 +11,21 @@
         <div class="notification-badge">3</div>
       </div>
       <div class="user-info">
-        <div class="user-avatar">张</div>
+        <div class="user-avatar">{{ userInitial }}</div>
         <div class="user-details">
-          <div class="user-name">张医生</div>
-          <div class="user-role">主任医师</div>
+          <div class="user-name">{{ userName }}</div>
+          <div class="user-role">{{ userRole }}</div>
         </div>
       </div>
-      <button class="logout-btn">退出登录</button>
+      <button class="logout-btn" @click="handleLogout">退出登录</button>
     </div>
   </div>
 
   <!-- 主容器 -->
-  <div class="container">
-    <!-- 侧边栏 -->
-    <div class="sidebar">
+  <div class="app-layout-container">
+    <!-- 侧边栏 - 根据路由动态显示 -->
+    <AdminSidebar v-if="isAdminRoute" />
+    <div v-else class="sidebar">
       <div class="sidebar-section">
         <div class="sidebar-title">主导航</div>
         <div class="sidebar-item active">
@@ -61,22 +62,45 @@
 
     <!-- 主内容区域 -->
     <div class="main-content">
-      <router-view />
+      <router-view :key="route.fullPath" />
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AppLayout',
-  data() {
-    return {
-      // 静态数据
-    }
-  },
-  methods: {
-    // 可以在这里添加需要的方法
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import AdminSidebar from '@/components/admin/AdminSidebar.vue'
+
+const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
+
+const isAdminRoute = computed(() => {
+  return route.path.startsWith('/dashboard/admin') || route.path.startsWith('/admin')
+})
+
+const userInitial = computed(() => {
+  return authStore.user?.fullName?.charAt(0) || '用'
+})
+
+const userName = computed(() => {
+  return authStore.user?.fullName || '用户'
+})
+
+const userRole = computed(() => {
+  const roleMap: Record<string, string> = {
+    admin: '系统管理员',
+    doctor: '医生',
+    patient: '患者'
   }
+  return roleMap[authStore.user?.role || ''] || '用户'
+})
+
+const handleLogout = () => {
+  authStore.logout()
+  router.push('/login')
 }
 </script>
 
@@ -187,9 +211,13 @@ export default {
 }
 
 /* 主容器样式 */
-.container {
+.app-layout-container {
   display: flex;
   height: calc(100vh - 60px);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* 侧边栏样式 */
@@ -199,6 +227,9 @@ export default {
   border-right: 1px solid #e9ecef;
   padding: 20px 0;
   overflow-y: auto;
+  position: relative;
+  z-index: 100;
+  flex-shrink: 0;
 }
 
 .sidebar-section {
@@ -249,8 +280,13 @@ export default {
 /* 主内容区域样式 */
 .main-content {
   flex: 1;
-  padding: 20px;
+  padding: 0;
   overflow-y: auto;
-  background-color: #ffffff;
+  overflow-x: hidden;
+  background-color: #f5f7fa;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
 }
 </style>

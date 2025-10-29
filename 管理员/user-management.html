@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户账号管理 - 医疗影像管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .nav-item {
+            transition: all 0.2s;
+        }
+        .nav-item:hover {
+            background-color: #f0f4ff;
+        }
+        .nav-item.active {
+            background-color: #e6f0ff;
+            color: #2563eb;
+            font-weight: 500;
+        }
+        .stat-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <span class="text-lg font-semibold text-gray-800">医疗影像管理系统</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button class="p-2 hover:bg-gray-100 rounded-lg relative">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                </div>
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="User" class="w-9 h-9 rounded-full border-2 border-gray-200">
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-14">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-gray-200 fixed left-0 top-14 bottom-0 overflow-y-auto">
+            <nav class="p-4 space-y-1">
+                <a href="index.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>管理仪表盘</span>
+                </a>
+
+                <div class="space-y-1">
+                    <a href="data-analysis.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span>数据统计分析</span>
+                    </a>
+                    <a href="doctor-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">医生数据</span>
+                    </a>
+                    <a href="patient-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">患者数据</span>
+                    </a>
+                    <a href="feedback-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">反馈数据统计</span>
+                    </a>
+                </div>
+
+                <a href="system-monitoring.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>系统监控</span>
+                </a>
+
+                <a href="user-management.html" class="nav-item active flex items-center gap-3 px-4 py-2.5 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <span>用户账号管理</span>
+                </a>
+
+                <a href="roles-permissions.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    <span>角色与权限</span>
+                </a>
+
+                <a href="system-config.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>系统参数配置</span>
+                </a>
+            </nav>
+
+            <div class="p-4 mt-8 border-t border-gray-200">
+                <div class="text-xs text-gray-500 space-y-1">
+                    <div class="flex justify-between">
+                        <span>系统版本</span>
+                        <span class="font-medium">v2.3.1</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>最近更新</span>
+                        <span class="font-medium">2023-08-15</span>
+                    </div>
+                </div>
+                <button class="w-full mt-3 px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                    查看更新日志
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1 p-8">
+            <div class="max-w-7xl mx-auto">
+                <!-- Page Header -->
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">用户账号管理</h1>
+                    <p class="text-gray-600">全面管理系统用户账户，包括创建、编辑、禁用和删除用户的权</p>
+                </div>
+
+                <!-- Tabs -->
+                <div class="mb-6 flex items-center gap-6 border-b border-gray-200">
+                    <button class="pb-3 px-1 border-b-2 border-blue-600 text-blue-600 font-medium">全部用户</button>
+                    <button class="pb-3 px-1 text-gray-600 hover:text-gray-900">批量操作</button>
+                    <button class="pb-3 px-1 text-gray-600 hover:text-gray-900">批量删除</button>
+                    <div class="ml-auto">
+                        <button class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
+                            添加用户
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search and Filters -->
+                <div class="mb-6 bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-2">用户角色</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>全部角色</option>
+                                <option>超级管理员</option>
+                                <option>医生</option>
+                                <option>患者</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-2">账号状态</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>全部状态</option>
+                                <option>正常</option>
+                                <option>已禁用</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-2">所属部门</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>全部部门</option>
+                                <option>放射科</option>
+                                <option>神经科</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-2">创建时间</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option>最近3个月</option>
+                                <option>最近6个月</option>
+                                <option>最近1年</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <input type="text" placeholder="搜索用户名、名、姓名或邮箱..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            搜索
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200">
+                        <div class="text-gray-600 text-sm mb-2">总用户数</div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-bold text-gray-900">156</div>
+                            <span class="text-green-600 text-sm font-medium">↑ +12.5% 较上月</span>
+                        </div>
+                    </div>
+                    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200">
+                        <div class="text-gray-600 text-sm mb-2">注册用户</div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-bold text-gray-900">128</div>
+                            <span class="text-green-600 text-sm font-medium">近1周 +2.1%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200">
+                        <div class="text-gray-600 text-sm mb-2">医生用户</div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-bold text-gray-900">86</div>
+                            <span class="text-green-600 text-sm font-medium">近1周 +5.1%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card bg-white rounded-xl p-6 border border-gray-200">
+                        <div class="text-gray-600 text-sm mb-2">患者用户</div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-bold text-gray-900">70</div>
+                            <span class="text-green-600 text-sm font-medium">近1周 +4.4%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Table -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">用户列表</h3>
+                        <div class="flex gap-2 text-sm">
+                            <button class="text-gray-600 hover:text-gray-900">导出</button>
+                            <span class="text-gray-300">|</span>
+                            <button class="text-gray-600 hover:text-gray-900">10条/页</button>
+                        </div>
+                    </div>
+
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">用户头像</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">用户名</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">用户角色</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">所属部门</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">账号状态</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">最近登录</th>
+                                <th class="text-left py-3 px-4 text-sm font-medium text-gray-700">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">管理员账户</div>
+                                        <div class="text-xs text-gray-500">admin@mail.com</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm">admin</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded">系统管理员</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm">总监部</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">正常</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-21 05:45</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=dr_li" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">李医生</div>
+                                        <div class="text-xs text-gray-500">李医生 放射科医师</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm">dr_li</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">医生</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm">放射科</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">正常</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-20 16:30</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=dr_wang" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">王医生</div>
+                                        <div class="text-xs text-gray-500">神经主治医师</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm">dr_wang</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">医生</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm">神经科</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">正常</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-20 14:22</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=patient_zhang" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">张先生</div>
+                                        <div class="text-xs text-gray-500">患者</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm">patient_zhang</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">患者</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm">患者</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">正常</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-19 08:15</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=patient_li" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">李女士</div>
+                                        <div class="text-xs text-gray-500">患者</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm">patient_li</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">患者</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm">患者</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">已禁用</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-18 15:10:18</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=nurse_zhao" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">赵护士</div>
+                                        <div class="text-xs text-gray-500">护士</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm">nurse_zhao</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">护士</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm">护理部</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">正常</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-21 08:32</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=finance_qian" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">钱先生</div>
+                                        <div class="text-xs text-gray-500">财务主管</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm">finance_qian</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded">财务人员</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm">财务部</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">正常</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-21 11:05</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=dr_sun" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">孙医生</div>
+                                        <div class="text-xs text-gray-500">神经主治医师</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm">dr_sun</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">医生</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm">神经科</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">正常</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-21 11:30</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=patient_zhou" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">周先生</div>
+                                        <div class="text-xs text-gray-500">患者</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm">patient_zhou</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">患者</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm">患者</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">正常</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-19 16:45</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4">
+                                    <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=secretary_wu" alt="User" class="w-8 h-8 rounded-full">
+                                </td>
+                                <td class="py-3 px-4">
+                                    <div>
+                                        <div class="font-medium text-gray-900">吴秘书</div>
+                                        <div class="text-xs text-gray-500">前台秘书</div>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-4 text-sm">secretary_wu</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">普通用户</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm">院长办公室</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">正常</span>
+                                </td>
+                                <td class="py-3 px-4 text-sm text-gray-700">2023-08-21 13:52</td>
+                                <td class="py-3 px-4">
+                                    <div class="flex items-center gap-2">
+                                        <button class="text-blue-600 hover:text-blue-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-gray-600 hover:text-gray-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="flex items-center justify-between mt-6">
+                        <div class="text-sm text-gray-600">显示 1 至 10 条，共 156 条</div>
+                        <div class="flex gap-2">
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">上一页</button>
+                            <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">1</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">2</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">3</button>
+                            <span class="px-3 py-1 text-sm text-gray-600">...</span>
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">16</button>
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-600 hover:bg-gray-50">下一页</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

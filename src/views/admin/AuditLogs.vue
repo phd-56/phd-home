@@ -302,9 +302,9 @@ const ipFilter = ref('');
 const moduleFilter = ref('');
 const dateRange = ref<[Date, Date] | null>(null);
 
-// 返回用户管理页面
+// 返回管理仪表盘
 const goBack = () => {
-  router.push('/dashboard/admin/user-management');
+  router.push('/dashboard/admin/dashboard');
 };
 
 // 模拟数据生成

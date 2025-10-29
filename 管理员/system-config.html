@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统参数配置 - 医疗影像管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .nav-item {
+            transition: all 0.2s;
+        }
+        .nav-item:hover {
+            background-color: #f0f4ff;
+        }
+        .nav-item.active {
+            background-color: #e6f0ff;
+            color: #2563eb;
+            font-weight: 500;
+        }
+        .config-item {
+            transition: all 0.2s;
+        }
+        .config-item:hover {
+            background-color: #f9fafb;
+        }
+        .config-item.active {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <span class="text-lg font-semibold text-gray-800">医疗影像管理系统</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button class="p-2 hover:bg-gray-100 rounded-lg relative">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                </div>
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="User" class="w-9 h-9 rounded-full border-2 border-gray-200">
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-14">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-gray-200 fixed left-0 top-14 bottom-0 overflow-y-auto">
+            <nav class="p-4 space-y-1">
+                <a href="index.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>管理仪表盘</span>
+                </a>
+
+                <div class="space-y-1">
+                    <a href="data-analysis.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span>数据统计分析</span>
+                    </a>
+                    <a href="doctor-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">医生数据</span>
+                    </a>
+                    <a href="patient-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">患者数据</span>
+                    </a>
+                    <a href="feedback-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">反馈数据统计</span>
+                    </a>
+                </div>
+
+                <a href="system-monitoring.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>系统监控</span>
+                </a>
+
+                <a href="user-management.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <span>用户账号管理</span>
+                </a>
+
+                <a href="roles-permissions.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    <span>角色与权限</span>
+                </a>
+
+                <a href="system-config.html" class="nav-item active flex items-center gap-3 px-4 py-2.5 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>系统参数配置</span>
+                </a>
+            </nav>
+
+            <div class="p-4 mt-8 border-t border-gray-200">
+                <div class="text-xs text-gray-500 space-y-1">
+                    <div class="flex justify-between">
+                        <span>系统版本</span>
+                        <span class="font-medium">v2.3.1</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>最近更新</span>
+                        <span class="font-medium">2023-08-15</span>
+                    </div>
+                </div>
+                <button class="w-full mt-3 px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                    查看更新日志
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1 p-8">
+            <div class="max-w-7xl mx-auto">
+                <!-- Page Header -->
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">系统参数配置</h1>
+                    <p class="text-gray-600">配置系统全局参数、安全策略、存储管理等通知设置</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mb-6 flex gap-3">
+                    <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        恢复默认
+                    </button>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        保存配置
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-12 gap-6">
+                    <!-- Left: Config Menu -->
+                    <div class="col-span-3 bg-white rounded-xl border border-gray-200 p-4">
+                        <div class="space-y-1">
+                            <button class="config-item active w-full text-left px-4 py-2.5 rounded-lg border border-transparent">
+                                基础配置
+                            </button>
+                            <button class="config-item w-full text-left px-4 py-2.5 rounded-lg border border-transparent text-gray-700">
+                                安全策略
+                            </button>
+                            <button class="config-item w-full text-left px-4 py-2.5 rounded-lg border border-transparent text-gray-700">
+                                存储管理
+                            </button>
+                            <button class="config-item w-full text-left px-4 py-2.5 rounded-lg border border-transparent text-gray-700">
+                                通知设置
+                            </button>
+                            <button class="config-item w-full text-left px-4 py-2.5 rounded-lg border border-transparent text-gray-700">
+                                日志管理
+                            </button>
+                            <button class="config-item w-full text-left px-4 py-2.5 rounded-lg border border-transparent text-gray-700">
+                                接口设置
+                            </button>
+                            <button class="config-item w-full text-left px-4 py-2.5 rounded-lg border border-transparent text-gray-700">
+                                第三方集成
+                            </button>
+                            <button class="config-item w-full text-left px-4 py-2.5 rounded-lg border border-transparent text-gray-700">
+                                系统维护
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Config Content -->
+                    <div class="col-span-9 bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">基础配置</h3>
+                        <p class="text-sm text-gray-600 mb-6">配置系统基本信息与运行参数</p>
+
+                        <div class="space-y-6">
+                            <!-- System Info -->
+                            <div>
+                                <h4 class="text-base font-semibold text-gray-900 mb-4">系统信息</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">系统名称</label>
+                                        <input type="text" value="医疗影像管理系统" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">系统简称</label>
+                                        <input type="text" value="医像系统" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">系统描述</label>
+                                        <textarea rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">医疗影像管理系统 - 一套专业的医学影像存储与传输系统，支持DICOM格式影像的存储、传输、穿刺和影像生成与共享</textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">版权信息</label>
+                                        <input type="text" value="© 2023 医疗影像管理系统. 保留所有权利." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-200 pt-6">
+                                <h4 class="text-base font-semibold text-gray-900 mb-4">界面设置</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">主题模式</label>
+                                        <div class="flex gap-4">
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="theme" checked class="w-4 h-4 text-blue-600">
+                                                <span class="text-sm text-gray-700">浅色模式</span>
+                                            </label>
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="theme" class="w-4 h-4 text-blue-600">
+                                                <span class="text-sm text-gray-700">深色模式</span>
+                                            </label>
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="theme" class="w-4 h-4 text-blue-600">
+                                                <span class="text-sm text-gray-700">跟随系统</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">显示语言</label>
+                                        <div class="flex gap-4">
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="language" checked class="w-4 h-4 text-blue-600">
+                                                <span class="text-sm text-gray-700">简体中文</span>
+                                            </label>
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="language" class="w-4 h-4 text-blue-600">
+                                                <span class="text-sm text-gray-700">English</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">时区设置</label>
+                                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option>(GMT+08:00) 中国标准时间</option>
+                                            <option>(GMT+09:00) 日本标准时间</option>
+                                            <option>(GMT+00:00) 格林威治标准时间</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-200 pt-6">
+                                <h4 class="text-base font-semibold text-gray-900 mb-4">日期时间格式</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">日期格式</label>
+                                        <div class="flex gap-4">
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="dateFormat" checked class="w-4 h-4 text-blue-600">
+                                                <span class="text-sm text-gray-700">YYYY-MM-DD (2023-08-21)</span>
+                                            </label>
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="dateFormat" class="w-4 h-4 text-blue-600">
+                                                <span class="text-sm text-gray-700">MM/DD/YYYY (08/21/2023)</span>
+                                            </label>
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="dateFormat" class="w-4 h-4 text-blue-600">
+                                                <span class="text-sm text-gray-700">DD/MM/YYYY (21/08/2023)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">时间格式</label>
+                                        <div class="flex gap-4">
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="timeFormat" checked class="w-4 h-4 text-blue-600">
+                                                <span class="text-sm text-gray-700">24小时制 (15:30:00)</span>
+                                            </label>
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="timeFormat" class="w-4 h-4 text-blue-600">
+                                                <span class="text-sm text-gray-700">12小时制 (3:30:00 PM)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">日期时间分隔符</label>
+                                        <div class="grid grid-cols-3 gap-4">
+                                            <div class="p-3 border border-gray-300 rounded-lg">
+                                                <div class="text-xs text-gray-500 mb-1">空格 (2023-08-21 15:30)</div>
+                                            </div>
+                                            <div class="p-3 border border-gray-300 rounded-lg">
+                                                <div class="text-xs text-gray-500 mb-1">T分隔 (2023-08-21T15:30)</div>
+                                            </div>
+                                            <div class="p-3 border border-gray-300 rounded-lg">
+                                                <div class="text-xs text-gray-500 mb-1">斜杠 (2023-08-21/15:30)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-200 pt-6">
+                                <h4 class="text-base font-semibold text-gray-900 mb-4">登录设置</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                        <div>
+                                            <div class="font-medium text-gray-900 mb-1">启用登录验证码</div>
+                                            <div class="text-sm text-gray-600">启用后，用户登录时需要输入验证码</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked class="sr-only peer">
+                                            <div class="w-11 h-6 bg-blue-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">登录失败限制</label>
+                                        <div class="flex items-center gap-2">
+                                            <input type="number" value="5" class="w-24 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <span class="text-sm text-gray-600">次失败后临时锁定账号</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">验证码有效期</label>
+                                        <div class="flex items-center gap-2">
+                                            <input type="number" value="30" class="w-24 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <span class="text-sm text-gray-600">分钟</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                        <div>
+                                            <div class="font-medium text-gray-900 mb-1">启用记住登录状态</div>
+                                            <div class="text-sm text-gray-600">启用后，用户可选择记住登录状态</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked class="sr-only peer">
+                                            <div class="w-11 h-6 bg-blue-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-200 pt-6">
+                                <h4 class="text-base font-semibold text-gray-900 mb-4">会话设置</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">会话超时时间</label>
+                                        <div class="flex items-center gap-2">
+                                            <input type="number" value="30" class="w-24 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <span class="text-sm text-gray-600">分钟 (未操作自动登出)</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-700 mb-2">最大并发会话数</label>
+                                        <div class="flex items-center gap-2">
+                                            <input type="number" value="5" class="w-24 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <span class="text-sm text-gray-600">个 (同一账号同时登录数量)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

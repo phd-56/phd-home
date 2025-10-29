@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据统计分析 - 医疗影像管理系统</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 h-16">
+    <div class="flex items-center justify-between h-full px-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <span class="text-lg font-semibold text-gray-900">医疗影像管理系统</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="User" class="w-9 h-9 rounded-full">
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="fixed left-0 top-16 bottom-0 w-56 bg-white border-r border-gray-200 overflow-y-auto">
+    <nav class="p-4 space-y-1">
+      <a href="index.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span class="text-sm">管理仪表盘</span>
+      </a>
+
+      <div class="space-y-1">
+        <a href="data-analysis.html" class="flex items-center gap-3 px-3 py-2 text-blue-600 bg-blue-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          <span class="text-sm font-medium">数据统计分析</span>
+        </a>
+        <a href="doctor-data.html" class="flex items-center gap-3 px-3 py-2.5 ml-8 text-sm text-gray-600 rounded-lg hover:bg-gray-100">
+          医生数据
+        </a>
+        <a href="patient-data.html" class="flex items-center gap-3 px-3 py-2.5 ml-8 text-sm text-gray-600 rounded-lg hover:bg-gray-100">
+          患者数据
+        </a>
+        <a href="feedback-data.html" class="flex items-center gap-3 px-3 py-2.5 ml-8 text-sm text-gray-600 rounded-lg hover:bg-gray-100">
+          反馈数据统计
+        </a>
+      </div>
+
+      <a href="system-monitoring.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="text-sm">系统监控</span>
+      </a>
+
+      <a href="user-management.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <span class="text-sm">用户账号管理</span>
+      </a>
+
+      <a href="roles-permissions.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span class="text-sm">角色与权限</span>
+      </a>
+
+      <a href="system-config.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c-.94 1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span class="text-sm">系统参数配置</span>
+      </a>
+    </nav>
+
+    <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white">
+      <div class="text-xs text-gray-500 space-y-1">
+        <div class="flex justify-between">
+          <span>系统版本</span>
+          <span class="font-medium">v2.3.1</span>
+        </div>
+        <div class="flex justify-between">
+          <span>最近更新</span>
+          <span class="font-medium">2023-08-15</span>
+        </div>
+      </div>
+      <button class="w-full mt-3 px-3 py-2 text-xs text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100">
+        查看更新日志
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-56 mt-16 p-8">
+    <div class="mb-8">
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">数据统计分析</h1>
+      <p class="text-sm text-gray-500">系统数据统计与分析中心，帮助您全面了解平台运行状况</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-3 gap-6 mb-8">
+      <!-- Doctor Statistics -->
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div class="bg-blue-50 p-6 border-b border-blue-100">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-gray-900">医生数据统计</h3>
+              <p class="text-xs text-gray-500">医生数据统计与趋势分析</p>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm text-gray-600">医生总数</span>
+                <span class="text-xs text-green-600 font-medium">↑ +15.2%</span>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">128</div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm text-gray-600">本月活跃医生</span>
+                <span class="text-xs text-green-600 font-medium">↑ +8.7%</span>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">86</div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm text-gray-600">医生平均接诊数</span>
+                <span class="text-xs text-red-600 font-medium">↓ -1.3%</span>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">42.8</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4">
+          <!-- Added fixed height container for mini chart -->
+          <div style="height: 128px; position: relative;">
+            <canvas id="doctorMiniChart"></canvas>
+          </div>
+          <button onclick="window.location.href='doctor-data.html'" class="w-full mt-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700">
+            查看医生数据详情
+          </button>
+        </div>
+      </div>
+
+      <!-- Patient Statistics -->
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div class="bg-green-50 p-6 border-b border-green-100">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-gray-900">患者数据统计</h3>
+              <p class="text-xs text-gray-500">患者基础与检查量分析</p>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm text-gray-600">患者总数</span>
+                <span class="text-xs text-green-600 font-medium">↑ +12.5%</span>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">1,158</div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm text-gray-600">本月新增患者</span>
+                <span class="text-xs text-green-600 font-medium">↑ +18.3%</span>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">146</div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm text-gray-600">人均检查次数</span>
+                <span class="text-xs text-green-600 font-medium">↑ +2.1%</span>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">3.7</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4">
+          <!-- Added fixed height container for mini chart -->
+          <div style="height: 128px; position: relative;">
+            <canvas id="patientMiniChart"></canvas>
+          </div>
+          <button onclick="window.location.href='patient-data.html'" class="w-full mt-4 py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700">
+            查看患者数据详情
+          </button>
+        </div>
+      </div>
+
+      <!-- Feedback Statistics -->
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div class="bg-purple-50 p-6 border-b border-purple-100">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-base font-semibold text-gray-900">反馈数据统计</h3>
+              <p class="text-xs text-gray-500">用户反馈与满意度分析</p>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm text-gray-600">总反馈数量</span>
+                <span class="text-xs text-green-600 font-medium">↑ +7.8%</span>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">326</div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm text-gray-600">平均满意度</span>
+                <span class="text-xs text-green-600 font-medium">↑ +0.2</span>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">4.7/5.0</div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm text-gray-600">待处理反馈</span>
+                <span class="text-xs text-red-600 font-medium">↑ +3</span>
+              </div>
+              <div class="text-3xl font-bold text-gray-900">12</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4">
+          <!-- Added fixed height container for mini chart -->
+          <div style="height: 128px; position: relative;">
+            <canvas id="feedbackMiniChart"></canvas>
+          </div>
+          <button onclick="window.location.href='feedback-data.html'" class="w-full mt-4 py-2.5 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700">
+            查看反馈数据详情
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-2 gap-6">
+      <!-- Examination Type Distribution -->
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h3 class="text-base font-semibold text-gray-900 mb-1">检查类型分布</h3>
+            <p class="text-xs text-gray-500">近30天各类检查占比</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="px-3 py-1 text-xs text-gray-600 hover:bg-gray-100 rounded">居</button>
+            <button class="px-3 py-1 text-xs text-gray-900 bg-gray-100 rounded font-medium">月</button>
+            <button class="px-3 py-1 text-xs text-gray-600 hover:bg-gray-100 rounded">季</button>
+          </div>
+        </div>
+        <!-- Added fixed height container for chart -->
+        <div style="height: 256px; position: relative;">
+          <canvas id="examDistributionChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Platform Activity Trends -->
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h3 class="text-base font-semibold text-gray-900 mb-1">平台活跃度趋势</h3>
+            <p class="text-xs text-gray-500">近6个月平台活跃用户变化</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="px-3 py-1 text-xs text-gray-900 bg-gray-100 rounded font-medium">月</button>
+            <button class="px-3 py-1 text-xs text-gray-600 hover:bg-gray-100 rounded">季</button>
+            <button class="px-3 py-1 text-xs text-gray-600 hover:bg-gray-100 rounded">年</button>
+          </div>
+        </div>
+        <!-- Added fixed height container for chart -->
+        <div style="height: 256px; position: relative;">
+          <canvas id="activityTrendChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Doctor Mini Chart
+    const doctorMiniCtx = document.getElementById('doctorMiniChart').getContext('2d');
+    new Chart(doctorMiniCtx, {
+      type: 'line',
+      data: {
+        labels: ['3月', '4月', '5月', '6月', '7月', '8月'],
+        datasets: [{
+          data: [110, 115, 118, 122, 125, 128],
+          borderColor: 'rgb(59, 130, 246)',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.4,
+          fill: true,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 0 },
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { display: false },
+          x: { display: false }
+        }
+      }
+    });
+
+    // Patient Mini Chart
+    const patientMiniCtx = document.getElementById('patientMiniChart').getContext('2d');
+    new Chart(patientMiniCtx, {
+      type: 'line',
+      data: {
+        labels: ['3月', '4月', '5月', '6月', '7月', '8月'],
+        datasets: [{
+          data: [920, 980, 1020, 1080, 1120, 1158],
+          borderColor: 'rgb(34, 197, 94)',
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
+          tension: 0.4,
+          fill: true,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 0 },
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { display: false },
+          x: { display: false }
+        }
+      }
+    });
+
+    // Feedback Mini Chart
+    const feedbackMiniCtx = document.getElementById('feedbackMiniChart').getContext('2d');
+    new Chart(feedbackMiniCtx, {
+      type: 'line',
+      data: {
+        labels: ['3月', '4月', '5月', '6月', '7月', '8月'],
+        datasets: [{
+          data: [280, 290, 295, 305, 315, 326],
+          borderColor: 'rgb(168, 85, 247)',
+          backgroundColor: 'rgba(168, 85, 247, 0.1)',
+          tension: 0.4,
+          fill: true,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 0 },
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { display: false },
+          x: { display: false }
+        }
+      }
+    });
+
+    // Examination Distribution Chart
+    const examDistCtx = document.getElementById('examDistributionChart').getContext('2d');
+    new Chart(examDistCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['MRI', 'CT', 'X光', '超声'],
+        datasets: [{
+          data: [32, 28, 22, 18],
+          backgroundColor: [
+            'rgb(59, 130, 246)',
+            'rgb(34, 197, 94)',
+            'rgb(234, 179, 8)',
+            'rgb(168, 85, 247)'
+          ],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 0 },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 20,
+              font: { size: 12 }
+            }
+          }
+        },
+        cutout: '65%'
+      }
+    });
+
+    // Activity Trend Chart
+    const activityCtx = document.getElementById('activityTrendChart').getContext('2d');
+    new Chart(activityCtx, {
+      type: 'line',
+      data: {
+        labels: ['3月', '4月', '5月', '6月', '7月', '8月'],
+        datasets: [{
+          label: '活跃用户数',
+          data: [1200, 1450, 1680, 1820, 1950, 2100],
+          borderColor: 'rgb(59, 130, 246)',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 0 },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

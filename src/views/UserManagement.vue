@@ -9,7 +9,7 @@
     <div class="stats-cards">
       <el-card class="stat-card">
         <div class="stat-content">
-          <div class="stat-icon">👥</div>
+          <el-icon class="stat-icon"><User /></el-icon>
           <div class="stat-info">
             <div class="stat-number">{{ totalUsers }}</div>
             <div class="stat-label">总用户数</div>
@@ -19,7 +19,7 @@
 
       <el-card class="stat-card">
         <div class="stat-content">
-          <div class="stat-icon">👨‍⚕️</div>
+          <el-icon class="stat-icon"><UserFilled /></el-icon>
           <div class="stat-info">
             <div class="stat-number">{{ doctorCount }}</div>
             <div class="stat-label">医生用户</div>
@@ -29,7 +29,7 @@
 
       <el-card class="stat-card">
         <div class="stat-content">
-          <div class="stat-icon">👤</div>
+          <el-icon class="stat-icon"><User /></el-icon>
           <div class="stat-info">
             <div class="stat-number">{{ patientCount }}</div>
             <div class="stat-label">患者用户</div>
@@ -39,7 +39,7 @@
 
       <el-card class="stat-card">
         <div class="stat-content">
-          <div class="stat-icon">🛡️</div>
+          <el-icon class="stat-icon"><Lock /></el-icon>
           <div class="stat-info">
             <div class="stat-number">{{ adminCount }}</div>
             <div class="stat-label">管理员</div>
@@ -89,7 +89,7 @@
           <template #default="{ row }">
             <div class="user-info">
               <div class="user-avatar">
-                {{ getAvatarEmoji(row.role) }}
+                <el-icon><component :is="getAvatarIcon(row.role)" /></el-icon>
               </div>
               <div class="user-details">
                 <div class="user-name">{{ row.fullName }}</div>
@@ -194,6 +194,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { User, UserFilled, Lock, Plus, Download, Search } from '@element-plus/icons-vue'
 
 interface User {
   id: number
@@ -302,13 +303,13 @@ const filteredUsers = computed(() => {
 const dialogTitle = computed(() => isEditing.value ? '编辑用户' : '添加用户')
 
 // 方法
-const getAvatarEmoji = (role: string) => {
-  const emojiMap: { [key: string]: string } = {
-    patient: '👤',
-    doctor: '👨‍⚕️',
-    admin: '🛡️'
+const getAvatarIcon = (role: string) => {
+  const iconMap: { [key: string]: any } = {
+    patient: User,
+    doctor: UserFilled,
+    admin: Lock
   }
-  return emojiMap[role] || '👤'
+  return iconMap[role] || User
 }
 
 const getRoleTagType = (role: string) => {

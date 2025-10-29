@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>反馈数据统计 - 医疗影像管理系统</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Added Chart.js library for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 h-16">
+    <div class="flex items-center justify-between h-full px-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <span class="text-lg font-semibold text-gray-900">医疗影像管理系统</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 00-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="User" class="w-9 h-9 rounded-full">
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="fixed left-0 top-16 bottom-0 w-56 bg-white border-r border-gray-200 overflow-y-auto">
+    <nav class="p-4 space-y-1">
+      <a href="index.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span class="text-sm">管理仪表盘</span>
+      </a>
+
+      <div class="space-y-1">
+        <a href="data-analysis.html" class="flex items-center gap-3 px-3 py-2 text-blue-600 bg-blue-50 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          <span class="text-sm font-medium">数据统计分析</span>
+        </a>
+        <a href="doctor-data.html" class="flex items-center gap-3 px-3 py-2.5 ml-8 text-sm text-gray-600 rounded-lg hover:bg-gray-100">
+          医生数据
+        </a>
+        <a href="patient-data.html" class="flex items-center gap-3 px-3 py-2.5 ml-8 text-sm text-gray-600 rounded-lg hover:bg-gray-100">
+          患者数据
+        </a>
+        <a href="feedback-data.html" class="flex items-center gap-3 px-3 py-2.5 ml-8 text-sm text-blue-600 bg-blue-50 rounded-lg font-medium">
+          反馈数据统计
+        </a>
+      </div>
+
+      <a href="system-monitoring.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="text-sm">系统监控</span>
+      </a>
+
+      <a href="user-management.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <span class="text-sm">用户账号管理</span>
+      </a>
+
+      <a href="roles-permissions.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+        </svg>
+        <span class="text-sm">角色与权限</span>
+      </a>
+
+      <a href="system-config.html" class="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span class="text-sm">系统参数配置</span>
+      </a>
+    </nav>
+
+    <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-white">
+      <div class="text-xs text-gray-500 space-y-1">
+        <div class="flex justify-between">
+          <span>系统版本</span>
+          <span class="font-medium">v2.3.1</span>
+        </div>
+        <div class="flex justify-between">
+          <span>最近更新</span>
+          <span class="font-medium">2023-08-15</span>
+        </div>
+      </div>
+      <button class="w-full mt-3 px-3 py-2 text-xs text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100">
+        查看更新日志
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-56 mt-16 p-8">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">反馈数据统计</h1>
+      <p class="text-sm text-gray-500">全面掌握用户反馈情况，掌握平台与用户满意度对外展示</p>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+      <div class="flex items-center gap-4">
+        <input type="text" placeholder="搜索反馈内容、用户姓名搜索..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">搜索</button>
+      </div>
+      <div class="grid grid-cols-4 gap-4 mt-4">
+        <div>
+          <label class="block text-sm text-gray-600 mb-2">反馈类型</label>
+          <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option>全部类型</option>
+            <option>功能建议</option>
+            <option>问题反馈</option>
+            <option>服务投诉</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-2">处理状态</label>
+          <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option>全部状态</option>
+            <option>待处理</option>
+            <option>处理中</option>
+            <option>已完成</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-2">反馈来源</label>
+          <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option>全部来源</option>
+            <option>Web端</option>
+            <option>移动端</option>
+            <option>电话</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-2">反馈日期</label>
+          <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option>最近30天</option>
+            <option>最近7天</option>
+            <option>最近90天</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-4 gap-6 mb-6">
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm text-gray-600">总反馈量</span>
+          <span class="text-xs text-green-600 font-medium">↑ +7.8%</span>
+        </div>
+        <div class="text-3xl font-bold text-gray-900 mb-1">326</div>
+        <div class="text-xs text-gray-500">较上月新增23条</div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm text-gray-600">平均满意度</span>
+          <span class="text-xs text-green-600 font-medium">↑ +0.2</span>
+        </div>
+        <div class="text-3xl font-bold text-gray-900 mb-1">4.7/5.0</div>
+        <div class="text-xs text-gray-500">基于2805条有效评价</div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm text-gray-600">待处理反馈</span>
+          <span class="text-xs text-red-600 font-medium">↑ +8.0%</span>
+        </div>
+        <div class="text-3xl font-bold text-gray-900 mb-1">287</div>
+        <div class="text-xs text-gray-500">平均处理耗时16小时</div>
+      </div>
+
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm text-gray-600">逾期处理项</span>
+          <span class="text-xs text-red-600 font-medium">↑ +3</span>
+        </div>
+        <div class="text-3xl font-bold text-gray-900 mb-1">39</div>
+        <div class="text-xs text-gray-500">超过承诺处理时限</div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <!-- Satisfaction Trend -->
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-base font-semibold text-gray-900 mb-1">满意度趋势</h3>
+            <p class="text-xs text-gray-500">近6个月满意度变化趋势</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="px-3 py-1 text-xs text-gray-900 bg-gray-100 rounded font-medium">月</button>
+            <button class="px-3 py-1 text-xs text-gray-600 hover:bg-gray-100 rounded">季</button>
+            <button class="px-3 py-1 text-xs text-gray-600 hover:bg-gray-100 rounded">年</button>
+          </div>
+        </div>
+        <div class="h-64">
+          <canvas id="satisfactionTrendChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Feedback Type Distribution -->
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <div class="mb-4">
+          <h3 class="text-base font-semibold text-gray-900 mb-1">反馈类型分布</h3>
+          <p class="text-xs text-gray-500">各类反馈占比统计分析</p>
+        </div>
+        <div class="h-64 mb-4">
+          <canvas id="feedbackTypeChart"></canvas>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 bg-cyan-500 rounded-full"></div>
+            <span class="text-sm text-gray-700">功能建议</span>
+            <span class="text-sm font-medium text-gray-900 ml-auto">55.2% (115条)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+            <span class="text-sm text-gray-700">表扬赞赏</span>
+            <span class="text-sm font-medium text-gray-900 ml-auto">22.1% (73条)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 bg-pink-500 rounded-full"></div>
+            <span class="text-sm text-gray-700">问题反馈</span>
+            <span class="text-sm font-medium text-gray-900 ml-auto">28.2% (93条)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 bg-gray-400 rounded-full"></div>
+            <span class="text-sm text-gray-700">其他反馈</span>
+            <span class="text-sm font-medium text-gray-900 ml-auto">14.2% (46条)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- More Charts -->
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <!-- Feedback Source Distribution -->
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <div class="mb-4">
+          <h3 class="text-base font-semibold text-gray-900 mb-1">反馈来源分布</h3>
+          <p class="text-xs text-gray-500">不同渠道反馈占比分析</p>
+        </div>
+        <div class="h-64">
+          <canvas id="feedbackSourceChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Feedback Rating Distribution -->
+      <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <div class="mb-4">
+          <h3 class="text-base font-semibold text-gray-900 mb-1">反馈年龄分布</h3>
+          <p class="text-xs text-gray-500">问题严重度与数量分析</p>
+        </div>
+        <div class="space-y-4 mb-6">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm text-gray-700">高评分级</span>
+              <span class="text-sm font-medium text-gray-900">18条 (19.4%)</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-red-500 h-2 rounded-full" style="width: 19.4%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm text-gray-700">中评分级</span>
+              <span class="text-sm font-medium text-gray-900">42条 (45.2%)</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-yellow-500 h-2 rounded-full" style="width: 45.2%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm text-gray-700">低评分级</span>
+              <span class="text-sm font-medium text-gray-900">33条 (35.4%)</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-blue-500 h-2 rounded-full" style="width: 35.4%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-4 pt-4 border-t border-gray-200">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-green-600 mb-1">67</div>
+            <div class="text-xs text-gray-500">已解决</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-yellow-600 mb-1">15</div>
+            <div class="text-xs text-gray-500">处理中</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-red-600 mb-1">11</div>
+            <div class="text-xs text-gray-500">未处理</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback List -->
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-base font-semibold text-gray-900">最近反馈详情</h3>
+        <div class="flex items-center gap-2">
+          <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+          </button>
+          <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-gray-200">
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">序号</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">反馈内容</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">反馈类型</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">用户信息</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">满意度</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">提交时间</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">处理状态</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-sm text-gray-900">1</td>
+            <td class="py-3 px-4 text-sm text-gray-700 max-w-xs truncate">
+              建议增加影像报告分享功能，可以直接分享给其他医生进行会诊
+            </td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">功能建议</span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user1" alt="User" class="w-6 h-6 rounded-full">
+                <span class="text-sm text-gray-900">张凡生 (患者科)</span>
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-1">
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <span class="text-sm text-gray-600 ml-1">5.0</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-sm text-gray-900">2023-08-20 09:45</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded">处理中</span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-sm text-gray-900">2</td>
+            <td class="py-3 px-4 text-sm text-gray-700 max-w-xs truncate">
+              界面上半区不够友好，希望能优化一下，感觉有点乱
+            </td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs bg-pink-100 text-pink-700 rounded">问题反馈</span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user2" alt="User" class="w-6 h-6 rounded-full">
+                <span class="text-sm text-gray-900">李医生 (放射科)</span>
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-1">
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <span class="text-sm text-gray-600 ml-1">2.0</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-sm text-gray-900">2023-08-18 14:22</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">已解决</span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-sm text-gray-900">3</td>
+            <td class="py-3 px-4 text-sm text-gray-700 max-w-xs truncate">
+              系统非常好用，医生态度也很好，感谢平台！
+            </td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">表扬赞赏</span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user3" alt="User" class="w-6 h-6 rounded-full">
+                <span class="text-sm text-gray-900">王文士 (患者)</span>
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-1">
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <span class="text-sm text-gray-600 ml-1">5.0</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-sm text-gray-900">2023-08-18 08:36</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">已处理</span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-sm text-gray-900">4</td>
+            <td class="py-3 px-4 text-sm text-gray-700 max-w-xs truncate">
+              感觉影像加载速度比较慢，可以优化一下吗？
+            </td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">功能建议</span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user4" alt="User" class="w-6 h-6 rounded-full">
+                <span class="text-sm text-gray-900">刘医生 (内科)</span>
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-1">
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <span class="text-sm text-gray-600 ml-1">4.0</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-sm text-gray-900">2023-08-17 16:15</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded">已处理</span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-sm text-gray-900">5</td>
+            <td class="py-3 px-4 text-sm text-gray-700 max-w-xs truncate">
+              上传文件时出现错误，反复尝试都失败，请尽快修复
+            </td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs bg-pink-100 text-pink-700 rounded">问题反馈</span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=user5" alt="User" class="w-6 h-6 rounded-full">
+                <span class="text-sm text-gray-900">张凡生 (患者)</span>
+              </div>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-1">
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+                <span class="text-sm text-gray-600 ml-1">2.0</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-sm text-gray-900">2023-08-15 10:28</td>
+            <td class="py-3 px-4">
+              <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded">已解决</span>
+            </td>
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <button class="p-1 text-blue-600 hover:bg-blue-50 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-gray-600 hover:bg-gray-100 rounded">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="flex items-center justify-between mt-6">
+        <div class="text-sm text-gray-600">显示 1 至 5 条，共 326 条</div>
+        <div class="flex items-center gap-2">
+          <button class="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button class="px-3 py-1 text-sm text-white bg-blue-600 rounded">1</button>
+          <button class="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">2</button>
+          <button class="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">3</button>
+          <span class="px-2 text-sm text-gray-600">...</span>
+          <button class="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">66</button>
+          <button class="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Added Chart.js initialization scripts -->
+  <script>
+    // Satisfaction Trend Chart
+    const satisfactionTrendCtx = document.getElementById('satisfactionTrendChart').getContext('2d');
+    new Chart(satisfactionTrendCtx, {
+      type: 'line',
+      data: {
+        labels: ['3月', '4月', '5月', '6月', '7月', '8月'],
+        datasets: [{
+          label: '平均满意度',
+          data: [4.3, 4.4, 4.5, 4.6, 4.65, 4.7],
+          borderColor: 'rgb(59, 130, 246)',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: false,
+            min: 4.0,
+            max: 5.0,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+
+    // Feedback Type Chart
+    const feedbackTypeCtx = document.getElementById('feedbackTypeChart').getContext('2d');
+    new Chart(feedbackTypeCtx, {
+      type: 'pie',
+      data: {
+        labels: ['功能建议', '表扬赞赏', '问题反馈', '其他反馈'],
+        datasets: [{
+          data: [115, 73, 93, 46],
+          backgroundColor: [
+            'rgb(6, 182, 212)',
+            'rgb(34, 197, 94)',
+            'rgb(236, 72, 153)',
+            'rgb(156, 163, 175)'
+          ],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 15,
+              font: {
+                size: 12
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Feedback Source Chart
+    const feedbackSourceCtx = document.getElementById('feedbackSourceChart').getContext('2d');
+    new Chart(feedbackSourceCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Web端', '移动端', '电话', '邮件'],
+        datasets: [{
+          data: [145, 98, 52, 31],
+          backgroundColor: [
+            'rgb(59, 130, 246)',
+            'rgb(34, 197, 94)',
+            'rgb(234, 179, 8)',
+            'rgb(168, 85, 247)'
+          ],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 20,
+              font: {
+                size: 12
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

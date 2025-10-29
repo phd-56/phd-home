@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统监控 - 医疗影像管理系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .nav-item {
+            transition: all 0.2s;
+        }
+        .nav-item:hover {
+            background-color: #f0f4ff;
+        }
+        .nav-item.active {
+            background-color: #e6f0ff;
+            color: #2563eb;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <span class="text-lg font-semibold text-gray-800">医疗影像管理系统</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button class="p-2 hover:bg-gray-100 rounded-lg relative">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                </div>
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="User" class="w-9 h-9 rounded-full border-2 border-gray-200">
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-14">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-gray-200 fixed left-0 top-14 bottom-0 overflow-y-auto">
+            <nav class="p-4 space-y-1">
+                <a href="index.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>管理仪表盘</span>
+                </a>
+
+                <div class="space-y-1">
+                    <a href="data-analysis.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span>数据统计分析</span>
+                    </a>
+                    <a href="doctor-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">医生数据</span>
+                    </a>
+                    <a href="patient-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">患者数据</span>
+                    </a>
+                    <a href="feedback-data.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700 pl-12">
+                        <span class="text-sm">反馈数据统计</span>
+                    </a>
+                </div>
+
+                <a href="system-monitoring.html" class="nav-item active flex items-center gap-3 px-4 py-2.5 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>系统监控</span>
+                </a>
+
+                <a href="user-management.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <span>用户账号管理</span>
+                </a>
+
+                <a href="roles-permissions.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>角色与权限</span>
+                </a>
+
+                <a href="system-config.html" class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>系统参数配置</span>
+                </a>
+            </nav>
+
+            <div class="p-4 mt-8 border-t border-gray-200">
+                <div class="text-xs text-gray-500 space-y-1">
+                    <div class="flex justify-between">
+                        <span>系统版本</span>
+                        <span class="font-medium">v2.3.1</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>最近更新</span>
+                        <span class="font-medium">2023-08-15</span>
+                    </div>
+                </div>
+                <button class="w-full mt-3 px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                    查看更新日志
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1 p-8">
+            <div class="max-w-7xl mx-auto">
+                <!-- Page Header -->
+                <div class="mb-8">
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">系统监控</h1>
+                    <p class="text-gray-600">实时监控系统运行状态，及时发现并处理异常问题</p>
+                </div>
+
+                <!-- System Status -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-1">系统状态概览</h3>
+                            <p class="text-sm text-gray-500">最后更新: 2023-08-21 15:30:22</p>
+                        </div>
+                        <button class="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 text-sm">
+                            刷新
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-6 mb-6">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm text-gray-600">CPU使用率</span>
+                                <span class="text-sm font-semibold text-gray-900">38%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: 38%"></div>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">8核心 Intel Core i5-9400F @ 2.90GHz</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm text-gray-600">内存使用率</span>
+                                <span class="text-sm font-semibold text-gray-900">62%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-orange-500 h-2 rounded-full" style="width: 62%"></div>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">已用: 32GB / 总计: 51GB / 可用: 19GB</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm text-gray-600">磁盘使用率</span>
+                                <span class="text-sm font-semibold text-gray-900">65%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-orange-500 h-2 rounded-full" style="width: 65%"></div>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">已用: 307.7GB / 总计: 1.37TB / 可用: 1.06TB</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 text-sm">
+                        <span class="text-gray-600">网络流量入: <span class="font-semibold text-gray-900">128Mbps</span></span>
+                        <span class="text-gray-400">|</span>
+                        <span class="text-gray-600">网络流量出: <span class="font-semibold text-gray-900">86.8Mbps</span></span>
+                    </div>
+
+                    <div class="mt-6">
+                        <div style="height: 128px; position: relative;">
+                            <canvas id="systemMetricsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Services -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">核心服务监控</h3>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900">数据库服务</div>
+                                    <div class="text-sm text-gray-500">MySQL 8.0.14.3</div>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">正常运行中</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900">应用服务器</div>
+                                    <div class="text-sm text-gray-500">Node.js 14.17.3</div>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">正常运行中</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900">存储服务</div>
+                                    <div class="text-sm text-gray-500">Minio Object Storage</div>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">正常运行中</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900">缓存服务</div>
+                                    <div class="text-sm text-gray-500">Redis 6.2.7</div>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">正常运行中</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900">消息队列</div>
+                                    <div class="text-sm text-gray-500">RabbitMQ 3.11.3</div>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">正常运行中</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900">认证服务</div>
+                                    <div class="text-sm text-gray-500">OAuth 2.0 / JWT</div>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">正常运行中</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                    <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900">新增文件服务</div>
+                                    <div class="text-sm text-gray-500">ImageMagick 7.1.0</div>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 text-sm rounded-full">负载较高</span>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900">认证服务</div>
+                                    <div class="text-sm text-gray-500">OAuth 2.0 / JWT</div>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">正常运行中</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <button class="text-blue-600 text-sm hover:underline">查看全部服务 (12)</button>
+                    </div>
+                </div>
+
+                <!-- Database Performance -->
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white rounded-xl border border-gray-200 p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900">数据库性能监控</h3>
+                            <div class="flex gap-2 text-sm">
+                                <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded">1小时</button>
+                                <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded">24小时</button>
+                                <button class="px-3 py-1 text-blue-600 bg-blue-50 rounded">7天</button>
+                                <button class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded">30天</button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 mb-4">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-600">查询性能监控</span>
+                                    <span class="text-sm font-semibold text-gray-900">128次/秒</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 42.5%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-600">连接数</span>
+                                    <span class="text-sm font-semibold text-gray-900">42 / 100</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 42%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="height: 192px; position: relative;">
+                            <canvas id="dbPerformanceChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-6">最近API请求记录</h3>
+
+                        <div style="height: 192px; position: relative;">
+                            <canvas id="apiRequestsChart"></canvas>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-gray-600">当前在线用户数</span>
+                                <span class="font-semibold text-gray-900">28</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-gray-600">今日新增用户</span>
+                                <span class="font-semibold text-gray-900">12</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-gray-600">今日活跃用户</span>
+                                <span class="font-semibold text-gray-900">16</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Activity -->
+                <div class="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">用户活动监控</h3>
+                        <button class="text-blue-600 text-sm hover:underline">查看全部</button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-500 w-20">15:34:45</span>
+                                <span class="text-sm text-gray-900">李医生上传了患者影像文件至系统，所属部门影像科，等待审核</span>
+                            </div>
+                            <span class="text-xs text-gray-500">刚刚 1分钟</span>
+                        </div>
+
+                        <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-500 w-20">15:15:22</span>
+                                <span class="text-sm text-gray-900">王医生上传了患者影像文件至系统，所属部门影像科，等待审核</span>
+                            </div>
+                            <span class="text-xs text-gray-500">刚刚 14分钟</span>
+                        </div>
+
+                        <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-500 w-20">14:51:23</span>
+                                <span class="text-sm text-gray-900">系统管理员修改了中医科的权限配置，更新了用户访问控制</span>
+                            </div>
+                            <span class="text-xs text-gray-500">2小时 38分钟</span>
+                        </div>
+
+                        <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-500 w-20">14:15:28</span>
+                                <span class="text-sm text-gray-900">张医生完成了患者CT影像诊断报告，所属部门放射科</span>
+                            </div>
+                            <span class="text-xs text-gray-500">3小时 14分钟</span>
+                        </div>
+
+                        <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-500 w-20">10:48:17</span>
+                                <span class="text-sm text-gray-900">刘医生登录系统并查看了待处理的影像检查列表</span>
+                            </div>
+                            <span class="text-xs text-gray-500">6小时 41分钟</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // System Metrics Chart
+        const metricsCtx = document.getElementById('systemMetricsChart').getContext('2d');
+        new Chart(metricsCtx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                datasets: [
+                    {
+                        label: 'CPU使用率',
+                        data: [25, 30, 45, 38, 42, 38],
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: '内存使用率',
+                        data: [55, 58, 62, 60, 65, 62],
+                        borderColor: 'rgb(249, 115, 22)',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 0 },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 10,
+                            font: { size: 11 }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Database Performance Chart
+        const dbCtx = document.getElementById('dbPerformanceChart').getContext('2d');
+        new Chart(dbCtx, {
+            type: 'bar',
+            data: {
+                labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                datasets: [{
+                    label: '查询次数 (千次)',
+                    data: [85, 92, 88, 95, 102, 78, 65],
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 0 },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // API Requests Chart
+        const apiCtx = document.getElementById('apiRequestsChart').getContext('2d');
+        new Chart(apiCtx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                datasets: [{
+                    label: 'API请求数',
+                    data: [1200, 800, 2400, 3200, 2800, 1600],
+                    borderColor: 'rgb(34, 197, 94)',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 0 },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import doctorRoutes from './doctorRoutes'
+import adminRoutes from './adminRoutes'
 // 静态导入Login组件以测试加载问题
 import LoginView from '@/views/Login.vue'
 
@@ -117,11 +118,12 @@ const router = createRouter({
           ]
         },
 
-        // 管理员仪表板
+        // 管理员仪表板 - 使用 adminRoutes 配置
         {
           path: 'admin',
           component: () => import('@/components/AppLayout.vue'),
-          meta: { role: 'admin' },
+          meta: { requiresAuth: true, role: 'admin' },
+          redirect: '/dashboard/admin/dashboard',
           children: [
             // 管理员首页
             {
@@ -129,146 +131,80 @@ const router = createRouter({
               name: 'AdminDashboard',
               component: () => import('@/views/AdminDashboard.vue')
             },
+            {
+              path: 'dashboard',
+              name: 'admin.dashboard',
+              component: () => import('@/views/AdminDashboard.vue')
+            },
 
             // 用户管理
             {
               path: 'user-management',
-              name: 'UserManagement',
-              component: () => import('@/views/UserManagement.vue')
-            },
-
-            // 上传功能
-            // {              path: 'upload',              name: 'AdminUpload',              component: () => import('@/views/Upload.vue')            },
-
-            // 诊断相关路由
-            {
-              path: 'diagnosis',
-              name: 'AdminDiagnosis',
-              component: () => import('@/views/diagnosis/ImageUpload.vue')
+              name: 'admin.userManagement',
+              component: () => import('@/views/UserManagement.vue'),
+              meta: {
+                requiresAuth: true,
+                role: 'admin',
+                title: '用户管理',
+                icon: 'user',
+                breadcrumb: '用户管理'
+              }
             },
             {
-              path: 'diagnosis/result',
-              name: 'AdminDiagnosisResult',
-              component: () => import('@/views/diagnosis/DiagnosisResult.vue')
+              path: 'data-analysis',
+              name: 'admin.dataAnalysis',
+              component: () => import('@/views/admin/DataAnalysis.vue')
             },
             {
-              path: 'diagnosis/image-viewer',
-              name: 'AdminImageViewer',
-              component: () => import('@/views/diagnosis/ImageViewer.vue')
-            },
-
-            // 病例管理路由
-            {
-              path: 'cases',
-              name: 'AdminCases',
-              component: () => import('@/views/case-management/CaseList.vue')
+              path: 'doctor-data',
+              name: 'admin.doctorData',
+              component: () => import('@/views/admin/DoctorData.vue')
             },
             {
-              path: 'cases/create',
-              name: 'AdminCaseCreate',
-              component: () => import('@/views/case-management/CaseCreate.vue')
+              path: 'patient-data',
+              name: 'admin.patientData',
+              component: () => import('@/views/admin/PatientData.vue')
             },
             {
-              path: 'cases/:id',
-              name: 'AdminCaseDetail',
-              component: () => import('@/views/case-management/CaseDetail.vue')
+              path: 'feedback-data',
+              name: 'admin.feedbackData',
+              component: () => import('@/views/admin/FeedbackData.vue')
             },
-            // 病例管理路由 - 注释掉因为文件不存在
-            // {
-            //   path: 'cases/import',
-            //   name: 'AdminCaseImport',
-            //   component: () => import('@/views/case-management/HisImport.vue')
-            // },
             {
-              path: 'cases/document-upload',
-              name: 'AdminDocumentUpload',
-              component: () => import('@/views/case-management/DocumentUpload.vue')
+              path: 'roles-permissions',
+              name: 'admin.rolesPermissions',
+              component: () => import('@/views/admin/RolesPermissions.vue')
             },
-
-            // 知识库路由
             {
-              path: 'knowledge',
-              name: 'AdminKnowledge',
-              component: () => import('@/views/doctor/KnowledgeBase.vue')
+              path: 'system-config',
+              name: 'admin.systemConfig',
+              component: () => import('@/views/admin/SystemConfig.vue')
             },
-
-            // 报告路由
-            {
-              path: 'reports',
-              name: 'AdminReports',
-              component: () => import('@/views/ReportPreview.vue')
-            },
-
             // 系统监控路由
             {
-              path: 'system-monitor',
-              name: 'SystemMonitor',
-              component: () => import('@/views/admin/SystemMonitor.vue')
-            },
-            {
               path: 'system-monitoring',
-              name: 'SystemMonitoring',
-              component: () => import('@/views/admin/SystemMonitoring.vue')
+              name: 'admin.systemMonitoring',
+              component: () => import('@/views/admin/SystemMonitor.vue'),
+              meta: {
+                requiresAuth: true,
+                role: 'admin',
+                title: '系统监控',
+                icon: 'monitor',
+                breadcrumb: '系统监控'
+              }
             },
-
-            // 数据备份路由
-            {
-              path: 'data-backup',
-              name: 'DataBackup',
-              component: () => import('@/views/admin/DataBackup.vue')
-            },
-            {
-              path: 'backup-management',
-              name: 'BackupManagement',
-              component: () => import('@/views/admin/BackupManagement.vue')
-            },
-            {
-              path: 'restore-operation',
-              name: 'RestoreOperation',
-              component: () => import('@/views/admin/RestoreOperation.vue')
-            },
-
-            // 审计日志路由
+            // 操作审计日志路由
             {
               path: 'audit-logs',
-              name: 'AuditLogs',
-              component: () => import('@/views/admin/AuditLogs.vue')
-            },
-
-            // 反馈路由
-            {
-              path: 'feedback',
-              name: 'AdminFeedback',
-              component: () => import('@/views/Feedback.vue')
-            },
-
-            // 模型优化路由
-            {
-              path: 'model-optimization',
-              name: 'ModelOptimization',
-              component: () => import('@/views/admin/ModelOptimization.vue')
-            },
-            {
-              path: 'optimization-management',
-              name: 'OptimizationManagement',
-              component: () => import('@/views/admin/OptimizationManagement.vue')
-            },
-            {
-              path: 'model-optimization-comparison',
-              name: 'ModelOptimizationComparison',
-              component: () => import('@/views/admin/ModelOptimizationComparison.vue')
-            },
-            {
-              path: 'model-performance',
-              name: 'ModelPerformance',
-              component: () => import('@/views/admin/ModelPerformance.vue')
-            },
-
-            // 告警设置路由
-            {
-              path: 'alarm-settings',
-              name: 'AlarmSettings',
-              component: () => import('@/views/admin/AlarmSettings.vue')
+              name: 'admin.auditLogs',
+              component: () => import('@/views/admin/AuditLogs.vue'),
+              meta: {
+                requiresAuth: true,
+                role: 'admin',
+                title: '操作审计日志',
+                icon: 'document',
+                breadcrumb: '操作审计日志'
+              }
             }
           ]
         }
@@ -353,20 +289,26 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  // 如果需要认证但未认证，跳转到登录页
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+  // 检查是否需要认证 - 检查当前路由和父路由的 meta
+  const requiresAuthRoute = to.matched.find(record => record.meta.requiresAuth)
+  if (requiresAuthRoute && !authStore.isAuthenticated) {
     console.log('未认证，跳转到登录页')
     next('/login')
     return
   }
 
-  // 检查角色权限
-  if (to.meta.requiresAuth && to.meta.role && authStore.user?.role !== to.meta.role) {
-    console.log('角色权限不足，跳转到首页')
-    // 移除了 ElMessage 的使用，因为它在路由守卫中不可用
-    // 可以在跳转后通过其他方式显示提示，比如在目标页面中显示
-    next('/')
-    return
+  // 检查角色权限 - 检查当前路由和父路由的 meta
+  const roleRoute = to.matched.find(record => record.meta.role)
+  if (roleRoute) {
+    const requiredRole = roleRoute.meta.role
+    if (requiredRole && authStore.user?.role !== requiredRole) {
+      console.log('角色权限不足，跳转到首页')
+      console.log('- 需要角色:', requiredRole)
+      console.log('- 当前用户角色:', authStore.user?.role)
+      console.log('- 目标路由:', to.path)
+      next('/')
+      return
+    }
   }
 
   // 其他情况直接放行
