@@ -1,13 +1,6 @@
 <template>
-  <div class="patient-layout">
-    <!-- 患者侧边栏 -->
-    <PatientSidebar 
-      :active-tab="'reports'" 
-      @tab-change="handleTabChange"
-    />
-    
-    <div class="patient-reports">
-      <div class="reports-content">
+  <div class="patient-reports">
+    <div class="reports-content">
         <div class="page-header">
           <div>
             <h1 class="text-2xl font-semibold text-gray-800 mb-1">我的影像报告</h1>
@@ -178,7 +171,7 @@
                 </span>
               </div>
             </div>
-      </div>
+          </div>
 
           <!-- 分页 -->
           <div class="p-5 border-t border-gray-200 flex items-center justify-between">
@@ -210,7 +203,7 @@
               >
                 <i class="fas fa-chevron-right"></i>
               </button>
-      </div>
+            </div>
           </div>
         </div>
         
@@ -250,7 +243,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -479,21 +471,22 @@ const handleTabChange = (tab: string) => {
 </script>
 
 <style scoped>
-.patient-layout {
-  min-height: 100vh;
-  background: #f9fafb;
-}
-
 .patient-reports {
-  margin-left: 224px;
-  padding: 24px;
-  min-height: 100vh;
-  width: calc(100% - 224px);
+  padding: 0;
 }
 
 .reports-content {
+  padding: 0;
   max-width: 1200px;
-  width: 100%;
+  margin: 0 auto;
+}
+
+.reports-content .page-header {
+  padding: 24px 24px 0 24px;
+}
+
+.reports-content > div {
+  padding: 0 24px;
 }
 
 .page-header {

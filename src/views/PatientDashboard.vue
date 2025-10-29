@@ -7,27 +7,66 @@
     />
     
     <div class="patient-dashboard">
-      <!-- 路由出口 - 始终存在，用于显示子路由内容 -->
-      <router-view />
-      
-      <!-- 只有当访问根路径时才显示主页内容 -->
-      <div v-if="$route.path === '/dashboard/patient'" class="dashboard-content">
-        <!-- 页面头部 -->
-        <div class="page-header">
-          <div>
-            <h1 class="text-2xl font-semibold text-gray-800 mb-1">我的工作台</h1>
-            <p class="text-sm text-gray-500">欢迎回来，张老师！在这里您可以查看您的健康管理中心</p>
+      <!-- 顶部导航栏 -->
+      <div class="top-navbar">
+        <div class="navbar-left">
+          <div class="logo">
+            <span class="logo-text">🦴 BoneAI Diagnostics</span>
           </div>
-                  <div class="header-actions">
-                    <button 
-                      class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
-                      @click="goToAppointment"
-                    >
-                      <i class="fas fa-calendar-plus"></i>
-                      <span>预约检查</span>
-                    </button>
-                  </div>
         </div>
+        <div class="navbar-right">
+          <div class="notification-center">
+            <el-badge :value="3" class="notification-badge">
+              <el-button circle>
+                <i class="fas fa-bell"></i>
+              </el-button>
+            </el-badge>
+          </div>
+          <div class="user-profile">
+            <el-dropdown @command="handleUserAction">
+              <span class="user-info">
+                <div class="user-avatar">张</div>
+                <div class="user-details">
+                  <div class="user-name">张患者</div>
+                  <div class="user-role">患者</div>
+                </div>
+                <i class="fas fa-caret-down"></i>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="profile">个人中心</el-dropdown-item>
+                  <el-dropdown-item command="settings">账户设置</el-dropdown-item>
+                  <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </div>
+      </div>
+
+      <!-- 主内容区域 -->
+      <div class="main-content-area">
+        <!-- 路由出口 - 始终存在，用于显示子路由内容 -->
+        <router-view />
+        
+        <!-- 只有当访问根路径时才显示主页内容 -->
+        <div v-if="$route.path === '/dashboard/patient'" class="dashboard-content">
+          <!-- 页面头部 -->
+          <div class="page-header">
+            <div>
+              <h1 class="text-2xl font-semibold text-gray-800 mb-1">我的工作台</h1>
+              <p class="text-sm text-gray-500">欢迎回来，张患者！在这里您可以查看您的健康管理中心</p>
+            </div>
+            <div class="header-actions">
+              <button 
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
+                @click="goToAppointment"
+              >
+                <i class="fas fa-calendar-plus"></i>
+                <span>预约检查</span>
+              </button>
+            </div>
+          </div>
 
         <div class="flex gap-6">
           <!-- 左侧主要内容 -->
@@ -251,6 +290,7 @@
           </div>
         </div>
       </div>
+      </div>
     </div>
   </div>
 </template>
@@ -259,7 +299,7 @@
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import PatientSidebar from '@/components/patient/PatientSidebar.vue';
 
 const router = useRouter();
@@ -320,23 +360,208 @@ const handleLogout = () => {
   ElMessage.success('已退出登录');
   router.push('/');
 };
+
+const handleUserAction = async (command: string) => {
+  switch (command) {
+    case 'profile':
+      // 跳转到个人中心（如果有的话）
+      ElMessage.info('个人中心功能开发中');
+      break;
+    case 'settings':
+      router.push('/dashboard/patient/settings');
+      break;
+    case 'logout':
+      try {
+        await ElMessageBox.confirm('确定要退出登录吗？', '退出确认', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        handleLogout();
+      } catch {
+        // 用户取消
+      }
+      break;
+  }
+};
 </script>
 
 <style scoped>
 .patient-layout {
+  display: flex;
   min-height: 100vh;
-  background: #f9fafb;
+  background-color: #f5f7fa;
 }
 
 .patient-dashboard {
+  flex: 1;
   margin-left: 224px;
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
+/* 顶部导航栏样式 */
+.top-navbar {
+  background-color: #1890ff;
+  color: white;
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo .logo-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.notification-center {
+  position: relative;
+}
+
+.notification-badge {
+  border: none;
+}
+
+.notification-badge :deep(.el-badge__content) {
+  background-color: #ff4d4f;
+}
+
+.notification-badge .el-button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+}
+
+.notification-badge .el-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.user-info:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background-color: #ff7875;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.user-role {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.user-info .fa-caret-down {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 主内容区域 */
+.main-content-area {
+  flex: 1;
+  padding: 24px;
+  margin-top: 60px;
+  overflow-y: auto;
+}
+
+/* 工作台页面 - 居中显示 */
 .dashboard-content {
-  max-width: 1280px;
+  max-width: 1400px;
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  margin: 0 auto; /* 工作台页面居中显示 */
+}
+
+/* 子页面内容样式 - 距离侧边栏较近，统一24px */
+.main-content-area :deep(.patient-reports),
+.main-content-area :deep(.patient-appointment),
+.main-content-area :deep(.patient-settings),
+.main-content-area :deep(.patient-help) {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  min-height: calc(100vh - 120px);
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.main-content-area :deep(.page-header) {
+  margin-bottom: 24px;
+}
+
+.main-content-area :deep(h1) {
+  font-size: 24px;
+  font-weight: 600;
+  color: #303133;
+  margin-bottom: 8px;
+}
+
+.main-content-area :deep(.text-gray-500) {
+  color: #909399;
+  font-size: 14px;
+}
+
+.dashboard-content {
+  max-width: 1400px; /* 工作台页面更宽 */
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
 }
 
 .page-header {
@@ -643,10 +868,21 @@ const handleLogout = () => {
   padding-left: 20px;
 }
 
+/* 响应式设计 */
 @media (max-width: 1024px) {
+  .patient-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    height: calc(100vh - 60px);
+    top: 60px;
+  }
+  
   .patient-dashboard {
     margin-left: 0;
-    padding: 16px;
+  }
+  
+  .main-content-area {
+    margin-left: 0;
   }
   
   .flex {

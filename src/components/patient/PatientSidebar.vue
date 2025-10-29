@@ -1,17 +1,5 @@
 <template>
   <div class="patient-sidebar">
-    <div class="sidebar-header">
-      <div class="user-info">
-        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-          <span class="text-blue-600 text-sm">{{ userInfo.name.charAt(0) }}</span>
-        </div>
-        <div class="user-details">
-          <h4>{{ userInfo.name }}</h4>
-          <p class="user-role">账号: ID {{ userInfo.id }}</p>
-        </div>
-      </div>
-    </div>
-
     <div class="sidebar-menu">
               <div class="menu-section">
                 <div class="section-title">患者管理</div>
@@ -109,7 +97,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 const userInfo = reactive<UserInfo>({
-  name: '张老师',
+  name: '张患者',
   id: '2023051008'
 })
 
@@ -142,85 +130,67 @@ const handleLogout = async () => {
 <style scoped>
 .patient-sidebar {
   width: 224px;
-  height: 100vh;
-  background: #fff;
-  border-right: 1px solid #e5e7eb;
+  height: calc(100vh - 60px);
+  background: #ffffff;
+  border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
-  top: 0;
+  top: 60px;
   overflow-y: auto;
-  z-index: 1000;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar-header {
-  padding: 16px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.user-details h4 {
-  margin: 0;
-  color: #1f2937;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.user-role {
-  margin: 0;
-  color: #6b7280;
-  font-size: 12px;
+  z-index: 100;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-menu {
   flex: 1;
-  padding: 16px;
+  padding: 20px 0;
 }
 
 .menu-section {
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
 .section-title {
   font-size: 12px;
-  color: #9ca3af;
-  margin-bottom: 12px;
+  color: #909399;
+  margin-bottom: 8px;
+  padding: 0 20px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-weight: normal;
 }
 
 .menu-nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0;
 }
 
 .menu-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 12px;
-  color: #374151;
+  padding: 12px 20px;
+  color: #606266;
   text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.2s;
+  border-radius: 0;
+  transition: all 0.3s ease;
   font-size: 14px;
+  position: relative;
+  cursor: pointer;
 }
 
 .menu-item:hover {
-  background-color: #f3f4f6;
+  background-color: #f5f7fa;
+  color: #409eff;
 }
 
 .menu-item.active {
-  background-color: #dbeafe;
-  color: #2563eb;
+  background-color: #ecf5ff;
+  color: #409eff;
+  border-right: 3px solid #409eff;
 }
 
 .menu-item i {
@@ -229,8 +199,9 @@ const handleLogout = async () => {
 }
 
 .sidebar-footer {
-  padding: 16px;
-  border-top: 1px solid #e5e7eb;
+  padding: 16px 20px;
+  border-top: 1px solid #f0f0f0;
+  background: #fafafa;
 }
 
 .logout-btn {
@@ -238,18 +209,20 @@ const handleLogout = async () => {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 12px;
+  padding: 12px 16px;
   background: none;
   border: none;
-  color: #374151;
-  border-radius: 8px;
+  color: #606266;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   font-size: 14px;
+  font-weight: 500;
 }
 
 .logout-btn:hover {
-  background-color: #f3f4f6;
+  background-color: #f5f7fa;
+  color: #409eff;
 }
 
 .logout-btn i {

@@ -1,13 +1,6 @@
 <template>
-  <div class="patient-layout">
-    <!-- 患者侧边栏 -->
-    <PatientSidebar 
-      :active-tab="'help'" 
-      @tab-change="handleTabChange"
-    />
-    
-    <div class="patient-help">
-      <div class="help-content">
+  <div class="patient-help">
+    <div class="help-content">
         <div class="page-header">
         <div>
           <h1 class="text-2xl font-semibold text-gray-800 mb-1">帮助中心</h1>
@@ -178,7 +171,6 @@
     >
       <i class="fas fa-comments text-xl"></i>
     </button>
-      </div>
     </div>
   </div>
 </template>
@@ -334,21 +326,22 @@ const handleTabChange = (tab: string) => {
 </script>
 
 <style scoped>
-.patient-layout {
-  min-height: 100vh;
-  background: #f9fafb;
-}
-
 .patient-help {
-  margin-left: 224px;
-  padding: 24px;
-  min-height: 100vh;
-  width: calc(100% - 224px);
+  padding: 0;
 }
 
 .help-content {
+  padding: 0;
   max-width: 1200px;
-  width: 100%;
+  margin: 0 auto;
+}
+
+.help-content .page-header {
+  padding: 24px 24px 0 24px;
+}
+
+.help-content > div {
+  padding: 0 24px 24px 24px;
 }
 
 .page-header {

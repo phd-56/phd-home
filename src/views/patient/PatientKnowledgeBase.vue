@@ -164,8 +164,19 @@
                       <span><i class="fas fa-calendar"></i> 2023-01-10</span>
                       <span><i class="fas fa-eye"></i> 1,893 查看</span>
                       <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-              </div>
-            </div>
+                    </div>
+                    <!-- 原地展开的详情 -->
+                    <div v-if="currentGuideId === 'herniation-2023' && showGuideDetail" class="guide-detail-expanded">
+                      <div class="guide-detail-content">
+                        <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                        <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                          <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                          <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                        </div>
+                        <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="guide-item">
                   <i class="fas fa-file-medical guide-icon"></i>
@@ -274,24 +285,46 @@
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link">颈椎病诊疗指南 (2022版)</h4>
+                  <h4 class="guide-title-link" @click="openGuideDetail('spondylosis-2022')">颈椎病诊疗指南 (2022版)</h4>
                   <p>本指南由中华医学会骨科学分会发布，涵盖了脊髓型、神经根型颈椎病的诊断标准、阶梯治疗和手术时机...</p>
                   <div class="guide-meta">
                     <span><i class="fas fa-calendar"></i> 2022-10-18</span>
                     <span><i class="fas fa-eye"></i> 6,210 查看</span>
                     <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
                   </div>
+                  <!-- 原地展开的详情 -->
+                  <div v-if="currentGuideId === 'spondylosis-2022' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link">脊髓型颈椎病(CSM)诊断与治疗专家共识</h4>
+                  <h4 class="guide-title-link" @click="openGuideDetail('csm-consensus')">脊髓型颈椎病(CSM)诊断与治疗专家共识</h4>
                   <p>针对脊髓型颈椎病的早期识别、影像学评估（T2高信号）、手术入路选择（前路ACDF/ACCF，后路）提供了详细建议...</p>
                   <div class="guide-meta">
                     <span><i class="fas fa-calendar"></i> 2023-02-05</span>
                     <span><i class="fas fa-eye"></i> 4,119 查看</span>
                     <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                  <!-- 原地展开的详情 -->
+                  <div v-if="currentGuideId === 'csm-consensus' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -387,12 +420,23 @@
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link">脊柱骨折诊疗指南 (2023版)</h4>
+                  <h4 class="guide-title-link" @click="openGuideDetail('spinal-fracture-2023')">脊柱骨折诊疗指南 (2023版)</h4>
                   <p>本指南详细介绍了脊柱骨折的分类、诊断标准、保守治疗和手术治疗的适应症，特别强调了稳定性评估的重要性...</p>
                   <div class="guide-meta">
                     <span><i class="fas fa-calendar"></i> 2023-04-20</span>
                     <span><i class="fas fa-eye"></i> 2,856 查看</span>
                     <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                  <!-- 原地展开的详情 -->
+                  <div v-if="currentGuideId === 'spinal-fracture-2023' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -452,12 +496,23 @@
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link">青少年特发性脊柱侧弯诊疗指南</h4>
+                  <h4 class="guide-title-link" @click="openGuideDetail('scoliosis-guide')">青少年特发性脊柱侧弯诊疗指南</h4>
                   <p>本指南针对青少年特发性脊柱侧弯的诊断、Cobb角测量、支具治疗和手术指征提供了详细指导...</p>
                   <div class="guide-meta">
                     <span><i class="fas fa-calendar"></i> 2023-05-15</span>
                     <span><i class="fas fa-eye"></i> 3,124 查看</span>
                     <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                  <!-- 原地展开的详情 -->
+                  <div v-if="currentGuideId === 'scoliosis-guide' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -490,12 +545,23 @@
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link">膝关节骨关节炎诊疗指南 (2023版)</h4>
+                  <h4 class="guide-title-link" @click="openGuideDetail('oa-2023')">膝关节骨关节炎诊疗指南 (2023版)</h4>
                   <p>本指南详细介绍了膝关节骨关节炎的病理机制、临床表现、影像学分级和阶梯治疗方案...</p>
                   <div class="guide-meta">
                     <span><i class="fas fa-calendar"></i> 2023-06-10</span>
                     <span><i class="fas fa-eye"></i> 4,567 查看</span>
                     <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                  <!-- 原地展开的详情 -->
+                  <div v-if="currentGuideId === 'oa-2023' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -528,12 +594,23 @@
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link">半月板损伤诊疗指南 (2023版)</h4>
+                  <h4 class="guide-title-link" @click="openGuideDetail('meniscus-2023-2')">半月板损伤诊疗指南 (2023版)</h4>
                   <p>本指南详细介绍了半月板损伤的解剖、分型、MRI诊断标准和关节镜手术指征...</p>
                   <div class="guide-meta">
                     <span><i class="fas fa-calendar"></i> 2023-03-15</span>
                     <span><i class="fas fa-eye"></i> 3,452 查看</span>
                     <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                  <!-- 原地展开的详情 -->
+                  <div v-if="currentGuideId === 'meniscus-2023-2' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -566,12 +643,23 @@
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link">膝关节韧带损伤诊疗指南</h4>
+                  <h4 class="guide-title-link" @click="openGuideDetail('ligament-guide')">膝关节韧带损伤诊疗指南</h4>
                   <p>本指南详细介绍了前交叉韧带、后交叉韧带、内侧副韧带等损伤的诊断和治疗方案...</p>
                   <div class="guide-meta">
                     <span><i class="fas fa-calendar"></i> 2023-07-20</span>
                     <span><i class="fas fa-eye"></i> 2,789 查看</span>
                     <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                  <!-- 原地展开的详情 -->
+                  <div v-if="currentGuideId === 'ligament-guide' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -604,12 +692,23 @@
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link">股骨头坏死诊疗指南 (2023版)</h4>
+                  <h4 class="guide-title-link" @click="openGuideDetail('anfh-2023')">股骨头坏死诊疗指南 (2023版)</h4>
                   <p>本指南详细介绍了股骨头坏死的病因、分期、影像学诊断和保髋手术的适应症...</p>
                   <div class="guide-meta">
                     <span><i class="fas fa-calendar"></i> 2023-08-15</span>
                     <span><i class="fas fa-eye"></i> 1,956 查看</span>
                     <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                  <!-- 原地展开的详情 -->
+                  <div v-if="currentGuideId === 'anfh-2023' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -628,22 +727,6 @@
                 <p>早期症状包括髋关节疼痛，特别是夜间痛和负重时疼痛加重。疼痛可放射到大腿内侧或膝关节，活动受限。</p>
               </div>
             </div>
-          </div>
-        </div>
-        <div v-if="showGuideDetail" class="content-page is-active">
-          <div class="page-header">
-            <a href="#" class="btn-back" @click.prevent="showGuideDetail = null">
-              <i class="fas fa-arrow-left"></i> 返回上一级
-            </a>
-          </div>
-          <div class="guide-content-full">
-            <h1>{{ currentGuide.title }}</h1>
-            <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-              <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-              <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-              <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-            </div>
-            <div v-html="currentGuide.content"></div>
           </div>
         </div>
       </div>
@@ -673,6 +756,7 @@ const activeDisease = ref('herniation')
 
 // 指南详情
 const showGuideDetail = ref(false)
+const currentGuideId = ref('') // 当前展开的指南ID
 const currentGuide = ref({
   title: '',
   date: '',
@@ -761,6 +845,8 @@ const toggleExpanded = (item: string) => {
 
 const selectDisease = (disease: string) => {
   activeDisease.value = disease
+  // 切换疾病时，自动关闭已展开的详情
+  showGuideDetail.value = false
 }
 
 const showPage = (page: string) => {
@@ -771,7 +857,14 @@ const openGuideDetail = (guideId: string) => {
   const guide = guideData[guideId as keyof typeof guideData]
   if (guide) {
     currentGuide.value = guide
-    showGuideDetail.value = true
+    // 如果点击的是当前已展开的，则收起；否则展开新的
+    if (currentGuideId.value === guideId) {
+      currentGuideId.value = ''
+      showGuideDetail.value = false
+    } else {
+      currentGuideId.value = guideId
+      showGuideDetail.value = true
+    }
   }
 }
 </script>
@@ -1472,6 +1565,46 @@ const openGuideDetail = (guideId: string) => {
   line-height: 1.8;
   color: #606266;
   margin-bottom: 16px;
+}
+
+/* 就地展开的详情样式 */
+.guide-detail-expanded {
+  margin-top: 20px;
+  border-top: 1px solid #e4e7ed;
+  padding-top: 20px;
+}
+
+.guide-detail-content {
+  background-color: #fafbfc;
+  border: 1px solid #e4e7ed;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.guide-detail-content h2 {
+  font-size: 20px;
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #303133;
+}
+
+.guide-detail-body {
+  margin-top: 20px;
+}
+
+.guide-detail-body h3 {
+  font-size: 16px;
+  margin: 16px 0 8px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e4e7ed;
+  color: #303133;
+}
+
+.guide-detail-body p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #606266;
+  margin-bottom: 12px;
 }
 
 @media (max-width: 1024px) {

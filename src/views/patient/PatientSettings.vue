@@ -1,12 +1,5 @@
 <template>
-  <div class="patient-layout">
-    <!-- 患者侧边栏 -->
-    <PatientSidebar 
-      :active-tab="'settings'" 
-      @tab-change="handleTabChange"
-    />
-    
-    <div class="patient-settings">
+  <div class="patient-settings">
       <div class="page-header">
         <div>
           <h1 class="text-2xl font-semibold text-gray-800 mb-1">账户设置</h1>
@@ -241,20 +234,18 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import PatientSidebar from '@/components/patient/PatientSidebar.vue'
 
 const router = useRouter()
 
 // 用户信息
 const userInfo = reactive({
-  name: '张老师',
+  name: '张患者',
   gender: '男',
   birthDate: '1990-01-01',
   phone: '13800138000'
@@ -312,16 +303,14 @@ const goBack = () => {
 </script>
 
 <style scoped>
-.patient-layout {
-  min-height: 100vh;
-  background: #f9fafb;
+.patient-settings {
+  padding: 0;
 }
 
-.patient-settings {
-  margin-left: 224px;
+.settings-container {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 24px;
-  min-height: 100vh;
-  width: calc(100% - 224px);
 }
 
 .page-header {
