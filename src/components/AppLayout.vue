@@ -28,35 +28,35 @@
     <div v-else class="sidebar">
       <div class="sidebar-section">
         <div class="sidebar-title">主导航</div>
-        <div class="sidebar-item active">
-          ⏱️ 工作台
-        </div>
-        <div class="sidebar-item">
-          🖼️ 影像诊断
-        </div>
-        <div class="sidebar-item">
-          📋 病例管理
-          <span class="sidebar-badge">12</span>
-        </div>
-        <div class="sidebar-item">
-          📚 知识库
-        </div>
-        <div class="sidebar-item">
-          📊 报告中心
-        </div>
+        <router-link class="sidebar-item" to="/dashboard/doctor" custom v-slot="{ href, navigate, isActive }">
+          <a :href="href" @click="navigate" :class="{ active: isActive }">⏱️ 工作台</a>
+        </router-link>
+        <router-link class="sidebar-item" to="/dashboard/doctor/ai-diagnosis" custom v-slot="{ href, navigate, isActive }">
+          <a :href="href" @click="navigate" :class="{ active: isActive }">🖼️ 影像诊断</a>
+        </router-link>
+        <router-link class="sidebar-item" to="/dashboard/doctor/case-management" custom v-slot="{ href, navigate, isActive }">
+          <a :href="href" @click="navigate" :class="{ active: isActive }">
+            📋 病例管理 <span class="sidebar-badge">12</span>
+          </a>
+        </router-link>
+        <router-link class="sidebar-item" to="/dashboard/doctor/knowledge-base" custom v-slot="{ href, navigate, isActive }">
+          <a :href="href" @click="navigate" :class="{ active: isActive }">📚 知识库</a>
+        </router-link>
+        <router-link class="sidebar-item" to="/dashboard/doctor/reports" custom v-slot="{ href, navigate, isActive }">
+          <a :href="href" @click="navigate" :class="{ active: isActive }">📊 报告中心</a>
+        </router-link>
       </div>
-
       <div class="sidebar-section">
         <div class="sidebar-title">辅助功能</div>
-        <div class="sidebar-item">
-          📈 数据统计
-        </div>
-        <div class="sidebar-item">
-          💬 反馈中心
-        </div>
-        <div class="sidebar-item">
-          ❓ 帮助文档
-        </div>
+        <router-link class="sidebar-item" to="/dashboard/doctor/statistics" custom v-slot="{ href, navigate, isActive }">
+          <a :href="href" @click="navigate" :class="{ active: isActive }">📈 数据统计</a>
+        </router-link>
+        <router-link class="sidebar-item" to="/dashboard/doctor/feedback" custom v-slot="{ href, navigate, isActive }">
+          <a :href="href" @click="navigate" :class="{ active: isActive }">💬 反馈中心</a>
+        </router-link>
+        <router-link class="sidebar-item" to="/dashboard/doctor/help" custom v-slot="{ href, navigate, isActive }">
+          <a :href="href" @click="navigate" :class="{ active: isActive }">❓ 帮助文档</a>
+        </router-link>
       </div>
     </div>
 
@@ -246,6 +246,10 @@ const handleLogout = () => {
 }
 
 .sidebar-item {
+  display: block;
+}
+
+.sidebar-item a {
   padding: 12px 20px;
   font-size: 14px;
   color: #495057;
@@ -254,13 +258,14 @@ const handleLogout = () => {
   align-items: center;
   justify-content: space-between;
   transition: background-color 0.2s;
+  text-decoration: none;
 }
 
-.sidebar-item:hover {
+.sidebar-item a:hover {
   background-color: #e9ecef;
 }
 
-.sidebar-item.active {
+.sidebar-item a.active {
   background-color: #3498db;
   color: white;
 }
@@ -273,7 +278,7 @@ const handleLogout = () => {
   border-radius: 10px;
 }
 
-.sidebar-item.active .sidebar-badge {
+.sidebar-item a.active .sidebar-badge {
   background-color: rgba(255, 255, 255, 0.3);
 }
 

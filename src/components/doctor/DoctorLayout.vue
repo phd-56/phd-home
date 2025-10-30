@@ -21,34 +21,34 @@ watch(
   () => route.name,
   (routeName) => {
     const routeToTabMap: Record<string, string> = {
-      'CaseManagement': 'cases',
-      'ImageViewer': 'images',
-      'ImageUpload': 'ai-diagnosis',
-      'DiagnosisResult': 'ai-diagnosis',
-      'AIDiagnosis': 'ai-diagnosis',
-      'ReportGenerator': 'reports',
-      'ReportPreview': 'reports',
-      'KnowledgeBase': 'knowledge',
-      'Statistics': 'statistics'
+      'DoctorDashboardMain': 'dashboard',
+      'doctor.caseManagement': 'cases',
+      'doctor.caseCreate': 'cases',
+      'doctor.caseDetail': 'cases',
+      'doctor.aiDiagnosis': 'diagnosis',
+      'doctor.reports': 'reports',
+      'doctor.reportEditor': 'reports',
+      'doctor.knowledgeBase': 'knowledge',
+      'doctor.statistics': 'statistics',
+      'doctor.feedbackHistory': 'feedback',
     }
     activeTab.value = routeToTabMap[routeName as string] || 'cases'
   },
   { immediate: true }
 )
 
-// 处理标签页切换
+// 处理标签页切换，所有tab跳转都用'/dashboard/doctor/xxx'前缀
 const handleTabChange = (tab: string) => {
   activeTab.value = tab
-  
   const tabToRouteMap: Record<string, string> = {
-    'cases': '/doctor/cases',
-    'images': '/doctor/images',
-    'ai-diagnosis': '/doctor/ai-diagnosis/upload', // 修正为正确的上传路径
-    'reports': '/doctor/reports',
-    'knowledge': '/doctor/knowledge',
-    'statistics': '/doctor/statistics'
+    'dashboard': '/dashboard/doctor',
+    'cases': '/dashboard/doctor/case-management',
+    'diagnosis': '/dashboard/doctor/ai-diagnosis',
+    'reports': '/dashboard/doctor/reports',
+    'knowledge': '/dashboard/doctor/knowledge-base',
+    'statistics': '/dashboard/doctor/statistics',
+    'feedback': '/dashboard/doctor/feedback',
   }
-  
   const targetRoute = tabToRouteMap[tab]
   if (targetRoute && route.path !== targetRoute) {
     router.push(targetRoute)

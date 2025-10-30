@@ -67,7 +67,7 @@
         </div>
 
         <div v-if="loading" class="loading-container">
-          <el-loading-spinner />
+          <el-icon><Loading /></el-icon>
           <p>加载中...</p>
         </div>
 
@@ -88,7 +88,7 @@
                 <el-tag v-if="item.isNew" type="danger" size="small">最新</el-tag>
                 <el-button 
                   icon="Star" 
-                  size="mini" 
+                  size="small" 
                   :class="item.isFavorite ? 'favorited' : ''"
                   @click.stop="toggleFavorite(item)"
                 />

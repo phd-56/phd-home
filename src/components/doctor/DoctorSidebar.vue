@@ -7,10 +7,9 @@
           v-for="item in mainMenuItems" 
           :key="item.index" 
           class="menu-item" 
-          :class="{ active: props.activeTab === item.index }"
+          :class="{ active: isActive(item.index) }"
           @click="handleMenuSelect(item.index)"
         >
-          <span class="menu-icon">{{ item.icon }}</span>
           <span class="menu-text">{{ item.text }}</span>
           <span v-if="item.badge" class="menu-badge">{{ item.badge }}</span>
         </div>
@@ -22,10 +21,9 @@
           v-for="item in subMenuItems" 
           :key="item.index" 
           class="menu-item" 
-          :class="{ active: props.activeTab === item.index }"
+          :class="{ active: isActive(item.index) }"
           @click="handleMenuSelect(item.index)"
         >
-          <span class="menu-icon">{{ item.icon }}</span>
           <span class="menu-text">{{ item.text }}</span>
         </div>
       </div>
@@ -62,8 +60,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, reactive } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 
 interface MenuItem {
@@ -82,6 +80,7 @@ const emit = defineEmits<{
 }>()
 
 const router = useRouter()
+const route = useRoute()
 
 // 主菜单项
 const mainMenuItems = reactive<MenuItem[]>([
@@ -97,6 +96,53 @@ const subMenuItems = reactive<MenuItem[]>([
   { index: 'statistics', icon: '📊', text: '数据统计' },
   { index: 'feedback', icon: '💬', text: '反馈中心' }
 ])
+
+// 路由到菜单项的映射
+const routeToMenuMap: Record<string, string> = {
+  '': 'dashboard',
+  '/dashboard/doctor': 'dashboard',
+  '/dashboard/doctor/case-management': 'cases',
+  '/dashboard/doctor/case-management/create': 'cases',
+  '/dashboard/doctor/case-management/:id': 'cases',
+  '/dashboard/doctor/ai-diagnosis': 'diagnosis',
+  '/dashboard/doctor/reports': 'reports',
+  '/dashboard/doctor/reports/editor': 'reports',
+  '/dashboard/doctor/knowledge-base': 'knowledge',
+  '/dashboard/doctor/statistics': 'statistics',
+  '/dashboard/doctor/feedback': 'feedback'
+}
+
+// 判断菜单项是否激活
+const isActive = (index: string) => {
+  // 首先尝试通过当前路由路径匹配
+  const currentPath = route.path
+  
+  // 检查路径是否匹配对应的菜单项
+  if (index === 'dashboard' && (currentPath === '/dashboard/doctor' || currentPath === '/dashboard/doctor/')) {
+    return true
+  }
+  if (index === 'cases' && currentPath.startsWith('/dashboard/doctor/case-management')) {
+    return true
+  }
+  if (index === 'diagnosis' && currentPath.startsWith('/dashboard/doctor/ai-diagnosis')) {
+    return true
+  }
+  if (index === 'reports' && currentPath.startsWith('/dashboard/doctor/reports')) {
+    return true
+  }
+  if (index === 'knowledge' && currentPath.startsWith('/dashboard/doctor/knowledge-base')) {
+    return true
+  }
+  if (index === 'statistics' && currentPath.startsWith('/dashboard/doctor/statistics')) {
+    return true
+  }
+  if (index === 'feedback' && currentPath.startsWith('/dashboard/doctor/feedback')) {
+    return true
+  }
+  
+  // 如果路由匹配失败，则使用 props.activeTab（向后兼容）
+  return props.activeTab === index
+}
 
 // 处理菜单选择
 const handleMenuSelect = (index: string) => {
@@ -179,14 +225,36 @@ const startAIDiagnosis = () => {
 /* 菜单项 */
 .menu-item {
   display: flex;
+  flex-direction: row;
+  justify-content: center; /* 水平居中 */
   align-items: center;
-  padding: 12px 20px;
-  margin: 0;
+  padding: 12px 0;       /* 左右padding为0，保持高度 */
+  min-height: 44px;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  font-size: 14px;
+  font-size: 15px;
   color: #606266;
+  text-align: center;
+}
+.menu-item .menu-text {
+  flex: none;
+  width: auto;
+  text-align: center;
+  font-weight: 500;
+  margin: 0 4px;
+}
+.menu-badge {
+  margin-left: 6px;
+  background-color: #ff4d4f;
+  color: white;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  min-width: 20px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .menu-item:hover {

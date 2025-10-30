@@ -519,7 +519,8 @@ const getFeedbackTypeTagType = (type: FeedbackType | string): string => {
     'report': 'info',
     'system': 'warning'
   }
-  return typeMap[type as string] || 'default'
+  // 默认值由'default'改为'info'
+  return typeMap[type as string] || 'info'
 }
 
 // 辅助函数：获取反馈状态名称
@@ -541,7 +542,7 @@ const getFeedbackStatusTagType = (status: FeedbackStatus | string): string => {
     'resolved': 'success',
     'rejected': 'danger'
   }
-  return statusMap[status as string] || 'default'
+  return statusMap[status as string] || 'info'
 }
 
 // 页面方法
