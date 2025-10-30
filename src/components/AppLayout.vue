@@ -1,6 +1,6 @@
 <template>
   <!-- 顶部导航栏 -->
-  <div class="navbar">
+  <div class="navbar" v-if="!shouldHideLayout">
     <div class="navbar-left">
       <div class="logo">🦴</div>
       <div class="brand-name">BoneAI Diagnostics</div>
@@ -22,40 +22,62 @@
   </div>
 
   <!-- 主容器 -->
-  <div class="app-layout-container">
+  <div class="app-layout-container" :class="{ 'no-navbar': shouldHideLayout }">
     <!-- 侧边栏 - 根据路由动态显示 -->
-    <AdminSidebar v-if="isAdminRoute" />
-    <div v-else class="sidebar">
+    <AdminSidebar v-if="isAdminRoute && !shouldHideLayout" />
+    <div v-else-if="!shouldHideLayout" class="sidebar">
       <div class="sidebar-section">
         <div class="sidebar-title">主导航</div>
         <router-link class="sidebar-item" to="/dashboard/doctor" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">⏱️ 工作台</a>
+          <a :href="href" @click="navigate" :class="{ active: isActive }">
+            <span>工作台</span>
+            <span></span>
+          </a>
         </router-link>
         <router-link class="sidebar-item" to="/dashboard/doctor/ai-diagnosis" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">🖼️ 影像诊断</a>
+          <a :href="href" @click="navigate" :class="{ active: isActive }">
+            <span>影像诊断</span>
+            <span></span>
+          </a>
         </router-link>
         <router-link class="sidebar-item" to="/dashboard/doctor/case-management" custom v-slot="{ href, navigate, isActive }">
           <a :href="href" @click="navigate" :class="{ active: isActive }">
-            📋 病例管理 <span class="sidebar-badge">12</span>
+            <span>病例管理</span>
+            <span class="sidebar-badge">12</span>
           </a>
         </router-link>
         <router-link class="sidebar-item" to="/dashboard/doctor/knowledge-base" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">📚 知识库</a>
+          <a :href="href" @click="navigate" :class="{ active: isActive }">
+            <span>知识库</span>
+            <span></span>
+          </a>
         </router-link>
         <router-link class="sidebar-item" to="/dashboard/doctor/reports" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">📊 报告中心</a>
+          <a :href="href" @click="navigate" :class="{ active: isActive }">
+            <span>报告中心</span>
+            <span></span>
+          </a>
         </router-link>
       </div>
       <div class="sidebar-section">
         <div class="sidebar-title">辅助功能</div>
         <router-link class="sidebar-item" to="/dashboard/doctor/statistics" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">📈 数据统计</a>
+          <a :href="href" @click="navigate" :class="{ active: isActive }">
+            <span>数据统计</span>
+            <span></span>
+          </a>
         </router-link>
         <router-link class="sidebar-item" to="/dashboard/doctor/feedback" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">💬 反馈中心</a>
+          <a :href="href" @click="navigate" :class="{ active: isActive }">
+            <span>反馈中心</span>
+            <span></span>
+          </a>
         </router-link>
         <router-link class="sidebar-item" to="/dashboard/doctor/help" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">❓ 帮助文档</a>
+          <a :href="href" @click="navigate" :class="{ active: isActive }">
+            <span>帮助文档</span>
+            <span></span>
+          </a>
         </router-link>
       </div>
     </div>
@@ -79,6 +101,10 @@ const authStore = useAuthStore()
 
 const isAdminRoute = computed(() => {
   return route.path.startsWith('/dashboard/admin') || route.path.startsWith('/admin')
+})
+
+const shouldHideLayout = computed(() => {
+  return route.path.includes('/ai-diagnosis/process')
 })
 
 const userInitial = computed(() => {
@@ -117,32 +143,42 @@ const handleLogout = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  height: 60px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0 24px;
+  height: 64px;
+  background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-left {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
 .logo {
-  font-size: 24px;
-  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  margin-right: 0;
 }
 
 .brand-name {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: white;
 }
 
 .navbar-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
 .notification {
@@ -153,25 +189,31 @@ const handleLogout = () => {
 
 .notification-badge {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: #ff4757;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
   color: white;
-  font-size: 12px;
-  padding: 2px 6px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .user-avatar {
   width: 36px;
   height: 36px;
-  background-color: #3498db;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -184,48 +226,57 @@ const handleLogout = () => {
 .user-details {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .user-name {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  color: white;
 }
 
 .user-role {
   font-size: 12px;
-  color: #666;
+  color: white;
+  opacity: 0.9;
 }
 
 .logout-btn {
-  padding: 8px 16px;
-  background-color: #3498db;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
-  border: none;
-  border-radius: 4px;
+  padding: 6px 16px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 .logout-btn:hover {
-  background-color: #2980b9;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* 主容器样式 */
 .app-layout-container {
   display: flex;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 64px);
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;
+  background-color: #f5f7fa;
+}
+
+.app-layout-container.no-navbar {
+  height: 100vh;
 }
 
 /* 侧边栏样式 */
 .sidebar {
   width: 240px;
-  background-color: #f8f9fa;
-  border-right: 1px solid #e9ecef;
-  padding: 20px 0;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  padding: 24px 0;
   overflow-y: auto;
   position: relative;
   z-index: 100;
@@ -233,15 +284,16 @@ const handleLogout = () => {
 }
 
 .sidebar-section {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .sidebar-title {
   font-size: 12px;
+  color: #999;
   font-weight: 600;
-  color: #6c757d;
+  padding: 0 16px;
+  margin-bottom: 12px;
   text-transform: uppercase;
-  padding: 0 20px 10px;
   letter-spacing: 0.5px;
 }
 
@@ -250,36 +302,45 @@ const handleLogout = () => {
 }
 
 .sidebar-item a {
-  padding: 12px 20px;
-  font-size: 14px;
-  color: #495057;
-  cursor: pointer;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  transition: background-color 0.2s;
+  gap: 0;
+  cursor: pointer;
+  color: #666;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  position: relative;
   text-decoration: none;
+  justify-content: center;
+}
+
+.sidebar-item a span:first-child {
+  flex: 1;
+  text-align: center;
 }
 
 .sidebar-item a:hover {
-  background-color: #e9ecef;
+  background: #f0f4f8;
+  color: #1e40af;
 }
 
 .sidebar-item a.active {
-  background-color: #3498db;
-  color: white;
+  color: #1e40af;
+  background: #eff6ff;
+  border-left: 3px solid #1e40af;
+  padding-left: 13px;
 }
 
 .sidebar-badge {
-  background-color: #ff4757;
-  color: white;
-  font-size: 12px;
+  margin-left: 8px;
+  background: #fecaca;
+  color: #dc2626;
   padding: 2px 8px;
-  border-radius: 10px;
-}
-
-.sidebar-item a.active .sidebar-badge {
-  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
 }
 
 /* 主内容区域样式 */
@@ -293,5 +354,35 @@ const handleLogout = () => {
   max-width: 100%;
   box-sizing: border-box;
   position: relative;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .app-layout-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    overflow-x: auto;
+    padding: 12px 0;
+  }
+
+  .sidebar-section {
+    margin-bottom: 0;
+    margin-right: 24px;
+  }
+
+  .navbar-right {
+    gap: 12px;
+  }
+
+  .user-details {
+    display: none;
+  }
 }
 </style>

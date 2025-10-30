@@ -1,6 +1,6 @@
 <template>
 <!-- 主内容区域 -->
-<div class="main-content no-nav">
+<div class="doctor-dashboard">
     <!-- 欢迎部分 -->
     <div class="welcome-section">
         <div class="welcome-title">欢迎使用 BoneAI 系统</div>
@@ -16,7 +16,7 @@
             <div class="stat-value">12</div>
             <div class="stat-change up">↑ 2个新增</div>
             <div class="stat-detail">轻上周下降 1.2%，需关注</div>
-            <a class="stat-link">查看详情 ></a>
+            <a class="stat-link" @click="viewPendingCases">查看详情 ></a>
         </div>
         <div class="stat-card">
             <div class="stat-header">
@@ -26,7 +26,7 @@
             <div class="stat-value">8</div>
             <div class="stat-change up">↑ 3个完成</div>
             <div class="stat-detail"></div>
-            <a class="stat-link">查看详情 ></a>
+            <a class="stat-link" @click="viewTodayDiagnoses">查看详情 ></a>
         </div>
         <div class="stat-card">
             <div class="stat-header">
@@ -135,19 +135,36 @@
     </div>
 </div>
 </template>
-<style scoped>
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f5f7fa;
-    color: #333;
+
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+// 跳转到待处理病例
+const viewPendingCases = () => {
+  router.push({
+    path: '/dashboard/doctor/case-management',
+    query: { tab: 'pending' }
+  })
 }
-.main-content.no-nav {
+
+// 跳转到今日诊断
+const viewTodayDiagnoses = () => {
+  router.push({
+    path: '/dashboard/doctor/case-management',
+    query: { tab: 'processing' }
+  })
+}
+</script>
+
+<style scoped>
+.doctor-dashboard {
     background: #f5f7fa;
-    min-height: 100vh;
-    width: 100vw;
+    min-height: 100%;
+    width: 100%;
     box-sizing: border-box;
-    margin: 0 auto;
-    padding: 0 0 24px 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -155,81 +172,265 @@ body {
 }
 .welcome-section {
     margin-bottom: 32px;
-    padding-top: 44px;
-    padding-left: 6vw;
-    padding-right: 6vw;
+    padding-top: 32px;
+    padding-left: 32px;
+    padding-right: 32px;
 }
-.welcome-title {font-size: 28px;font-weight: 700;margin-bottom: 8px;color: #1f2937;}
-.welcome-date {font-size: 14px;color: #666;}
+.welcome-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #1f2937;
+}
+.welcome-date {
+    font-size: 14px;
+    color: #999;
+}
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     margin-bottom: 32px;
-    padding-left: 6vw;
-    padding-right: 6vw;
+    padding-left: 32px;
+    padding-right: 32px;
 }
 .stat-card {
     background: white;
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.06);
-    transition: all .3s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
-.stat-card:hover {box-shadow: 0 4px 12px rgba(0,0,0,.10);transform: translateY(-2px);}
-.stat-header {display: flex;align-items: center;gap: 12px;margin-bottom: 16px;}
-.stat-icon {width: 48px;height: 48px;border-radius: 12px;display: flex;align-items: center;justify-content: center;font-size: 24px;}
-.stat-icon.blue {background: #dbeafe;color: #1e40af;}
-.stat-icon.green {background: #dcfce7;color: #16a34a;}
-.stat-icon.purple {background: #f3e8ff;color: #9333ea;}
-.stat-icon.gray {background: #f3f4f6;color: #6b7280;}
-.stat-label {font-size: 14px;color: #666;}
-.stat-value {font-size: 32px;font-weight: 700;color: #1f2937;margin-bottom: 8px;}
-.stat-change {font-size: 12px;display: flex;align-items: center;gap: 4px;}
-.stat-change.up {color: #16a34a;}
-.stat-change.down {color: #dc2626;}
-.stat-detail {font-size: 12px;color: #999;margin-top: 8px;}
-.stat-link {color: #1e40af;text-decoration: none;font-size: 12px;margin-top: 12px;display: inline-block;cursor: pointer;transition: color .3s;}
-.stat-link:hover {color: #1e3a8a;text-decoration: underline;}
+.stat-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+.stat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+.stat-icon.blue {
+    background: #dbeafe;
+    color: #1e40af;
+}
+.stat-icon.green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+.stat-icon.purple {
+    background: #f3e8ff;
+    color: #9333ea;
+}
+.stat-icon.gray {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+.stat-label {
+    font-size: 14px;
+    color: #666;
+}
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+.stat-change {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.stat-change.up {
+    color: #16a34a;
+}
+.stat-change.down {
+    color: #dc2626;
+}
+.stat-detail {
+    font-size: 12px;
+    color: #999;
+    margin-top: 8px;
+}
+.stat-link {
+    color: #1e40af;
+    text-decoration: none;
+    font-size: 12px;
+    margin-top: 12px;
+    display: inline-block;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.stat-link:hover {
+    color: #1e3a8a;
+    text-decoration: underline;
+}
 .charts-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    padding-left: 6vw;
-    padding-right: 6vw;
+    padding-left: 32px;
+    padding-right: 32px;
 }
 .chart-card {
     background: white;
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
-.chart-header {display: flex;align-items: center;justify-content: space-between;margin-bottom: 24px;}
-.chart-title {font-size: 16px;font-weight: 600;color: #1f2937;}
-.chart-action {color: #1e40af;font-size: 12px;cursor: pointer;text-decoration: none;transition: color .3s;}
-.chart-action:hover {color: #1e3a8a;}
-.bar-chart {display: flex;align-items: flex-end;justify-content: space-around;height: 300px;gap: 12px;}
-.bar-item {display: flex;flex-direction: column;align-items: center;gap: 8px;flex: 1;}
-.bar {width: 100%;background: linear-gradient(180deg, #1e40af 0%, #3b82f6 100%);border-radius: 6px 6px 0 0;transition: all 0.3s ease;cursor: pointer;}
-.bar:hover {opacity: 0.8;transform: scaleY(1.05);}
-.bar-label {font-size: 12px;color: #666;font-weight: 500;}
-.bar-value {font-size: 12px;color: #999;margin-top: 4px;}
-.pie-chart {display: flex;align-items: center;justify-content: center;height: 300px;position: relative;}
-.pie-circle {width: 200px;height: 200px;border-radius: 50%;background: conic-gradient(#1e40af 0deg 180deg,#f59e0b 180deg 270deg,#ef4444 270deg 324deg,#16a34a 324deg 360deg);display: flex;align-items: center;justify-content: center;position: relative;box-shadow: 0 4px 12px rgba(0,0,0,.1);}
-.pie-center {width: 140px;height: 140px;background: white;border-radius: 50%;display: flex;flex-direction: column;align-items: center;justify-content: center;}
-.pie-percentage {font-size: 32px;font-weight: 700;color: #1f2937;}
-.pie-label {font-size: 12px;color: #999;}
-.pie-legend {display: flex;flex-direction: column;gap: 12px;margin-left: 32px;}
-.legend-item {display: flex;align-items: center;gap: 8px;font-size: 12px;}
-.legend-color {width: 12px;height: 12px;border-radius: 2px;}
-.legend-color.blue {background: #1e40af;}
-.legend-color.orange {background: #f59e0b;}
-.legend-color.red {background: #ef4444;}
-.legend-color.green {background: #16a34a;}
-@media (max-width: 1200px) {.charts-grid{grid-template-columns:1fr;}}
+.chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+.chart-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+}
+.chart-action {
+    color: #1e40af;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.chart-action:hover {
+    color: #1e3a8a;
+}
+.bar-chart {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: 300px;
+    gap: 12px;
+}
+.bar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+.bar {
+    width: 100%;
+    background: linear-gradient(180deg, #1e40af 0%, #3b82f6 100%);
+    border-radius: 6px 6px 0 0;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.bar:hover {
+    opacity: 0.8;
+    transform: scaleY(1.05);
+}
+.bar-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+.bar-value {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+}
+.pie-chart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    position: relative;
+}
+.pie-circle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #1e40af 0deg 180deg,
+        #f59e0b 180deg 270deg,
+        #ef4444 270deg 324deg,
+        #16a34a 324deg 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.pie-center {
+    width: 140px;
+    height: 140px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.pie-percentage {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+}
+.pie-label {
+    font-size: 12px;
+    color: #999;
+}
+.pie-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-left: 32px;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+}
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+.legend-color.blue {
+    background: #1e40af;
+}
+.legend-color.orange {
+    background: #f59e0b;
+}
+.legend-color.red {
+    background: #ef4444;
+}
+.legend-color.green {
+    background: #16a34a;
+}
+@media (max-width: 1200px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
 @media (max-width: 768px) {
-    .main-content.no-nav{padding: 0;}
-    .welcome-section, .charts-grid, .stats-grid{padding-left: 0;padding-right: 0;}
-    .stats-grid{grid-template-columns: 1fr;}
+    .doctor-dashboard {
+        padding: 0;
+    }
+    .welcome-section, .charts-grid, .stats-grid {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
 }
 </style>

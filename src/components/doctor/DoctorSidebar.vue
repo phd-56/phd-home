@@ -10,6 +10,7 @@
           :class="{ active: isActive(item.index) }"
           @click="handleMenuSelect(item.index)"
         >
+          <span class="menu-icon">{{ item.icon }}</span>
           <span class="menu-text">{{ item.text }}</span>
           <span v-if="item.badge" class="menu-badge">{{ item.badge }}</span>
         </div>
@@ -24,6 +25,7 @@
           :class="{ active: isActive(item.index) }"
           @click="handleMenuSelect(item.index)"
         >
+          <span class="menu-icon">{{ item.icon }}</span>
           <span class="menu-text">{{ item.text }}</span>
         </div>
       </div>
@@ -216,7 +218,7 @@ const startAIDiagnosis = () => {
 .menu-section-title {
   font-size: 12px;
   color: #909399;
-  padding: 0 20px 8px;
+  padding: 0 16px 8px;
   margin: 0;
   font-weight: normal;
   text-transform: uppercase;
@@ -226,26 +228,53 @@ const startAIDiagnosis = () => {
 .menu-item {
   display: flex;
   flex-direction: row;
-  justify-content: center; /* 水平居中 */
   align-items: center;
-  padding: 12px 0;       /* 左右padding为0，保持高度 */
+  justify-content: center;
+  margin: 8px 16px;
+  padding: 12px 20px;
   min-height: 44px;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  font-size: 15px;
+  font-size: 14px;
   color: #606266;
-  text-align: center;
+  background-color: #ffffff;
+  border: 1px solid #e4e7ed;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
-.menu-item .menu-text {
-  flex: none;
-  width: auto;
+
+.menu-item:hover {
+  background-color: #f5f7fa;
+  color: #409eff;
+  border-color: #c6e2ff;
+  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.menu-item.active {
+  background-color: #ecf5ff;
+  color: #409eff;
+  border-color: #409eff;
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.2);
+}
+
+.menu-icon {
+  font-size: 16px;
+  margin-right: 8px;
+  width: 20px;
   text-align: center;
+  display: inline-block;
+}
+
+.menu-text {
+  flex: 1;
   font-weight: 500;
-  margin: 0 4px;
+  text-align: center;
 }
+
 .menu-badge {
-  margin-left: 6px;
+  margin-left: 8px;
   background-color: #ff4d4f;
   color: white;
   font-size: 12px;
@@ -255,39 +284,6 @@ const startAIDiagnosis = () => {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-}
-
-.menu-item:hover {
-  background-color: #f5f7fa;
-  color: #409eff;
-}
-
-.menu-item.active {
-  background-color: #ecf5ff;
-  color: #409eff;
-  border-right: 3px solid #409eff;
-}
-
-.menu-icon {
-  font-size: 16px;
-  margin-right: 12px;
-  width: 20px;
-  text-align: center;
-}
-
-.menu-text {
-  flex: 1;
-  font-weight: 500;
-}
-
-.menu-badge {
-  background-color: #ff4d4f;
-  color: white;
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  min-width: 20px;
-  text-align: center;
 }
 
 /* 快速操作区域 */

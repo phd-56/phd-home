@@ -1,1328 +1,1922 @@
 <template>
-  <div class="knowledge-base">
-    <div class="base-header">
-      <h2>医学知识库</h2>
-      <div class="search-bar">
-        <el-input
-          v-model="searchQuery"
-          placeholder="搜索疾病、症状、治疗方案..."
-          clearable
-          @input="handleSearch"
-        >
-          <template #prefix>
-            <el-icon><Search /></el-icon>
-          </template>
-        </el-input>
+  <div class="knowledge-base-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <span class="iconify" data-icon="healthicons:medical-records-outline" data-inline="false" style="font-size: 28px; color: #409EFF; margin-right: 10px;"></span>
+        医学影像诊断系统
       </div>
+      <div class="header-right">
+        <a href="#" @click.prevent="handleUpload">
+          <span class="iconify" data-icon="solar:upload-outline" style="font-size: 16px;"></span> 上传知识
+        </a>
+        <a href="#" class="btn btn-primary" @click.prevent="handleMyLearning">
+          <span class="iconify" data-icon="solar:book-bold-duotone" style="font-size: 16px;"></span> 我的学习
+        </a>
+        <a href="#" class="avatar">
+          <span class="iconify" data-icon="ph:user-bold" style="font-size: 20px;"></span>
+        </a>
+        <a href="#">管理员</a>
     </div>
+    </header>
 
-    <div class="base-content">
-      <!-- 左侧：分类导航 -->
-      <div class="category-sidebar">
-        <h3>疾病分类</h3>
-        <el-menu
-          :default-active="activeCategory"
-          class="category-menu"
-          @select="handleCategorySelect"
-        >
-          <el-menu-item
-            v-for="category in diseaseCategories"
-            :key="category.id"
-            :index="category.id"
-          >
-            <el-icon><Folder /></el-icon>
-            <span>{{ category.name }}</span>
-            <span class="count">({{ category.count }})</span>
-          </el-menu-item>
-        </el-menu>
+    <div class="main-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>骨骼疾病分类</h2>
+          <p>根据解剖部位和类型浏览</p>
+        </div>
+        <ul class="sidebar-nav">
+          <li class="nav-item" :class="{ 'is-expanded': expandedCategories.includes('spine') }">
+            <div class="nav-item-title" @click="toggleCategory('spine')">
+              <span class="iconify" data-icon="solar:alt-arrow-right-linear" style="font-size: 16px;"></span>
+              脊柱疾病
+            </div>
+            <ul class="sub-nav">
+              <li><a href="#" class="nav-link" :class="{ 'is-active': activePage === 'herniation' }" @click.prevent="showPage('herniation')">腰椎间盘突出症</a></li>
+              <li><a href="#" class="nav-link" :class="{ 'is-active': activePage === 'spondylosis' }" @click.prevent="showPage('spondylosis')">颈椎病</a></li>
+              <li><a href="#" class="nav-link" :class="{ 'is-active': activePage === 'spinal-fracture' }" @click.prevent="showPage('spinal-fracture')">脊柱骨折</a></li>
+              <li><a href="#" class="nav-link" :class="{ 'is-active': activePage === 'spinal-deformity' }" @click.prevent="showPage('spinal-deformity')">脊柱畸形</a></li>
+            </ul>
+          </li>
+          <li class="nav-item" :class="{ 'is-expanded': expandedCategories.includes('joint') }">
+            <div class="nav-item-title" @click="toggleCategory('joint')">
+              <span class="iconify" data-icon="solar:alt-arrow-right-linear" style="font-size: 16px;"></span>
+              关节疾病
+            </div>
+            <ul class="sub-nav">
+              <li><a href="#" class="nav-link" :class="{ 'is-active': activePage === 'arthritis' }" @click.prevent="showPage('arthritis')">关节炎</a></li>
+              <li><a href="#" class="nav-link" :class="{ 'is-active': activePage === 'meniscus-injury' }" @click.prevent="showPage('meniscus-injury')">半月板损伤</a></li>
+              <li><a href="#" class="nav-link" :class="{ 'is-active': activePage === 'anfh' }" @click.prevent="showPage('anfh')">股骨头坏死</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-parent-link" :class="{ 'is-active': activePage === 'bone-soft-tumor' }" @click.prevent="showPage('bone-soft-tumor')">
+              <span class="iconify" data-icon="solar:alt-arrow-right-linear" style="font-size: 16px;"></span>
+              骨与软组织肿瘤
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-parent-link" :class="{ 'is-active': activePage === 'trauma' }" @click.prevent="showPage('trauma')">
+              <span class="iconify" data-icon="solar:alt-arrow-right-linear" style="font-size: 16px;"></span>
+              骨折与创伤
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-parent-link" :class="{ 'is-active': activePage === 'bone-tumor' }" @click.prevent="showPage('bone-tumor')">
+              <span class="iconify" data-icon="solar:alt-arrow-right-linear" style="font-size: 16px;"></span>
+              骨肿瘤
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-parent-link" :class="{ 'is-active': activePage === 'metabolic' }" @click.prevent="showPage('metabolic')">
+              <span class="iconify" data-icon="solar:alt-arrow-right-linear" style="font-size: 16px;"></span>
+              代谢性骨病
+            </a>
+          </li>
+        </ul>
+        <div class="sidebar-footer">
+          <a href="#">查看全部分类</a>
+        </div>
+      </aside>
 
-        <!-- 热门标签 -->
-        <div class="hot-tags">
-          <h4>热门标签</h4>
-          <div class="tags-container">
-            <el-tag
-              v-for="tag in hotTags"
-              :key="tag"
-              class="tag"
-              :type="selectedTags.includes(tag) ? 'primary' : 'info'"
-              @click="toggleTag(tag)"
+      <!-- Content Area -->
+      <main class="content-area">
+        <!-- Search Module -->
+        <div class="search-module">
+          <h3>智能医学知识检索</h3>
+          <div class="search-box">
+            <input 
+              type="text" 
+              placeholder="搜索疾病名称、症状、征象、解剖部位、影像表现或关键词..."
+              v-model="searchQuery"
+              @keyup.enter="handleSearch"
             >
-              {{ tag }}
-            </el-tag>
+            <button @click="handleSearch">
+              <span class="iconify" data-icon="solar:magnifer-bold" style="font-size: 18px;"></span> 检索
+            </button>
           </div>
+          <div class="search-links">
+            热门搜索:
+            <a href="#" @click.prevent="searchByKeyword('半月板损伤')">半月板损伤</a>
+            <a href="#" @click.prevent="searchByKeyword('骨折分型')">骨折分型</a>
+            <a href="#" @click.prevent="searchByKeyword('MRI征象')">MRI征象</a>
+            <a href="#">... 更多</a>
         </div>
       </div>
 
-      <!-- 中间：知识内容 -->
-      <div class="knowledge-main">
-        <div class="content-header">
-          <h3>{{ currentCategoryName }}知识</h3>
-          <div class="sort-options">
-            <el-radio-group v-model="sortBy" size="small">
-              <el-radio-button label="relevance">相关性</el-radio-button>
-              <el-radio-button label="date">最新</el-radio-button>
-              <el-radio-button label="views">热度</el-radio-button>
-            </el-radio-group>
-          </div>
-        </div>
-
-        <div v-if="loading" class="loading-container">
-          <el-icon><Loading /></el-icon>
-          <p>加载中...</p>
-        </div>
-
-        <div v-else-if="filteredKnowledge.length === 0" class="empty-state">
-          <el-empty description="没有找到相关知识，请尝试其他搜索条件" />
-        </div>
-
-        <div v-else class="knowledge-list">
-          <div
-            v-for="item in filteredKnowledge"
-            :key="item.id"
-            class="knowledge-item"
-            @click="viewDetail(item)"
-          >
-            <div class="item-header">
-              <h4 class="item-title">{{ item.title }}</h4>
-              <div class="item-actions">
-                <el-tag v-if="item.isNew" type="danger" size="small">最新</el-tag>
-                <el-button 
-                  icon="Star" 
-                  size="small" 
-                  :class="item.isFavorite ? 'favorited' : ''"
-                  @click.stop="toggleFavorite(item)"
-                />
+        <!-- Search Results -->
+        <div v-if="searchResults.length > 0" class="search-results-page">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>搜索结果</h3>
+              <p class="search-result-count">找到 {{ searchResults.length }} 条结果</p>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item" v-for="(result, index) in searchResults" :key="index">
+                <span class="iconify guide-icon" :data-icon="result.icon" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a v-if="result.url" :href="result.url" target="_blank">{{ result.title }}</a>
+                    <span v-else>{{ result.title }}</span>
+                  </h4>
+                  <p>{{ result.description }}</p>
+                  <div class="guide-meta">
+                    <span v-if="result.date"><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> {{ result.date }}</span>
+                    <span v-if="result.doctor"><span class="iconify" data-icon="solar:user-id-bold" style="font-size: 14px;"></span> {{ result.doctor }}</span>
+                    <span v-if="result.journal"><span class="iconify" data-icon="solar:journal-bold" style="font-size: 14px;"></span> {{ result.journal }}</span>
+                    <span v-if="result.category"><span class="iconify" data-icon="solar:tag-bold" style="font-size: 14px;"></span> {{ result.category }}</span>
+                    <span v-if="result.imageCount"><span class="iconify" data-icon="solar:image-bold" style="font-size: 14px;"></span> {{ result.imageCount }} 张影像</span>
+                    <span v-if="result.views"><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> {{ result.views }} 查看</span>
+                    <a v-if="result.url" :href="result.url" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> 查看详情</a>
+                  </div>
+                </div>
               </div>
             </div>
-            <p class="item-description">{{ item.description }}</p>
-            <div class="item-meta">
-              <span class="category">{{ item.category }}</span>
-              <span class="date">{{ formatDate(item.updateTime) }}</span>
-              <span class="views">
-                <el-icon><View /></el-icon>
-                {{ item.viewCount }}
-              </span>
-            </div>
-            <div class="item-tags">
-              <el-tag
-                v-for="tag in item.tags"
-                :key="tag"
-                size="small"
-                type="info"
-              >
-                {{ tag }}
-              </el-tag>
-            </div>
           </div>
         </div>
 
-        <!-- 分页 -->
-        <div class="pagination" v-if="filteredKnowledge.length > 0">
-          <el-pagination
-            v-model:current-page="currentPage"
-            v-model:page-size="pageSize"
-            :total="totalItems"
-            layout="total, prev, pager, next"
-          />
-        </div>
-      </div>
-
-      <!-- 右侧：知识详情 -->
-      <div class="detail-sidebar" v-if="selectedItem">
-        <div class="detail-header">
-          <h3>{{ selectedItem.title }}</h3>
-          <div class="detail-actions">
-            <el-button 
-              icon="Star" 
-              size="small" 
-              :class="selectedItem.isFavorite ? 'favorited' : ''"
-              @click.stop="toggleFavorite(selectedItem)"
-            />
-            <el-button link @click="selectedItem = null">
-              <el-icon><Close /></el-icon>
-            </el-button>
-          </div>
-        </div>
-        
-        <div class="detail-content">
-          <div class="detail-meta">
-            <el-tag type="primary">{{ selectedItem.category }}</el-tag>
-            <span class="update-time">更新: {{ formatDate(selectedItem.updateTime) }}</span>
-          </div>
-
-          <div class="detail-body">
-            <!-- 疾病概述 -->
-            <div class="detail-section">
-              <h4>疾病概述</h4>
-              <p>{{ selectedItem.overview }}</p>
+        <!-- Quick Links Grid -->
+        <div v-if="!searchQuery" class="quick-links-grid">
+          <a class="quick-card" @click.prevent="showAllGuides">
+            <span class="iconify card-icon iconify-c1" data-icon="solar:document-text-bold-duotone" style="font-size: 40px;"></span>
+            <div class="card-content">
+              <h4>诊断指南</h4>
+              <p>临床实践标准，治疗规范</p>
+              <span class="count">128 篇指南</span>
             </div>
+            <span class="iconify card-arrow" data-icon="solar:alt-arrow-right-linear" style="font-size: 16px;"></span>
+          </a>
+          <a class="quick-card" @click.prevent="showAllAtlases">
+            <span class="iconify card-icon iconify-c2" data-icon="solar:gallery-wide-bold-duotone" style="font-size: 40px;"></span>
+            <div class="card-content">
+              <h4>影像图谱</h4>
+              <p>多种征象对比，智能标注</p>
+              <span class="count">356 组图谱</span>
+            </div>
+            <span class="iconify card-arrow" data-icon="solar:alt-arrow-right-linear" style="font-size: 16px;"></span>
+          </a>
+          <a class="quick-card" @click.prevent="showAllCases">
+            <span class="iconify card-icon iconify-c3" data-icon="solar:case-bold-duotone" style="font-size: 40px;"></span>
+            <div class="card-content">
+              <h4>临床案例</h4>
+              <p>详细诊疗过程，多学科讨论</p>
+              <span class="count">245 个案例</span>
+            </div>
+            <span class="iconify card-arrow" data-icon="solar:alt-arrow-right-linear" style="font-size: 16px;"></span>
+          </a>
+          <a class="quick-card" @click.prevent="showAllLiterature">
+            <span class="iconify card-icon iconify-c4" data-icon="solar:notebook-bold-duotone" style="font-size: 40px;"></span>
+            <div class="card-content">
+              <h4>医学文献</h4>
+              <p>前沿研究进展，指南解读</p>
+              <span class="count">512 篇文献</span>
+            </div>
+            <span class="iconify card-arrow" data-icon="solar:alt-arrow-right-linear" style="font-size: 16px;"></span>
+          </a>
+        </div>
 
-            <!-- 临床表现 -->
-            <div class="detail-section">
+        <!-- Content Pages -->
+        <!-- Herniation Page -->
+        <div v-if="activePage === 'herniation'" class="content-page">
+          <div class="content-section">
+            <h3>腰椎间盘突出症</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>腰椎间盘突出症（LDH）是指腰椎间盘退变、纤维环破裂、髓核突出，压迫神经根或马尾神经而引起的一系列临床症状。是最常见的脊柱疾病之一。</p>
+              
+              <h4>病因和病理机制</h4>
+              <ul>
+                <li>退行性病变：椎间盘随年龄增长而退变，含水量减少</li>
+                <li>外伤因素：急性外伤或慢性劳损</li>
+                <li>遗传因素：有家族聚集性</li>
+                <li>职业因素：长期坐姿、重体力劳动、振动</li>
+              </ul>
+
               <h4>临床表现</h4>
               <ul>
-                <li v-for="symptom in selectedItem.symptoms" :key="symptom">
-                  {{ symptom }}
-                </li>
+                <li>腰痛：最常见首发症状</li>
+                <li>下肢放射痛：沿神经分布区域放射</li>
+                <li>感觉异常：麻木、感觉减退或过敏</li>
+                <li>运动障碍：肌力下降、肌肉萎缩</li>
+                <li>马尾综合征：大小便功能障碍、鞍区麻木（急诊）</li>
               </ul>
+
+              <h4>影像学表现</h4>
+              <ul>
+                <li><strong>X线：</strong>椎间隙变窄、骨质增生、生理曲度改变</li>
+                <li><strong>MRI：</strong>诊断金标准，可显示椎间盘突出的部位、程度、类型</li>
+                <ul>
+                  <li>突出类型：膨出、突出、脱出、游离</li>
+                  <li>突出方向：中央型、旁中央型、外侧型、极外侧型</li>
+                  <li>神经受压程度：轻度、中度、重度</li>
+                </ul>
+                <li><strong>CT：</strong>清晰显示骨性结构和钙化</li>
+              </ul>
+
+              <h4>临床分型</h4>
+              <ul>
+                <li>Ⅰ型：仅腰痛，无下肢症状</li>
+                <li>Ⅱ型：腰痛伴下肢放射痛</li>
+                <li>Ⅲ型：下肢症状为主，腰痛轻微</li>
+                <li>Ⅳ型：马尾综合征或严重神经功能障碍</li>
+              </ul>
+
+              <h4>治疗原则</h4>
+              <ul>
+                <li>保守治疗：卧床休息、物理治疗、药物治疗、硬膜外注射</li>
+                <li>手术指征：</li>
+                <ul>
+                  <li>保守治疗3-6个月无效</li>
+                  <li>马尾综合征（急诊手术）</li>
+                  <li>进行性运动功能障碍</li>
+                  <li>严重疼痛影响生活</li>
+                </ul>
+                <li>手术方式：椎间盘摘除术、椎间融合术、人工椎间盘置换</li>
+              </ul>
+              </div>
+            </div>
             </div>
 
-            <!-- 诊断标准 -->
-            <div class="detail-section">
-              <h4>诊断标准</h4>
-              <div class="criteria">
-                <div
-                  v-for="criterion in selectedItem.diagnosisCriteria"
-                  :key="criterion.title"
-                  class="criterion-item"
-                >
-                  <h5>{{ criterion.title }}</h5>
-                  <p>{{ criterion.description }}</p>
+        <!-- Other Disease Pages -->
+        <div v-if="activePage === 'spondylosis'" class="content-page">
+          <div class="content-section">
+            <h3>颈椎病</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>颈椎病是由于颈椎间盘退行性病变、颈椎骨质增生、韧带肥厚或钙化等原因引起的一系列临床症状综合征。主要表现为颈肩痛、上肢麻木、头晕、头痛等症状。</p>
+              
+              <h4>临床表现</h4>
+              <ul>
+                <li>颈部疼痛和僵硬，活动受限</li>
+                <li>上肢放射性疼痛、麻木、无力</li>
+                <li>头晕、头痛、眩晕</li>
+                <li>行走不稳、下肢无力</li>
+                <li>吞咽困难、视力模糊等少见症状</li>
+              </ul>
+
+              <h4>影像学表现</h4>
+              <ul>
+                <li><strong>X线：</strong>颈椎曲度改变、椎间隙变窄、骨质增生、椎体不稳</li>
+                <li><strong>MRI：</strong>椎间盘突出、脊髓受压、神经根受压、椎管狭窄</li>
+                <li><strong>CT：</strong>骨赘形成、椎管狭窄程度、后纵韧带骨化</li>
+              </ul>
+
+              <h4>分型</h4>
+              <ul>
+                <li>神经根型：最常见的类型，表现为神经根受压症状</li>
+                <li>脊髓型：症状最严重，脊髓受压导致功能障碍</li>
+                <li>椎动脉型：椎动脉受压导致脑供血不足</li>
+                <li>交感神经型：交感神经受刺激引起症状</li>
+              </ul>
+
+              <h4>治疗原则</h4>
+              <ul>
+                <li>保守治疗：物理治疗、药物治疗、颈部固定</li>
+                <li>手术治疗：保守治疗无效或症状严重时考虑手术</li>
+                <li>预防措施：改善生活习惯、适当锻炼、避免长时间低头</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="activePage === 'spinal-fracture'" class="content-page">
+          <div class="content-section">
+            <h3>脊柱骨折</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>脊柱骨折是脊柱骨性结构的完整性遭到破坏，常见于外伤、骨质疏松、肿瘤等。根据骨折部位和稳定性可分为多种类型。</p>
+              
+              <h4>病因</h4>
+              <ul>
+                <li>外伤：车祸、高处坠落、暴力撞击</li>
+                <li>骨质疏松：多见于老年人，轻微外伤即可发生</li>
+                <li>肿瘤性骨折：原发或转移性骨肿瘤</li>
+                <li>病理性骨折：感染、代谢性疾病等</li>
+              </ul>
+
+              <h4>影像学表现</h4>
+              <ul>
+                <li><strong>X线：</strong>椎体变形、高度丢失、骨折线、后凸畸形</li>
+                <li><strong>CT：</strong>清晰显示骨折线、碎片移位、椎管占位</li>
+                <li><strong>MRI：</strong>评估脊髓损伤、软组织血肿、骨髓水肿</li>
+              </ul>
+
+              <h4>Denis三柱分类</h4>
+              <ul>
+                <li>前柱：前纵韧带、椎体前2/3、纤维环前部</li>
+                <li>中柱：椎体后1/3、纤维环后部、后纵韧带</li>
+                <li>后柱：椎弓、棘突、关节突、黄韧带、棘间韧带</li>
+              </ul>
+
+              <h4>治疗原则</h4>
+              <ul>
+                <li>稳定型骨折：保守治疗，支具固定</li>
+                <li>不稳定型骨折：手术治疗，内固定或融合</li>
+                <li>伴有神经损伤：紧急手术减压</li>
+                <li>老年骨质疏松骨折：椎体成形术或后凸成形术</li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+        <div v-if="activePage === 'spinal-deformity'" class="content-page">
+          <div class="content-section">
+            <h3>脊柱畸形</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>脊柱畸形是指脊柱在矢状面或冠状面上的异常弯曲，包括脊柱侧凸、脊柱后凸、脊柱前凸等。可导致外观畸形和功能障碍。</p>
+              
+              <h4>类型</h4>
+              <ul>
+                <li>特发性脊柱侧凸：最常见，病因不明，多见于青少年</li>
+                <li>先天性脊柱侧凸：椎体发育异常</li>
+                <li>退行性脊柱侧凸：椎间盘退变导致</li>
+                <li>脊柱后凸：驼背畸形</li>
+              </ul>
+
+              <h4>临床表现</h4>
+              <ul>
+                <li>外观畸形：肩膀不等高、腰部不对称</li>
+                <li>疼痛：背部、腰部疼痛</li>
+                <li>功能障碍：活动受限、心肺功能受损</li>
+                <li>心理影响：影响生活质量</li>
+              </ul>
+
+              <h4>影像学评估</h4>
+              <ul>
+                <li>Cobb角：测量侧凸程度的标准方法</li>
+                <li>旋转度数：评估椎体旋转程度</li>
+                <li>生长发育评估：Risser征、骨龄评估</li>
+              </ul>
+
+              <h4>治疗指征</h4>
+              <ul>
+                <li>轻度（&lt;25°）：观察、物理治疗</li>
+                <li>中度（25-45°）：支具治疗</li>
+                <li>重度（&gt;45°）：手术治疗</li>
+                <li>进展迅速：早期手术治疗</li>
+              </ul>
+                </div>
+          </div>
+        </div>
+        
+        <div v-if="activePage === 'arthritis'" class="content-page">
+          <div class="content-section">
+            <h3>骨关节炎</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>骨关节炎（OA）是最常见的关节疾病，是一种以关节软骨退行性病变为核心特征的慢性关节病。多见于中老年人，膝关节和髋关节最常受累。</p>
+              
+              <h4>病因和危险因素</h4>
+              <ul>
+                <li>年龄：患病率随年龄增长而增加</li>
+                <li>性别：女性患病率高于男性</li>
+                <li>肥胖：增加关节负重</li>
+                <li>外伤：关节损伤导致继发性OA</li>
+                <li>遗传因素：有家族聚集性</li>
+                  </ul>
+
+              <h4>临床表现</h4>
+              <ul>
+                <li>关节疼痛：活动后加重，休息缓解</li>
+                <li>关节僵硬：晨僵时间短于30分钟</li>
+                <li>关节肿胀：软组织肿胀</li>
+                <li>活动受限：关节活动度减少</li>
+                <li>关节畸形：晚期出现关节畸形</li>
+              </ul>
+
+              <h4>影像学表现</h4>
+              <ul>
+                <li><strong>X线：</strong>关节间隙变窄、骨赘形成、软骨下骨硬化、骨囊肿</li>
+                <li><strong>MRI：</strong>软骨损伤、骨髓水肿、滑膜炎、韧带损伤</li>
+                <li>Kellgren-Lawrence分级：0-4级严重程度分级</li>
+              </ul>
+
+              <h4>治疗原则</h4>
+              <ul>
+                <li>非药物治疗：运动疗法、体重管理、物理治疗、辅助器具</li>
+                <li>药物治疗：NSAIDs、止痛药、关节腔注射</li>
+                <li>手术治疗：关节镜清理、截骨术、关节置换术</li>
+              </ul>
+                  </div>
+          </div>
+          </div>
+
+        <div v-if="activePage === 'meniscus-injury'" class="content-page">
+          <div class="content-section">
+            <h3>半月板损伤</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>半月板是膝关节内C形的纤维软骨结构，位于股骨和胫骨之间，具有缓冲、稳定、润滑关节的作用。半月板损伤是膝关节最常见的损伤之一。</p>
+              
+              <h4>病因</h4>
+              <ul>
+                <li>外伤性损伤：旋转暴力、急停急转运动</li>
+                <li>退行性损伤：随年龄增长，半月板退变</li>
+                <li>解剖因素：盘状半月板、先天性发育异常</li>
+                  </ul>
+
+              <h4>临床表现</h4>
+              <ul>
+                <li>膝关节疼痛：内侧或外侧关节间隙疼痛</li>
+                <li>关节交锁：关节卡住不能伸直或屈曲</li>
+                <li>弹响：活动时关节弹响</li>
+                <li>肿胀：急性期关节肿胀</li>
+                <li>活动受限：下蹲困难、上下楼疼痛</li>
+              </ul>
+
+              <h4>影像学表现</h4>
+              <ul>
+                <li><strong>MRI：</strong>最佳检查方法</li>
+                <ul>
+                  <li>高信号延伸到关节面：Ⅱ度损伤</li>
+                  <li>高信号完全穿透关节面：Ⅲ度损伤</li>
+                  <li>半月板撕裂：水平、垂直、放射状、桶柄样撕裂</li>
+                </ul>
+                <li>关节镜：诊断金标准，可同时治疗</li>
+              </ul>
+
+              <h4>治疗</h4>
+              <ul>
+                <li>保守治疗：急性期休息、冰敷、制动、抗炎治疗</li>
+                <li>手术治疗：关节镜下半月板修复或部分切除</li>
+                <li>康复训练：术后康复训练恢复关节功能</li>
+              </ul>
+                  </div>
+          </div>
+            </div>
+
+        <div v-if="activePage === 'anfh'" class="content-page">
+          <div class="content-section">
+            <h3>股骨头坏死</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>股骨头坏死（ANFH）是由于股骨头血供中断或受损，导致骨细胞死亡和骨小梁塌陷的疾病。多见于中青年，严重影响髋关节功能。</p>
+              
+              <h4>病因</h4>
+              <ul>
+                <li>创伤性：股骨颈骨折、髋关节脱位</li>
+                <li>非创伤性：糖皮质激素使用、酒精滥用、血液病</li>
+                <li>特发性：无明显诱因</li>
+                  </ul>
+
+              <h4>临床表现</h4>
+              <ul>
+                <li>髋部疼痛：早期轻度疼痛，晚期剧痛</li>
+                <li>活动受限：髋关节活动度减少</li>
+                <li>跛行：行走时跛行</li>
+                <li>肌肉萎缩：臀肌、大腿肌肉萎缩</li>
+              </ul>
+
+              <h4>影像学分期（Ficat分期）</h4>
+              <ul>
+                <li>0期：无临床症状，MRI异常</li>
+                <li>Ⅰ期：X线正常，MRI或骨扫描异常</li>
+                <li>Ⅱ期：X线示硬化、囊性变，无塌陷</li>
+                <li>Ⅲ期：软骨下塌陷（新月征），股骨头变形</li>
+                <li>Ⅳ期：骨关节炎改变，关节间隙变窄</li>
+              </ul>
+
+              <h4>治疗</h4>
+              <ul>
+                <li>保守治疗：限制负重、药物治疗、物理治疗</li>
+                <li>保髋手术：髓芯减压、植骨术、截骨术、带血管骨移植</li>
+                <li>关节置换：严重塌陷、保守治疗无效</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="activePage === 'trauma'" class="content-page">
+          <div class="content-section">
+            <h3>骨折与创伤</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>骨折是指骨的完整性或连续性中断，是骨科最常见的疾病。根据病因可分为创伤性骨折、病理性骨折和应力性骨折。</p>
+              
+              <h4>骨折分类</h4>
+              <ul>
+                <li>按骨折线形态：横形、斜形、螺旋形、粉碎性、嵌插性、压缩性</li>
+                <li>按骨折程度：完全性骨折、不完全性骨折（裂隙骨折、青枝骨折）</li>
+                <li>按骨折端稳定程度：稳定性骨折、不稳定性骨折</li>
+                <li>按皮肤完整性：闭合性骨折、开放性骨折</li>
+              </ul>
+
+              <h4>临床表现</h4>
+              <ul>
+                <li>局部症状：疼痛、肿胀、瘀斑、功能障碍</li>
+                <li>特有体征：畸形、异常活动、骨擦音或骨擦感</li>
+                <li>全身症状：休克、发热（开放性骨折感染）</li>
+              </ul>
+
+              <h4>影像学检查</h4>
+              <ul>
+                <li><strong>X线：</strong>正侧位片，必要时加斜位或切线位</li>
+                <li><strong>CT：</strong>复杂性骨折，三维重建</li>
+                <li><strong>MRI：</strong>评估软组织损伤、骨髓水肿、隐匿性骨折</li>
+              </ul>
+
+              <h4>治疗原则</h4>
+              <ul>
+                <li>急救处理：止血、包扎、固定、转运</li>
+                <li>复位：手法复位或手术复位</li>
+                <li>固定：外固定（石膏、支具）或内固定（钢板、髓内钉）</li>
+                <li>康复：早期功能锻炼、物理治疗</li>
+              </ul>
+
+              <h4>常见骨折</h4>
+              <ul>
+                <li>桡骨远端骨折（Colles骨折）：最常见腕部骨折</li>
+                <li>股骨颈骨折：老年人常见，并发症多</li>
+                <li>胫骨平台骨折：高能量损伤，关节内骨折</li>
+                <li>踝关节骨折：三踝骨折、分度复杂</li>
+                <li>椎体压缩性骨折：骨质疏松性骨折</li>
+              </ul>
                 </div>
               </div>
             </div>
 
-            <!-- 治疗方案 -->
-            <div class="detail-section">
-              <h4>治疗方案</h4>
-              <el-tabs v-model="activeTab">
-                <el-tab-pane label="药物治疗" name="medication">
-                  <ul class="treatment-list" v-if="selectedItem.treatments.medication.length > 0">
-                    <li v-for="med in selectedItem.treatments.medication" :key="med">
-                      {{ med }}
-                    </li>
+        <div v-if="activePage === 'bone-tumor'" class="content-page">
+          <div class="content-section">
+            <h3>骨肿瘤</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>骨肿瘤分为原发性骨肿瘤和转移性骨肿瘤。原发性骨肿瘤包括良性和恶性，转移性骨肿瘤多为恶性。</p>
+              
+              <h4>良性骨肿瘤</h4>
+              <ul>
+                <li>骨软骨瘤：最常见的良性骨肿瘤</li>
+                <li>内生软骨瘤：好发于手足短骨</li>
+                <li>骨样骨瘤：夜间疼痛明显</li>
+                <li>骨巨细胞瘤：潜在恶性，好发于长骨骨端</li>
                   </ul>
-                  <div class="empty-state" v-else>
-                    暂无药物治疗方案
-                  </div>
-                </el-tab-pane>
-                <el-tab-pane label="物理治疗" name="physical">
-                  <ul class="treatment-list" v-if="selectedItem.treatments.physical.length > 0">
-                    <li v-for="phys in selectedItem.treatments.physical" :key="phys">
-                      {{ phys }}
-                    </li>
-                  </ul>
-                  <div class="empty-state" v-else>
-                    暂无物理治疗方案
-                  </div>
-                </el-tab-pane>
-                <el-tab-pane label="手术治疗" name="surgical">
-                  <ul class="treatment-list" v-if="selectedItem.treatments.surgical.length > 0">
-                    <li v-for="surgery in selectedItem.treatments.surgical" :key="surgery">
-                      {{ surgery }}
-                    </li>
-                  </ul>
-                  <div class="empty-state" v-else>
-                    暂无手术治疗方案
-                  </div>
-                </el-tab-pane>
-              </el-tabs>
-            </div>
 
-            <!-- 预防建议 -->
-            <div class="detail-section">
-              <h4>预防建议</h4>
-              <div class="prevention-tips">
-                <div
-                  v-for="tip in selectedItem.preventionTips"
-                  :key="tip"
-                  class="tip-item"
-                >
-                  <el-icon><Check /></el-icon>
-                  <span>{{ tip }}</span>
+              <h4>恶性骨肿瘤</h4>
+              <ul>
+                <li>骨肉瘤：最常见的原发恶性骨肿瘤，好发于青少年</li>
+                <li>软骨肉瘤：原发恶性软骨肿瘤</li>
+                <li>尤文肉瘤：儿童恶性小圆细胞肿瘤</li>
+                <li>转移性骨肿瘤：成人最常见恶性肿瘤，原发灶多来自肺、乳腺、前列腺</li>
+              </ul>
+
+              <h4>临床表现</h4>
+              <ul>
+                <li>疼痛：持续性疼痛，夜间加重</li>
+                <li>肿胀：局部肿胀、肿块</li>
+                <li>功能障碍：关节活动受限</li>
+                <li>病理性骨折</li>
+                <li>全身症状：恶性骨肿瘤可有发热、消瘦、贫血</li>
+              </ul>
+
+              <h4>影像学表现</h4>
+              <ul>
+                <li><strong>X线：</strong>骨质破坏、骨膜反应、软组织肿块</li>
+                <li><strong>CT：</strong>清晰显示骨质破坏和软组织侵犯</li>
+                <li><strong>MRI：</strong>评估髓内侵犯范围、软组织肿块</li>
+                <li><strong>PET-CT：</strong>评估转移、分期</li>
+              </ul>
+
+              <h4>治疗原则</h4>
+              <ul>
+                <li>良性肿瘤：观察、刮除、完整切除</li>
+                <li>恶性肿瘤：术前化疗、手术切除、术后化疗、放疗</li>
+                <li>保肢手术：假体置换、异体骨移植、瘤段切除</li>
+                <li>截肢：无法保肢或复发病例</li>
+              </ul>
+                  </div>
+          </div>
+        </div>
+
+        <div v-if="activePage === 'metabolic'" class="content-page">
+          <div class="content-section">
+            <h3>代谢性骨病</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>代谢性骨病是由于骨代谢异常导致的一系列疾病，主要包括骨质疏松症、佝偻病/骨软化症、原发性甲状旁腺功能亢进等。</p>
+              
+              <h4>骨质疏松症</h4>
+              <ul>
+                <li>定义：骨密度降低、骨质量下降的全身性疾病</li>
+                <li>病因：年龄增长、绝经、营养缺乏、药物因素</li>
+                <li>临床表现：骨痛、身高缩短、驼背、脆性骨折</li>
+                <li>诊断：骨密度检测T值≤-2.5</li>
+                <li>治疗：钙剂、维生素D、双膦酸盐、降钙素等</li>
+                  </ul>
+
+              <h4>佝偻病和骨软化症</h4>
+              <ul>
+                <li>定义：维生素D缺乏导致的骨矿化障碍</li>
+                <li>儿童：佝偻病，成人：骨软化症</li>
+                <li>临床表现：骨痛、肌无力、骨骼畸形</li>
+                <li>影像学：骨质密度减低、骨小梁模糊</li>
+                <li>治疗：补充维生素D和钙剂</li>
+              </ul>
+
+              <h4>原发性甲状旁腺功能亢进</h4>
+              <ul>
+                <li>定义：甲状旁腺激素分泌过多</li>
+                <li>临床表现：骨痛、骨折、肾结石、消化系统症状</li>
+                <li>影像学：骨质吸收、纤维囊性骨炎</li>
+                <li>治疗：手术切除甲状旁腺腺瘤</li>
+              </ul>
+
+              <h4>影像学表现</h4>
+              <ul>
+                <li><strong>X线：</strong>骨质密度减低、骨小梁稀少、皮质变薄</li>
+                <li><strong>骨扫描：</strong>评估骨代谢活性</li>
+                <li><strong>骨密度检测：</strong>诊断金标准</li>
+              </ul>
+                  </div>
+          </div>
+        </div>
+
+        <div v-if="activePage === 'bone-soft-tumor'" class="content-page">
+          <div class="content-section">
+            <h3>骨与软组织肿瘤</h3>
+            <div class="knowledge-content">
+              <h4>定义</h4>
+              <p>骨与软组织肿瘤涵盖骨、肌肉、神经、血管、脂肪等组织的肿瘤性疾病。诊断需要结合临床表现、影像学和病理学。</p>
+              
+              <h4>软组织肿瘤</h4>
+              <ul>
+                <li>良性：脂肪瘤、血管瘤、神经纤维瘤、腱鞘巨细胞瘤</li>
+                <li>恶性：脂肪肉瘤、横纹肌肉瘤、滑膜肉瘤、恶性纤维组织细胞瘤</li>
+                  </ul>
+
+              <h4>影像学检查</h4>
+              <ul>
+                <li><strong>超声：</strong>初步评估软组织肿块</li>
+                <li><strong>MRI：</strong>最佳检查方法，显示肿瘤范围、与周围关系</li>
+                <li><strong>CT：</strong>评估骨破坏、钙化</li>
+                <li><strong>活检：</strong>诊断金标准</li>
+              </ul>
+
+              <h4>分期系统</h4>
+              <ul>
+                <li>TNM分期：T（肿瘤大小）、N（淋巴结）、M（转移）</li>
+                <li>Enneking分期：用于骨与软组织肉瘤</li>
+              </ul>
+
+              <h4>治疗原则</h4>
+              <ul>
+                <li>良性肿瘤：观察或完整切除</li>
+                <li>恶性肿瘤：综合治疗（化疗+手术+放疗）</li>
+                <li>边缘切除：保证阴性切缘</li>
+                <li>保肢优先：保留肢体功能</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- All Guides Page -->
+        <div v-if="activePage === 'all-guides'" class="content-page">
+          <h2 class="aggregate-page-title">所有诊断指南</h2>
+          
+          <div class="content-section">
+            <h3 class="disease-group-title">脊柱疾病</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:document-add-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.orthopchina.org.cn/" target="_blank">腰椎间盘突出症诊疗指南 (2023版)</a>
+                  </h4>
+                  <p>本指南由中华医学会骨科学分会编写。系统阐述了腰椎间盘突出症的流行病学、发病机制、临床表现、影像学诊断、分型、治疗原则和手术指征等。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> 2023-01-10</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 1,893 查看</span>
+                    <a href="https://www.orthopchina.org.cn/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> PDF 下载</a>
+                  </div>
+                </div>
+              </div>
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:document-add-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.nature.com/articles/s41572-020-00277-0" target="_blank">颈椎病诊断与治疗指南</a>
+                  </h4>
+                  <p>国际权威期刊发布的颈椎病诊疗指南，涵盖神经根型、脊髓型、椎动脉型等多种颈椎病的诊断标准和治疗方案。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> 2022-08-15</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 2,456 查看</span>
+                    <a href="https://www.nature.com/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> PDF 下载</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <h3 class="disease-group-title">关节疾病</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:document-add-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.oarsi.org/" target="_blank">骨关节炎诊疗指南 (OARSI)</a>
+                  </h4>
+                  <p>国际骨关节炎研究学会(OARSI)最新指南，提供基于循证的骨关节炎诊断和治疗建议，涵盖膝关节、髋关节等多部位。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> 2023-05-20</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 3,789 查看</span>
+                    <a href="https://www.oarsi.org/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> PDF 下载</a>
+                  </div>
+                </div>
+              </div>
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:document-add-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.esska.org/" target="_blank">半月板损伤诊疗共识</a>
+                  </h4>
+                  <p>欧洲运动医学与膝关节镜学会的半月板损伤诊疗共识，详细阐述MRI分型、保守治疗指征和手术技术选择。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> 2023-03-18</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 1,234 查看</span>
+                    <a href="https://www.esska.org/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> PDF 下载</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <h3 class="disease-group-title">骨折与创伤</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:document-add-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.ao-foundation.org/" target="_blank">骨折分型指南 (AO/OTA)</a>
+                  </h4>
+                  <p>国际内固定研究协会(AO)骨折分型系统，为骨折分类、治疗方案选择和预后评估提供标准化依据。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> 2022-12-01</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 5,678 查看</span>
+                    <a href="https://www.ao-foundation.org/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> PDF 下载</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All Atlases Page -->
+        <div v-if="activePage === 'all-atlases'" class="content-page">
+          <h2 class="aggregate-page-title">所有影像图谱</h2>
+          
+          <div class="content-section">
+            <h3 class="disease-group-title">脊柱影像</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:gallery-wide-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://radiopaedia.org/" target="_blank">腰椎间盘突出MRI影像图谱</a>
+                  </h4>
+                  <p>包含腰椎间盘突出症的MRI典型征象、分型示意图、与正常椎间盘的对比，以及各型突出的影像特征详解。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:image-bold" style="font-size: 14px;"></span> 256 张影像</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 8,923 查看</span>
+                  </div>
+                </div>
+              </div>
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:gallery-wide-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://radiopaedia.org/" target="_blank">脊柱骨折X光与CT对比图</a>
+                  </h4>
+                  <p>详细展示各类脊柱骨折的X线、CT和MRI表现，包含Denis三柱分类示意图和骨折稳定性评估标准。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:image-bold" style="font-size: 14px;"></span> 312 张影像</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 6,445 查看</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <h3 class="disease-group-title">关节影像</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:gallery-wide-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://radiopaedia.org/" target="_blank">膝关节半月板损伤MRI征象</a>
+                  </h4>
+                  <p>半月板正常MRI表现、Ⅰ-Ⅲ度损伤分级标准、各类撕裂形态（水平、垂直、放射状、桶柄样）的影像特征。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:image-bold" style="font-size: 14px;"></span> 189 张影像</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 12,567 查看</span>
+                  </div>
+                </div>
+              </div>
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:gallery-wide-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://radiopaedia.org/" target="_blank">骨关节炎影像学分级图谱</a>
+                  </h4>
+                  <p>Kellgren-Lawrence分级的X线标准影像，关节间隙狭窄、骨赘形成、软骨下骨硬化等征象的量化评估。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:image-bold" style="font-size: 14px;"></span> 145 张影像</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 9,234 查看</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <h3 class="disease-group-title">肿瘤影像</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:gallery-wide-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://radiopaedia.org/" target="_blank">骨肿瘤影像诊断图谱</a>
+                  </h4>
+                  <p>良恶性骨肿瘤的X线、CT、MRI鉴别要点，骨膜反应、骨质破坏模式、软组织肿块等典型征象。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:image-bold" style="font-size: 14px;"></span> 423 张影像</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 7,123 查看</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All Cases Page -->
+        <div v-if="activePage === 'all-cases'" class="content-page">
+          <h2 class="aggregate-page-title">所有临床案例</h2>
+          
+          <div class="content-section">
+            <h3 class="disease-group-title">脊柱外科案例</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:case-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://casereports.bmj.com/" target="_blank">青年男性腰椎间盘突出症手术治疗案例</a>
+                  </h4>
+                  <p>患者男性，28岁，急性起病，左侧下肢放射性疼痛，影像学显示L4-L5椎间盘突出。行椎间盘摘除术后症状完全缓解，术后康复过程及随访结果。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:user-id-bold" style="font-size: 14px;"></span> 张医生</span>
+                    <span><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> 2023-08-15</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 3,456 查看</span>
+                  </div>
+                </div>
+              </div>
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:case-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://casereports.bmj.com/" target="_blank">颈椎病多节段病变手术案例</a>
+                  </h4>
+                  <p>患者女性，62岁，渐进性双手麻木、行走不稳，MRI显示多节段颈椎间盘突出伴椎管狭窄。行前路颈椎间盘摘除植骨融合内固定术。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:user-id-bold" style="font-size: 14px;"></span> 李医生</span>
+                    <span><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> 2023-07-20</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 4,567 查看</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <h3 class="disease-group-title">关节外科案例</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:case-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://casereports.bmj.com/" target="_blank">半月板桶柄样撕裂关节镜修复案例</a>
+                  </h4>
+                  <p>患者男性，25岁，运动损伤导致膝关节交锁。MRI确诊内侧半月板桶柄样撕裂，行关节镜下半月板缝合修复术，术后早期康复训练方案。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:user-id-bold" style="font-size: 14px;"></span> 王医生</span>
+                    <span><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> 2023-09-05</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 5,123 查看</span>
+                  </div>
+                </div>
+              </div>
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:case-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://casereports.bmj.com/" target="_blank">股骨头坏死保髋手术案例</a>
+                  </h4>
+                  <p>患者男性，35岁，长期服用激素导致双侧股骨头坏死Ficat III期。采用带血管游离腓骨移植术保髋治疗，术后随访3年效果良好。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:user-id-bold" style="font-size: 14px;"></span> 刘医生</span>
+                    <span><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> 2023-06-10</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 3,890 查看</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <h3 class="disease-group-title">创伤骨科案例</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:case-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://casereports.bmj.com/" target="_blank">胫骨平台骨折内固定术案例</a>
+                  </h4>
+                  <p>患者女性，48岁，车祸导致左侧胫骨平台骨折（Schatzker V型）。行切开复位钢板内固定术，术后早期负重训练时机与康复计划。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:user-id-bold" style="font-size: 14px;"></span> 陈医生</span>
+                    <span><span class="iconify" data-icon="solar:calendar-date-bold" style="font-size: 14px;"></span> 2023-08-28</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 2,345 查看</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
         
-        <el-button 
-          class="back-to-top" 
-          icon="ArrowUp" 
-          size="small"
-          @click="scrollToTop"
-          v-if="showBackToTop"
-        />
-      </div>
+        <!-- All Literature Page -->
+        <div v-if="activePage === 'all-literature'" class="content-page">
+          <h2 class="aggregate-page-title">所有医学文献</h2>
+          
+          <div class="content-section">
+            <h3 class="disease-group-title">脊柱疾病研究</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:notebook-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.sciencedirect.com/" target="_blank">腰椎间盘退变的分子机制研究进展</a>
+                  </h4>
+                  <p>综述腰椎间盘退变的病理生理机制、细胞外基质降解、炎症反应和神经长入的分子生物学研究现状。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:journal-bold" style="font-size: 14px;"></span> Spine Journal 2023</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 6,789 查看</span>
+                    <a href="https://www.sciencedirect.com/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> 全文阅读</a>
+                  </div>
+                </div>
+              </div>
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:notebook-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.nature.com/" target="_blank">AI辅助脊柱影像诊断的准确性评估</a>
+                  </h4>
+                  <p>深度学习算法在脊柱MRI自动诊断中的应用，对比AI诊断与放射科医师诊断的准确性和一致性。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:journal-bold" style="font-size: 14px;"></span> Nature Medicine 2023</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 8,456 查看</span>
+                    <a href="https://www.nature.com/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> 全文阅读</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <h3 class="disease-group-title">关节疾病研究</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:notebook-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.thelancet.com/" target="_blank">骨关节炎的药物治疗新进展</a>
+                  </h4>
+                  <p>探讨非甾体抗炎药、关节腔注射剂、生物制剂等骨关节炎治疗方案的有效性和安全性循证医学证据。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:journal-bold" style="font-size: 14px;"></span> The Lancet 2023</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 10,234 查看</span>
+                    <a href="https://www.thelancet.com/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> 全文阅读</a>
+                  </div>
+                </div>
+              </div>
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:notebook-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.nejm.org/" target="_blank">半月板修复vs切除术的长期随访研究</a>
+                  </h4>
+                  <p>10年随访研究比较半月板缝合修复与部分切除术的患者满意度、功能恢复和继发性骨关节炎发生率。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:journal-bold" style="font-size: 14px;"></span> NEJM 2023</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 7,890 查看</span>
+                    <a href="https://www.nejm.org/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> 全文阅读</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <h3 class="disease-group-title">骨肿瘤研究</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:notebook-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.cell.com/" target="_blank">骨肉瘤的免疫治疗新策略</a>
+                  </h4>
+                  <p>探讨PD-1抑制剂、CAR-T细胞疗法等在骨肉瘤治疗中的应用前景，结合传统化疗的协同效应。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:journal-bold" style="font-size: 14px;"></span> Cell 2023</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 5,678 查看</span>
+                    <a href="https://www.cell.com/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> 全文阅读</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <h3 class="disease-group-title">骨科技术革新</h3>
+            <div class="guide-list">
+              <div class="guide-item">
+                <span class="iconify guide-icon" data-icon="solar:notebook-bold-duotone" style="font-size: 36px;"></span>
+                <div class="guide-content">
+                  <h4 class="guide-title-link">
+                    <a href="https://www.science.org/" target="_blank">3D打印在骨科精准治疗中的应用</a>
+                  </h4>
+                  <p>3D打印技术在定制化植入物、手术导板、个性化假体设计和骨折复位中的应用现状与发展趋势。</p>
+                  <div class="guide-meta">
+                    <span><span class="iconify" data-icon="solar:journal-bold" style="font-size: 14px;"></span> Science 2023</span>
+                    <span><span class="iconify" data-icon="solar:eye-bold" style="font-size: 14px;"></span> 9,123 查看</span>
+                    <a href="https://www.science.org/" target="_blank"><span class="iconify" data-icon="bxs:file-pdf" style="font-size: 14px;"></span> 全文阅读</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, watch } from 'vue'
-//import { Search, Folder, View, Close, Check, Star, ArrowUp } from '@element-plus/icons-vue'
-import { ElMessage, ElEmpty, ElLoading } from 'element-plus'
-import { KnowledgeItem } from '@/types'
+import { ref, computed, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
 
-// 响应式数据
 const searchQuery = ref('')
-const activeCategory = ref('all')
-const selectedTags = ref<string[]>([])
-const sortBy = ref('relevance')
-const loading = ref(false)
-const selectedItem = ref<KnowledgeItem | null>(null)
-const currentPage = ref(1)
-const pageSize = ref(10)
-const activeTab = ref('medication')
-const showBackToTop = ref(false)
-let searchTimer: number | null = null
+const activePage = ref('herniation')
+const expandedCategories = ref(['spine'])
+const searchResults = ref<any[]>([])
 
-// 疾病分类
-const diseaseCategories = [
-  { id: 'all', name: '全部', count: 100 },
-  { id: 'arthritis', name: '关节炎', count: 15 },
-  { id: 'musculoskeletal', name: '肌肉骨骼疾病', count: 25 },
-  { id: 'cardiovascular', name: '心血管疾病', count: 22 },
-  { id: 'neurology', name: '神经系统疾病', count: 18 },
-  { id: 'respiratory', name: '呼吸系统疾病', count: 16 },
-  { id: 'gastrointestinal', name: '消化系统疾病', count: 14 },
-  { id: 'endocrine', name: '内分泌疾病', count: 10 },
-  { id: 'other', name: '其他疾病', count: 5 }
-]
-
-// 热门标签
-const hotTags = [
-  '高血压', '糖尿病', '肺炎', '骨折', '肿瘤', '感染',
-  '心力衰竭', '脑卒中', '哮喘', '胃炎', '关节炎', '肾炎'
-]
-
-// 模拟数据
-const knowledgeItems: KnowledgeItem[] = [
+// 完整知识库数据
+const knowledgeDatabase = ref([
+  // 诊断指南
   {
-    id: '1',
-    title: '膝关节骨关节炎诊断与治疗指南',
-    description: '详细介绍膝关节骨关节炎的临床表现、诊断标准和最新治疗方案，包括药物治疗、物理治疗和手术干预。',
-    category: '关节炎',
-    tags: ['膝关节', '骨关节炎', '诊断', '治疗'],
-    overview: '膝关节骨关节炎是一种常见的退行性关节疾病，主要表现为关节软骨的进行性破坏和骨质增生。',
-    symptoms: [
-      '关节疼痛，活动后加重',
-      '关节僵硬，尤其是晨僵',
-      '关节活动受限',
-      '关节肿胀',
-      '关节摩擦感'
-    ],
-    diagnosisCriteria: [
-      {
-        title: '临床标准',
-        description: '年龄≥50岁，膝关节疼痛，晨僵≤30分钟，活动时有骨摩擦音'
-      },
-      {
-        title: '影像学标准',
-        description: 'X线显示关节间隙变窄，软骨下骨硬化，骨赘形成'
-      }
-    ],
-    treatments: {
-      medication: [
-        '非甾体抗炎药（NSAIDs）',
-        '对乙酰氨基酚',
-        '关节腔注射糖皮质激素',
-        '透明质酸注射'
-      ],
-      physical: [
-        '物理治疗和康复训练',
-        '体重管理',
-        '辅助器具使用',
-        '运动疗法'
-      ],
-      surgical: [
-        '关节镜清理术',
-        '截骨术',
-        '单髁置换术',
-        '全膝关节置换术'
-      ]
-    },
-    preventionTips: [
-      '保持健康体重，减轻关节负担',
-      '加强下肢肌肉锻炼，增强关节稳定性',
-      '避免长时间站立和剧烈运动',
-      '注意膝关节保暖',
-      '适当补充钙剂和维生素D'
-    ],
-    updateTime: '2023-10-15',
-    viewCount: 1254,
-    isFavorite: false,
-    isNew: true
+    title: '腰椎间盘突出症诊疗指南 (2023版)',
+    description: '本指南由中华医学会骨科学分会编写。系统阐述了腰椎间盘突出症的流行病学、发病机制、临床表现、影像学诊断、分型、治疗原则和手术指征等。',
+    url: 'https://www.orthopchina.org.cn/',
+    date: '2023-01-10',
+    views: '1,893',
+    category: '脊柱疾病',
+    icon: 'solar:document-add-bold-duotone',
+    keywords: '腰椎间盘突出症,腰椎,椎间盘,突出症,髓核,纤维环,神经根,马尾综合征,L4-L5,保守治疗,手术治疗,椎间盘摘除术,硬膜外注射,影像学诊断,MRI,X线,CT',
+    type: 'guide'
   },
   {
-    id: '2',
-    title: '高血压诊断标准与治疗规范',
-    description: '全面介绍高血压的定义、分级、诊断流程和药物治疗方案，以及生活方式干预建议。',
-    category: '心血管疾病',
-    tags: ['高血压', '诊断标准', '治疗', '心血管'],
-    overview: '高血压是最常见的慢性病之一，也是心脑血管病最主要的危险因素。',
-    symptoms: [
-      '大多数患者无明显症状',
-      '部分患者可能出现头痛、头晕',
-      '心悸、胸闷',
-      '视力模糊',
-      '鼻出血'
-    ],
-    diagnosisCriteria: [
-      {
-        title: '诊断标准',
-        description: '在未使用降压药物的情况下，非同日3次测量诊室血压，收缩压≥140mmHg和（或）舒张压≥90mmHg'
-      },
-      {
-        title: '分级标准',
-        description: '1级高血压：收缩压140-159mmHg和（或）舒张压90-99mmHg；2级高血压：收缩压≥160mmHg和（或）舒张压≥100mmHg'
-      }
-    ],
-    treatments: {
-      medication: [
-        'ACEI类药物（如依那普利）',
-        'ARB类药物（如缬沙坦）',
-        '钙离子拮抗剂（如氨氯地平）',
-        '利尿剂（如氢氯噻嗪）',
-        'β受体阻滞剂（如美托洛尔）'
-      ],
-      physical: [
-        '规律有氧运动，每周至少150分钟',
-        '减轻体重，BMI控制在18.5-23.9',
-        '戒烟限酒',
-        '保持健康心态，减轻压力'
-      ],
-      surgical: []
-    },
-    preventionTips: [
-      '减少钠盐摄入，每人每天不超过5g',
-      '增加钾盐摄入，多吃新鲜蔬果',
-      '控制脂肪摄入，尤其是饱和脂肪',
-      '增加体育锻炼',
-      '定期体检，监测血压'
-    ],
-    updateTime: '2023-09-20',
-    viewCount: 2341,
-    isFavorite: true,
-    isNew: false
+    title: '颈椎病诊断与治疗指南',
+    description: '国际权威期刊发布的颈椎病诊疗指南，涵盖神经根型、脊髓型、椎动脉型等多种颈椎病的诊断标准和治疗方案。',
+    url: 'https://www.nature.com/articles/s41572-020-00277-0',
+    date: '2022-08-15',
+    views: '2,456',
+    category: '脊柱疾病',
+    icon: 'solar:document-add-bold-duotone',
+    keywords: '颈椎病,颈椎,椎间盘退变,神经根型,脊髓型,椎动脉型,交感神经型,颈肩痛,上肢麻木,头晕,头痛,行走不稳,手术治疗,保守治疗',
+    type: 'guide'
   },
   {
-    id: '3',
-    title: '腰椎间盘突出症的诊治与康复',
-    description: '详细介绍腰椎间盘突出症的病因、临床表现、诊断方法和综合治疗方案，以及康复锻炼指导。',
-    category: '肌肉骨骼疾病',
-    tags: ['腰椎', '椎间盘突出', '腰痛', '康复', '神经压迫'],
-    overview: '腰椎间盘突出症是指腰椎间盘发生退行性变后，在外力作用下，纤维环部分或全部破裂，髓核向外突出，刺激或压迫神经根、马尾神经所引起的一种综合征。',
-    symptoms: [
-      '腰痛，可放射至臀部和下肢',
-      '下肢放射痛（坐骨神经痛）',
-      '下肢麻木、无力',
-      '腰部活动受限',
-      '严重者可出现大小便功能障碍'
-    ],
-    diagnosisCriteria: [
-      {
-        title: '临床症状',
-        description: '典型的腰痛伴下肢放射痛，咳嗽、喷嚏时加重'
-      },
-      {
-        title: '体征',
-        description: '腰椎侧凸，腰部活动受限，直腿抬高试验阳性，相应神经根支配区感觉、运动障碍'
-      },
-      {
-        title: '影像学检查',
-        description: 'CT或MRI显示椎间盘突出，压迫神经根或硬膜囊'
-      }
-    ],
-    treatments: {
-      medication: [
-        '非甾体抗炎药（如布洛芬、塞来昔布）',
-        '肌肉松弛剂（如乙哌立松）',
-        '神经营养药物（如甲钴胺）',
-        '糖皮质激素（短期使用）'
-      ],
-      physical: [
-        '卧床休息（急性期）',
-        '腰椎牵引',
-        '物理因子治疗（中频、超短波等）',
-        '核心肌群锻炼',
-        '麦肯基疗法',
-        '针灸、推拿治疗'
-      ],
-      surgical: [
-        '微创椎间盘髓核摘除术',
-        '椎间孔镜手术',
-        '开放性椎间盘切除椎间融合术',
-        '人工椎间盘置换术'
-      ]
-    },
-    preventionTips: [
-      '保持正确的坐姿和站姿，避免久坐久站',
-      '加强腰背肌锻炼，如小燕飞、五点支撑等',
-      '避免弯腰搬重物，如需搬运应屈膝下蹲',
-      '控制体重，减轻腰椎负担',
-      '选择合适的床垫，保持腰椎正常生理曲度'
-    ],
-    updateTime: '2023-11-05',
-    viewCount: 1876,
-    isFavorite: false,
-    isNew: true
+    title: '骨关节炎诊疗指南 (OARSI)',
+    description: '国际骨关节炎研究学会(OARSI)最新指南，提供基于循证的骨关节炎诊断和治疗建议，涵盖膝关节、髋关节等多部位。',
+    url: 'https://www.oarsi.org/',
+    date: '2023-05-20',
+    views: '3,789',
+    category: '关节疾病',
+    icon: 'solar:document-add-bold-duotone',
+    keywords: '骨关节炎,关节软骨,退化,膝关节,髋关节,关节疼痛,关节僵硬,关节肿胀,Kellgren-Lawrence分级,NSAIDs,关节腔注射,关节置换术,运动疗法',
+    type: 'guide'
   },
   {
-    id: '4',
-    title: '肩关节周围炎（肩周炎）防治指南',
-    description: '全面介绍肩周炎的发病机制、临床分期、诊断要点和治疗策略，包括保守治疗和手术治疗的适应症。',
-    category: '肌肉骨骼疾病',
-    tags: ['肩关节', '肩周炎', '冻结肩', '肩部疼痛', '活动受限'],
-    overview: '肩关节周围炎，又称冻结肩、五十肩，是一种以肩关节疼痛和活动受限为主要特征的常见疾病，多发生于40-60岁人群，女性发病率略高于男性。',
-    symptoms: [
-      '肩关节疼痛，夜间加重',
-      '肩关节主动和被动活动均受限',
-      '肩部肌肉痉挛',
-      '肩部肌肉萎缩（晚期）',
-      '日常生活活动受限（如梳头、穿衣困难）'
-    ],
-    diagnosisCriteria: [
-      {
-        title: '临床表现',
-        description: '肩关节疼痛持续加重，各方向活动受限，尤其是外旋受限明显'
-      },
-      {
-        title: '影像学检查',
-        description: 'X线检查多无异常，MRI可显示肩关节囊增厚、炎症改变'
-      },
-      {
-        title: '鉴别诊断',
-        description: '需排除肩袖损伤、肩峰下撞击综合征、肩关节脱位等疾病'
-      }
-    ],
-    treatments: {
-      medication: [
-        '非甾体抗炎药（如塞来昔布、依托考昔）',
-        '局部注射糖皮质激素',
-        '外用止痛贴膏',
-        '口服肌肉松弛剂'
-      ],
-      physical: [
-        '早期镇痛治疗',
-        '关节松动术',
-        '循序渐进的主动和被动关节活动度训练',
-        '物理因子治疗（超声波、激光等）',
-        '中医治疗（针灸、推拿）'
-      ],
-      surgical: [
-        '关节镜下肩关节松解术',
-        '手法松解术（在麻醉下进行）',
-        '开放性肩关节囊松解术'
-      ]
-    },
-    preventionTips: [
-      '避免肩部受凉和过度劳累',
-      '加强肩部肌肉锻炼，如爬墙练习、钟摆运动',
-      '保持正确的姿势，避免长时间固定姿势',
-      '肩部急性损伤后及时治疗，避免发展为肩周炎',
-      '定期进行肩部保健按摩和热疗'
-    ],
-    updateTime: '2023-10-28',
-    viewCount: 1452,
-    isFavorite: true,
-    isNew: true
+    title: '半月板损伤诊疗共识',
+    description: '欧洲运动医学与膝关节镜学会的半月板损伤诊疗共识，详细阐述MRI分型、保守治疗指征和手术技术选择。',
+    url: 'https://www.esska.org/',
+    date: '2023-03-18',
+    views: '1,234',
+    category: '关节疾病',
+    icon: 'solar:document-add-bold-duotone',
+    keywords: '半月板损伤,半月板,膝关节,关节交锁,弹响,肿胀,关节镜,缝合修复,部分切除,MRI分型,水平撕裂,垂直撕裂,放射状撕裂,桶柄样撕裂',
+    type: 'guide'
   },
   {
-    id: '5',
-    title: '骨质疏松症的诊断与防治',
-    description: '详细介绍骨质疏松症的危险因素、诊断标准、药物治疗和非药物干预措施，以及骨折预防策略。',
-    category: '肌肉骨骼疾病',
-    tags: ['骨质疏松', '骨密度', '骨折风险', '钙剂', '维生素D'],
-    overview: '骨质疏松症是一种以骨量低下、骨微结构破坏，导致骨脆性增加，易发生骨折为特征的全身性骨病。常见于绝经后女性和老年男性。',
-    symptoms: [
-      '多数患者早期无明显症状',
-      '腰背疼痛或全身骨痛',
-      '身高缩短、驼背',
-      '易发生脆性骨折（如椎体压缩性骨折、髋部骨折、桡骨远端骨折）',
-      '呼吸困难（严重脊柱变形时）'
-    ],
-    diagnosisCriteria: [
-      {
-        title: '骨密度检查',
-        description: '双能X线吸收法（DXA）测量的骨密度T值≤-2.5即可诊断骨质疏松症'
-      },
-      {
-        title: '脆性骨折',
-        description: '发生脆性骨折（轻微外伤或日常活动中发生的骨折）即可诊断为严重骨质疏松症'
-      },
-      {
-        title: '实验室检查',
-        description: '血生化检查、骨代谢标志物等有助于病因诊断'
-      }
-    ],
-    treatments: {
-      medication: [
-        '钙剂和维生素D补充',
-        '双膦酸盐类药物（如阿仑膦酸钠、唑来膦酸）',
-        '降钙素类药物',
-        '甲状旁腺激素类似物',
-        '雌激素替代治疗（适用于绝经后女性）',
-        '选择性雌激素受体调节剂'
-      ],
-      physical: [
-        '负重运动和抗阻训练',
-        '平衡训练，预防跌倒',
-        '物理因子治疗（脉冲电磁场等）',
-        '营养支持，摄入足够的蛋白质'
-      ],
-      surgical: [
-        '椎体成形术或后凸成形术（用于椎体压缩性骨折）',
-        '骨折内固定术（用于髋部、腕部等骨折）'
-      ]
-    },
-    preventionTips: [
-      '摄入富含钙和维生素D的食物（如牛奶、鱼类、豆制品）',
-      '适当晒太阳，促进维生素D合成',
-      '规律运动，特别是负重运动',
-      '避免吸烟和过量饮酒',
-      '预防跌倒，改善家居环境安全性',
-      '定期进行骨密度检查（特别是绝经后女性和50岁以上男性）'
-    ],
-    updateTime: '2023-11-10',
-    viewCount: 2105,
-    isFavorite: false,
-    isNew: true
+    title: '骨折分型指南 (AO/OTA)',
+    description: '国际内固定研究协会(AO)骨折分型系统，为骨折分类、治疗方案选择和预后评估提供标准化依据。',
+    url: 'https://www.ao-foundation.org/',
+    date: '2022-12-01',
+    views: '5,678',
+    category: '骨折与创伤',
+    icon: 'solar:document-add-bold-duotone',
+    keywords: '骨折,骨折分型,AO分型,OTA,骨折分类,骨折线,横形骨折,斜形骨折,螺旋形骨折,粉碎性骨折,稳定性骨折,不稳定性骨折,骨折复位,内固定',
+    type: 'guide'
+  },
+  // 影像图谱
+  {
+    title: '腰椎间盘突出MRI影像图谱',
+    description: '包含腰椎间盘突出症的MRI典型征象、分型示意图、与正常椎间盘的对比，以及各型突出的影像特征详解。',
+    url: 'https://radiopaedia.org/',
+    date: '',
+    views: '8,923',
+    category: '脊柱影像',
+    icon: 'solar:gallery-wide-bold-duotone',
+    keywords: '腰椎间盘突出,MRI,影像,椎间盘膨出,椎间盘突出,椎间盘脱出,游离型,中央型,旁中央型,外侧型,极外侧型,神经受压',
+    type: 'atlas',
+    imageCount: '256'
   },
   {
-    id: '6',
-    title: '骨折的分类、急救与治疗原则',
-    description: '全面介绍骨折的分类方法、现场急救技术和临床治疗原则，包括保守治疗和手术治疗的选择依据。',
-    category: '肌肉骨骼疾病',
-    tags: ['骨折', '急救', '固定', '复位', '康复'],
-    overview: '骨折是指骨的完整性或连续性中断，可由创伤、骨骼疾病等原因引起。正确的分类和及时有效的治疗对预后至关重要。',
-    symptoms: [
-      '局部疼痛、肿胀',
-      '肢体畸形或反常活动',
-      '骨擦音或骨擦感',
-      '功能障碍',
-      '严重者可出现休克、发热等全身症状'
-    ],
-    diagnosisCriteria: [
-      {
-        title: '外伤史',
-        description: '有明确的外伤史或骨骼疾病史'
-      },
-      {
-        title: '临床表现',
-        description: '局部疼痛、肿胀、畸形、功能障碍等典型表现'
-      },
-      {
-        title: '影像学检查',
-        description: 'X线检查可明确骨折的部位、类型和移位情况，复杂骨折需CT或MRI检查'
-      }
-    ],
-    treatments: {
-      medication: [
-        '止痛药（如对乙酰氨基酚、阿片类药物）',
-        '抗生素（开放性骨折或术后预防感染）',
-        '抗凝药物（下肢骨折预防深静脉血栓）',
-        '促进骨折愈合药物'
-      ],
-      physical: [
-        '手法复位和外固定（石膏、支具等）',
-        '牵引治疗',
-        '早期功能锻炼',
-        '物理治疗（促进消肿、缓解疼痛）',
-        '康复训练（恢复关节活动度和肌肉力量）'
-      ],
-      surgical: [
-        '切开复位内固定术（钢板、螺钉、髓内钉等）',
-        '闭合复位内固定术',
-        '外固定架固定',
-        '骨折不愈合或畸形愈合的手术治疗',
-        '人工关节置换术（严重关节内骨折）'
-      ]
-    },
-    preventionTips: [
-      '加强安全意识，避免意外伤害',
-      '儿童和老年人注意防跌倒',
-      '进行体育活动前充分热身',
-      '佩戴适当的防护装备',
-      '积极治疗骨质疏松等骨骼疾病',
-      '保持良好的肌肉力量和平衡能力'
-    ],
-    updateTime: '2023-10-20',
-    viewCount: 1689,
-    isFavorite: true,
-    isNew: false
+    title: '脊柱骨折X光与CT对比图',
+    description: '详细展示各类脊柱骨折的X线、CT和MRI表现，包含Denis三柱分类示意图和骨折稳定性评估标准。',
+    url: 'https://radiopaedia.org/',
+    date: '',
+    views: '6,445',
+    category: '脊柱影像',
+    icon: 'solar:gallery-wide-bold-duotone',
+    keywords: '脊柱骨折,X线,CT,MRI,Denis三柱分类,前柱,中柱,后柱,椎体压缩,骨折线,椎管占位,骨折稳定性',
+    type: 'atlas',
+    imageCount: '312'
   },
   {
-    id: '7',
-    title: '肌腱炎与腱鞘炎的诊断与治疗',
-    description: '详细介绍常见肌腱炎和腱鞘炎的病因、临床表现、诊断和治疗方法，包括药物治疗、物理治疗和手术治疗。',
-    category: '肌肉骨骼疾病',
-    tags: ['肌腱炎', '腱鞘炎', '网球肘', '鼠标手', '过度使用'],
-    overview: '肌腱炎和腱鞘炎是由于肌肉过度使用、反复强烈牵拉引起的肌腱和腱鞘的炎症反应，常见于运动员、体力劳动者和长时间重复特定动作的人群。',
-    symptoms: [
-      '病变部位疼痛、压痛',
-      '局部肿胀',
-      '活动受限',
-      '有时可触及结节',
-      '活动时出现弹响或卡顿感（腱鞘炎）'
-    ],
-    diagnosisCriteria: [
-      {
-        title: '病史',
-        description: '有过度使用或反复动作的病史'
-      },
-      {
-        title: '临床表现',
-        description: '病变部位疼痛、肿胀、活动受限，局部压痛明显'
-      },
-      {
-        title: '影像学检查',
-        description: '超声或MRI检查可显示肌腱增厚、炎症改变或腱鞘积液'
-      },
-      {
-        title: '特殊检查',
-        description: '如网球肘的Mill征、腕管综合征的Tinel征和Phalen试验'
-      }
-    ],
-    treatments: {
-      medication: [
-        '非甾体抗炎药（如布洛芬、萘普生）',
-        '局部注射糖皮质激素（封闭治疗）',
-        '外用止痛贴膏或凝胶',
-        '口服肌肉松弛剂'
-      ],
-      physical: [
-        '休息和制动（急性期）',
-        '冰敷（急性期）',
-        '物理因子治疗（超声波、冲击波等）',
-        '康复训练（肌肉拉伸、力量训练）',
-        '支具固定',
-        '针灸、推拿治疗'
-      ],
-      surgical: [
-        '腱鞘切开减压术',
-        '肌腱修复或重建术',
-        '神经松解术（如腕管综合征）'
-      ]
-    },
-    preventionTips: [
-      '避免长时间重复同一动作',
-      '工作和运动时保持正确姿势',
-      '定期休息，进行适当的伸展运动',
-      '加强相关肌肉的力量训练',
-      '使用正确的工具和设备',
-      '控制运动强度，循序渐进'
-    ],
-    updateTime: '2023-11-02',
-    viewCount: 1357,
-    isFavorite: false,
-    isNew: true
+    title: '膝关节半月板损伤MRI征象',
+    description: '半月板正常MRI表现、Ⅰ-Ⅲ度损伤分级标准、各类撕裂形态（水平、垂直、放射状、桶柄样）的影像特征。',
+    url: 'https://radiopaedia.org/',
+    date: '',
+    views: '12,567',
+    category: '关节影像',
+    icon: 'solar:gallery-wide-bold-duotone',
+    keywords: '半月板,MRI,半月板撕裂,损伤分级,水平撕裂,垂直撕裂,放射状撕裂,桶柄样撕裂,关节镜,关节间隙',
+    type: 'atlas',
+    imageCount: '189'
   },
   {
-    id: '8',
-    title: '颈椎病诊断与治疗进展',
-    description: '全面介绍颈椎病的分型、临床表现、诊断方法和最新治疗技术，包括保守治疗和手术治疗的适应症选择。',
-    category: '肌肉骨骼疾病',
-    tags: ['颈椎病', '颈椎间盘突出', '神经根型', '脊髓型', '颈椎牵引'],
-    overview: '颈椎病是指颈椎间盘退行性变及其继发性椎间关节退行性变所致脊髓、神经、血管损害而表现的相应症状和体征，是中老年人的常见病、多发病。',
-    symptoms: [
-      '颈肩痛，可放射至上肢',
-      '上肢麻木、无力',
-      '头痛、头晕（椎动脉型）',
-      '行走不稳、踩棉花感（脊髓型）',
-      '恶心、耳鸣、视物模糊',
-      '严重者可出现大小便功能障碍'
-    ],
-    diagnosisCriteria: [
-      {
-        title: '临床症状和体征',
-        description: '根据不同分型（神经根型、脊髓型、椎动脉型等）有相应的表现'
-      },
-      {
-        title: '影像学检查',
-        description: 'X线显示颈椎生理曲度改变、骨质增生、椎间隙变窄；CT或MRI显示椎间盘突出、脊髓或神经根受压'
-      },
-      {
-        title: '神经电生理检查',
-        description: '肌电图等检查有助于评估神经损伤程度'
-      }
-    ],
-    treatments: {
-      medication: [
-        '非甾体抗炎药（如塞来昔布、依托考昔）',
-        '神经营养药物（如甲钴胺、维生素B1）',
-        '肌肉松弛剂（如乙哌立松）',
-        '脱水剂（急性期神经水肿）',
-        '改善脑循环药物（椎动脉型）'
-      ],
-      physical: [
-        '颈椎牵引',
-        '物理因子治疗（中频、超短波等）',
-        '中医治疗（针灸、推拿）',
-        '颈椎康复锻炼（如颈部米字操）',
-        '颈托固定（急性期）'
-      ],
-      surgical: [
-        '前路椎间盘切除椎间融合术',
-        '后路椎管扩大成形术',
-        '颈椎人工椎间盘置换术',
-        '微创颈椎手术'
-      ]
-    },
-    preventionTips: [
-      '保持正确的坐姿和睡姿',
-      '避免长时间低头工作或使用手机',
-      '选择合适的枕头，高度适中',
-      '加强颈部肌肉锻炼',
-      '注意颈部保暖，避免受凉',
-      '定期进行颈部保健活动'
-    ],
-    updateTime: '2023-11-08',
-    viewCount: 1987,
-    isFavorite: true,
-    isNew: true
+    title: '骨关节炎影像学分级图谱',
+    description: 'Kellgren-Lawrence分级的X线标准影像，关节间隙狭窄、骨赘形成、软骨下骨硬化等征象的量化评估。',
+    url: 'https://radiopaedia.org/',
+    date: '',
+    views: '9,234',
+    category: '关节影像',
+    icon: 'solar:gallery-wide-bold-duotone',
+    keywords: '骨关节炎,X线,Kellgren-Lawrence分级,关节间隙狭窄,骨赘,骨赘形成,软骨下骨硬化,骨囊肿,关节畸形',
+    type: 'atlas',
+    imageCount: '145'
+  },
+  {
+    title: '骨肿瘤影像诊断图谱',
+    description: '良恶性骨肿瘤的X线、CT、MRI鉴别要点，骨膜反应、骨质破坏模式、软组织肿块等典型征象。',
+    url: 'https://radiopaedia.org/',
+    date: '',
+    views: '7,123',
+    category: '肿瘤影像',
+    icon: 'solar:gallery-wide-bold-duotone',
+    keywords: '骨肿瘤,恶性骨肿瘤,良性骨肿瘤,骨肉瘤,软骨肉瘤,尤文肉瘤,骨膜反应,骨质破坏,软组织肿块,转移性肿瘤',
+    type: 'atlas',
+    imageCount: '423'
+  },
+  // 临床案例
+  {
+    title: '青年男性腰椎间盘突出症手术治疗案例',
+    description: '患者男性，28岁，急性起病，左侧下肢放射性疼痛，影像学显示L4-L5椎间盘突出。行椎间盘摘除术后症状完全缓解，术后康复过程及随访结果。',
+    url: 'https://casereports.bmj.com/',
+    date: '2023-08-15',
+    views: '3,456',
+    category: '脊柱外科',
+    icon: 'solar:case-bold-duotone',
+    keywords: '腰椎间盘突出症,手术治疗,椎间盘摘除术,L4-L5,下肢放射痛,案例,术后康复,随访',
+    type: 'case',
+    doctor: '张医生'
+  },
+  {
+    title: '颈椎病多节段病变手术案例',
+    description: '患者女性，62岁，渐进性双手麻木、行走不稳，MRI显示多节段颈椎间盘突出伴椎管狭窄。行前路颈椎间盘摘除植骨融合内固定术。',
+    url: 'https://casereports.bmj.com/',
+    date: '2023-07-20',
+    views: '4,567',
+    category: '脊柱外科',
+    icon: 'solar:case-bold-duotone',
+    keywords: '颈椎病,多节段病变,椎管狭窄,植骨融合,前路手术,案例,手术治疗',
+    type: 'case',
+    doctor: '李医生'
+  },
+  {
+    title: '半月板桶柄样撕裂关节镜修复案例',
+    description: '患者男性，25岁，运动损伤导致膝关节交锁。MRI确诊内侧半月板桶柄样撕裂，行关节镜下半月板缝合修复术，术后早期康复训练方案。',
+    url: 'https://casereports.bmj.com/',
+    date: '2023-09-05',
+    views: '5,123',
+    category: '关节外科',
+    icon: 'solar:case-bold-duotone',
+    keywords: '半月板损伤,桶柄样撕裂,关节镜,缝合修复,运动损伤,关节交锁,案例,康复训练',
+    type: 'case',
+    doctor: '王医生'
+  },
+  {
+    title: '股骨头坏死保髋手术案例',
+    description: '患者男性，35岁，长期服用激素导致双侧股骨头坏死Ficat III期。采用带血管游离腓骨移植术保髋治疗，术后随访3年效果良好。',
+    url: 'https://casereports.bmj.com/',
+    date: '2023-06-10',
+    views: '3,890',
+    category: '关节外科',
+    icon: 'solar:case-bold-duotone',
+    keywords: '股骨头坏死,Ficat分期,保髋手术,腓骨移植,激素,案例,手术效果',
+    type: 'case',
+    doctor: '刘医生'
+  },
+  {
+    title: '胫骨平台骨折内固定术案例',
+    description: '患者女性，48岁，车祸导致左侧胫骨平台骨折（Schatzker V型）。行切开复位钢板内固定术，术后早期负重训练时机与康复计划。',
+    url: 'https://casereports.bmj.com/',
+    date: '2023-08-28',
+    views: '2,345',
+    category: '创伤骨科',
+    icon: 'solar:case-bold-duotone',
+    keywords: '胫骨平台骨折,Schatzker分型,内固定术,钢板,康复,案例,车祸',
+    type: 'case',
+    doctor: '陈医生'
+  },
+  // 医学文献
+  {
+    title: '腰椎间盘退变的分子机制研究进展',
+    description: '综述腰椎间盘退变的病理生理机制、细胞外基质降解、炎症反应和神经长入的分子生物学研究现状。',
+    url: 'https://www.sciencedirect.com/',
+    date: '2023',
+    views: '6,789',
+    category: '脊柱疾病研究',
+    icon: 'solar:notebook-bold-duotone',
+    keywords: '腰椎间盘退变,分子机制,细胞外基质,炎症反应,神经长入,分子生物学,Spine Journal,研究进展',
+    type: 'literature',
+    journal: 'Spine Journal 2023'
+  },
+  {
+    title: 'AI辅助脊柱影像诊断的准确性评估',
+    description: '深度学习算法在脊柱MRI自动诊断中的应用，对比AI诊断与放射科医师诊断的准确性和一致性。',
+    url: 'https://www.nature.com/',
+    date: '2023',
+    views: '8,456',
+    category: '脊柱疾病研究',
+    icon: 'solar:notebook-bold-duotone',
+    keywords: 'AI,人工智能,深度学习,脊柱影像,诊断准确性,神经网络,MRI,Nature Medicine',
+    type: 'literature',
+    journal: 'Nature Medicine 2023'
+  },
+  {
+    title: '骨关节炎的药物治疗新进展',
+    description: '探讨非甾体抗炎药、关节腔注射剂、生物制剂等骨关节炎治疗方案的有效性和安全性循证医学证据。',
+    url: 'https://www.thelancet.com/',
+    date: '2023',
+    views: '10,234',
+    category: '关节疾病研究',
+    icon: 'solar:notebook-bold-duotone',
+    keywords: '骨关节炎,药物治疗,NSAIDs,关节腔注射,生物制剂,循证医学,The Lancet,治疗效果',
+    type: 'literature',
+    journal: 'The Lancet 2023'
+  },
+  {
+    title: '半月板修复vs切除术的长期随访研究',
+    description: '10年随访研究比较半月板缝合修复与部分切除术的患者满意度、功能恢复和继发性骨关节炎发生率。',
+    url: 'https://www.nejm.org/',
+    date: '2023',
+    views: '7,890',
+    category: '关节疾病研究',
+    icon: 'solar:notebook-bold-duotone',
+    keywords: '半月板修复,半月板切除,随访研究,患者满意度,功能恢复,继发性骨关节炎,NEJM,长期疗效',
+    type: 'literature',
+    journal: 'NEJM 2023'
+  },
+  {
+    title: '骨肉瘤的免疫治疗新策略',
+    description: '探讨PD-1抑制剂、CAR-T细胞疗法等在骨肉瘤治疗中的应用前景，结合传统化疗的协同效应。',
+    url: 'https://www.cell.com/',
+    date: '2023',
+    views: '5,678',
+    category: '骨肿瘤研究',
+    icon: 'solar:notebook-bold-duotone',
+    keywords: '骨肉瘤,免疫治疗,PD-1抑制剂,CAR-T细胞疗法,化疗,协同效应,Cell,肿瘤治疗',
+    type: 'literature',
+    journal: 'Cell 2023'
+  },
+  {
+    title: '3D打印在骨科精准治疗中的应用',
+    description: '3D打印技术在定制化植入物、手术导板、个性化假体设计和骨折复位中的应用现状与发展趋势。',
+    url: 'https://www.science.org/',
+    date: '2023',
+    views: '9,123',
+    category: '骨科技术革新',
+    icon: 'solar:notebook-bold-duotone',
+    keywords: '3D打印,定制化,植入物,手术导板,假体设计,骨折复位,精准治疗,Science,技术创新',
+    type: 'literature',
+    journal: 'Science 2023'
   }
-]
+])
 
-// 计算属性：当前分类名称
-const currentCategoryName = computed(() => {
-  const category = diseaseCategories.find(c => c.id === activeCategory.value)
-  return category ? category.name : '全部'
-})
-
-// 计算属性：过滤后的知识库项
-const filteredKnowledge = computed(() => {
-  let result = [...knowledgeItems]
-  
-  // 分类过滤
-  if (activeCategory.value !== 'all') {
-    const categoryName = diseaseCategories.find(c => c.id === activeCategory.value)?.name
-    if (categoryName) {
-      result = result.filter(item => item.category === categoryName)
-    }
-  }
-  
-  // 标签过滤
-  if (selectedTags.value.length > 0) {
-    result = result.filter(item => 
-      selectedTags.value.every(tag => item.tags.includes(tag))
-    )
-  }
-  
-  // 搜索过滤
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    result = result.filter(item => 
-      item.title.toLowerCase().includes(query) ||
-      item.description.toLowerCase().includes(query) ||
-      item.tags.some(tag => tag.toLowerCase().includes(query)) ||
-      item.category.toLowerCase().includes(query)
-    )
-  }
-  
-  // 排序
-  switch (sortBy.value) {
-    case 'date':
-      result.sort((a, b) => new Date(b.updateTime).getTime() - new Date(a.updateTime).getTime())
-      break
-    case 'views':
-      result.sort((a, b) => b.viewCount - a.viewCount)
-      break
-    case 'relevance':
-    default:
-      // 简单的相关性排序，实际应用中可能需要更复杂的算法
-      if (searchQuery.value) {
-        const query = searchQuery.value.toLowerCase()
-        result.sort((a, b) => {
-          const aScore = getRelevanceScore(a, query)
-          const bScore = getRelevanceScore(b, query)
-          return bScore - aScore
-        })
-      }
-      break
-  }
-  
-  // 分页处理
-  const startIndex = (currentPage.value - 1) * pageSize.value
-  return result.slice(startIndex, startIndex + pageSize.value)
-})
-
-// 计算总条目数
-const totalItems = computed(() => {
-  // 这里复用过滤逻辑来计算总数
-  let result = [...knowledgeItems]
-  
-  if (activeCategory.value !== 'all') {
-    const categoryName = diseaseCategories.find(c => c.id === activeCategory.value)?.name
-    if (categoryName) {
-      result = result.filter(item => item.category === categoryName)
-    }
-  }
-  
-  if (selectedTags.value.length > 0) {
-    result = result.filter(item => 
-      selectedTags.value.every(tag => item.tags.includes(tag))
-    )
-  }
-  
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    result = result.filter(item => 
-      item.title.toLowerCase().includes(query) ||
-      item.description.toLowerCase().includes(query) ||
-      item.tags.some(tag => tag.toLowerCase().includes(query)) ||
-      item.category.toLowerCase().includes(query)
-    )
-  }
-  
-  return result.length
-})
-
-// 计算相关性分数
-const getRelevanceScore = (item: KnowledgeItem, query: string) => {
-  let score = 0
-  
-  if (item.title.toLowerCase().includes(query)) {
-    score += 3
-  }
-  
-  if (item.description.toLowerCase().includes(query)) {
-    score += 2
-  }
-  
-  if (item.tags.some(tag => tag.toLowerCase().includes(query))) {
-    score += 2
-  }
-  
-  if (item.category.toLowerCase().includes(query)) {
-    score += 1
-  }
-  
-  return score
-}
-
-// 防抖处理搜索
-const handleSearch = () => {
-  if (searchTimer) {
-    clearTimeout(searchTimer)
-  }
-  
-  searchTimer = setTimeout(() => {
-    loading.value = true
-    // 模拟网络请求延迟
-    setTimeout(() => {
-      currentPage.value = 1
-      loading.value = false
-    }, 300)
-  }, 300) as unknown as number
-}
-
-const handleCategorySelect = (categoryId: string) => {
-  loading.value = true
-  activeCategory.value = categoryId
-  // 模拟网络请求延迟
-  setTimeout(() => {
-    currentPage.value = 1
-    loading.value = false
-  }, 300)
-}
-
-const toggleTag = (tag: string) => {
-  loading.value = true
-  const index = selectedTags.value.indexOf(tag)
+const toggleCategory = (category: string) => {
+  const index = expandedCategories.value.indexOf(category)
   if (index > -1) {
-    selectedTags.value.splice(index, 1)
+    expandedCategories.value.splice(index, 1)
   } else {
-    selectedTags.value.push(tag)
+    expandedCategories.value.push(category)
   }
-  // 模拟网络请求延迟
-  setTimeout(() => {
-    currentPage.value = 1
-    loading.value = false
-  }, 300)
 }
 
-const viewDetail = (item: KnowledgeItem) => {
-  loading.value = true
-  // 模拟网络请求延迟
-  setTimeout(() => {
-    selectedItem.value = item
-    // 增加查看次数
-    item.viewCount++
-    loading.value = false
-  }, 300)
+const showPage = (page: string) => {
+  activePage.value = page
 }
 
-// 切换收藏状态
-const toggleFavorite = (item: KnowledgeItem) => {
-  item.isFavorite = !item.isFavorite
-  ElMessage.success(item.isFavorite ? '已添加到收藏' : '已取消收藏')
+const showAllGuides = () => {
+  activePage.value = 'all-guides'
 }
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('zh-CN')
+const showAllAtlases = () => {
+  activePage.value = 'all-atlases'
 }
 
-// 监听详情页滚动，控制回到顶部按钮显示
-watch(selectedItem, (newVal) => {
-  if (newVal) {
-    const handleScroll = () => {
-      const detailContent = document.querySelector('.detail-content')
-      if (detailContent) {
-        showBackToTop.value = (detailContent as HTMLElement).scrollTop > 300
-      }
-    }
+const showAllCases = () => {
+  activePage.value = 'all-cases'
+}
+
+const showAllLiterature = () => {
+  activePage.value = 'all-literature'
+}
+
+const showGuideDetail = (guideId: string) => {
+  ElMessage.info(`查看指南详情: ${guideId}`)
+}
+
+const handleSearch = () => {
+  const query = searchQuery.value.trim().toLowerCase()
+  
+  if (!query) {
+    searchResults.value = []
+    activePage.value = 'herniation'
+    return
+  }
+
+  // 搜索知识库
+  const results = knowledgeDatabase.value.filter(item => {
+    const titleMatch = item.title.toLowerCase().includes(query)
+    const descMatch = item.description.toLowerCase().includes(query)
+    const keywordsMatch = item.keywords.toLowerCase().includes(query)
+    const categoryMatch = item.category && item.category.toLowerCase().includes(query)
     
-    const detailContent = document.querySelector('.detail-content')
-    if (detailContent) {
-      detailContent.addEventListener('scroll', handleScroll)
-      
-      // 清理函数
-      return () => {
-        detailContent.removeEventListener('scroll', handleScroll)
-      }
-    }
+    return titleMatch || descMatch || keywordsMatch || categoryMatch
+  })
+  
+  searchResults.value = results
+  
+  if (results.length > 0) {
+    activePage.value = 'search'
+    ElMessage.success(`找到 ${results.length} 条结果`)
   } else {
-    showBackToTop.value = false
+    ElMessage.warning('未找到相关结果')
   }
-})
+}
 
-// 滚动到顶部
-const scrollToTop = () => {
-  const detailContent = document.querySelector('.detail-content')
-  if (detailContent) {
-    (detailContent as HTMLElement).scrollTo({ top: 0, behavior: 'smooth' })
-  }
+const searchByKeyword = (keyword: string) => {
+  searchQuery.value = keyword
+  handleSearch()
+}
+
+const handleUpload = () => {
+  ElMessage.info('上传知识功能')
+}
+
+const handleMyLearning = () => {
+  ElMessage.info('我的学习功能')
 }
 
 onMounted(() => {
-  // 模拟初始加载数据
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-  }, 500)
+  // 初始化页面
 })
 </script>
 
 <style scoped>
-.knowledge-base {
-  padding: 20px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+:root {
+  --primary-color: #409EFF;
+  --primary-color-light: #ecf5ff;
+  --text-primary: #303133;
+  --text-regular: #606266;
+  --text-secondary: #909399;
+  --border-color: #e4e7ed;
+  --bg-page: #f5f7fa;
+  --bg-card: #ffffff;
+  --shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
 }
 
-.base-header {
+.knowledge-base-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+}
+
+.app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  height: 60px;
+  padding: 0 24px;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
-.search-bar {
-  width: 400px;
-}
-
-.base-content {
-  display: flex;
-  flex: 1;
-  gap: 20px;
-  height: calc(100vh - 160px);
-}
-
-.category-sidebar {
-  width: 250px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-}
-
-.category-menu {
-  border: none;
-  background: transparent;
-  flex: 1;
-}
-
-.category-menu .el-menu-item {
+.header-left {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 50px;
-  margin-bottom: 5px;
-  border-radius: 4px;
-}
-
-.count {
-  font-size: 12px;
-  color: #999;
-}
-
-.hot-tags {
-  margin-top: 20px;
-}
-
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.tag {
-  cursor: pointer;
-}
-
-.knowledge-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.content-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.knowledge-list {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.knowledge-item {
-  background: #fff;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.knowledge-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: #667eea;
-}
-
-.item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 10px;
-}
-
-.item-title {
-  margin: 0;
-  font-size: 16px;
-  color: #1f2937;
+  font-size: 20px;
   font-weight: 600;
 }
 
-.item-actions {
+.header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 24px;
 }
 
-.item-description {
-  margin: 0 0 10px 0;
-  color: #6b7280;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+.header-right a, .header-right .btn {
+  text-decoration: none;
+  color: var(--text-regular);
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ccc;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+}
+
+.main-container {
+  display: flex;
+  flex-grow: 1;
   overflow: hidden;
 }
 
-.item-meta {
-  display: flex;
-  gap: 15px;
-  font-size: 12px;
-  color: #9ca3af;
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 0 20px 10px 20px;
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 10px;
 }
 
-.views {
+.sidebar-header h2 {
+  font-size: 18px;
+  margin: 0 0 4px 0;
+}
+
+.sidebar-header p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item-title {
   display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.nav-item-title:hover {
+  background-color: #f9fafb;
+}
+
+.nav-item.is-expanded > .nav-item-title .iconify {
+  transform: rotate(90deg);
+}
+
+.sub-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: none;
+  background-color: #fafafa;
+}
+
+.nav-item.is-expanded > .sub-nav {
+  display: block;
+}
+
+.nav-link {
+  display: block;
+  padding: 10px 20px 10px 44px;
+  text-decoration: none;
+  color: var(--text-regular);
+  font-size: 14px;
+  position: relative;
+  border-left: 4px solid transparent;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: var(--primary-color);
+}
+
+.nav-link.nav-parent-link {
+  padding: 12px 20px;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+}
+
+.nav-link.nav-parent-link:hover {
+  background-color: #f9fafb;
+}
+
+.nav-link.is-active {
+  background-color: var(--primary-color-light);
+  color: var(--primary-color);
+  font-weight: 500;
+  border-left-color: var(--primary-color);
+}
+
+.nav-link.nav-parent-link.is-active {
+  padding-left: 16px;
+}
+
+.sidebar-footer {
+  padding: 15px 20px;
+  margin-top: 10px;
+  border-top: 1px solid var(--border-color);
+}
+
+.sidebar-footer a {
+  text-decoration: none;
+  font-size: 13px;
+  color: var(--primary-color);
+}
+
+.content-area {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 24px 30px;
+  scroll-behavior: smooth;
+}
+
+.content-page {
+  display: block;
+}
+
+.search-module {
+  background-color: var(--bg-card);
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.search-module h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+}
+
+.search-box input {
+  flex-grow: 1;
+  height: 44px;
+  padding: 0 16px;
+  font-size: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px 0 0 6px;
+  outline: none;
+}
+
+.search-box input:focus {
+  border-color: var(--primary-color);
+}
+
+.search-box button {
+  height: 46px;
+  border: none;
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 0 24px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 0 6px 6px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.search-links {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.search-links a {
+  color: var(--text-regular);
+  text-decoration: none;
+  margin-left: 16px;
+}
+
+.search-links a:hover, .search-links a.active {
+  color: var(--primary-color);
+}
+
+.search-results-page {
+  margin-bottom: 24px;
+}
+
+.search-result-count {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.quick-links-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.quick-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+  text-decoration: none;
+  transition: box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.quick-card:hover {
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
+}
+
+.card-icon {
+  flex-shrink: 0;
+}
+
+.quick-card .iconify-c1 { color: #409EFF; }
+.quick-card .iconify-c2 { color: #67C23A; }
+.quick-card .iconify-c3 { color: #E6A23C; }
+.quick-card .iconify-c4 { color: #F56C6C; }
+
+.card-content h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.card-content p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.card-content .count {
+  color: var(--text-regular);
+  font-weight: 500;
+}
+
+.card-arrow {
+  margin-left: auto;
+  color: var(--text-secondary);
+}
+
+.content-section {
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.section-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.see-all {
+  text-decoration: none;
+  font-size: 13px;
+  color: var(--primary-color);
+  display: inline-flex;
   align-items: center;
   gap: 4px;
 }
 
-.item-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.pagination {
-  margin-top: 15px;
-  align-self: flex-end;
-}
-
-.detail-sidebar {
-  width: 400px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-}
-
-.detail-header {
-  padding: 15px;
-  border-bottom: 1px solid #e5e7eb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.detail-header h3 {
+.guide-list {
+  list-style: none;
+  padding: 0;
   margin: 0;
-  font-size: 16px;
-  color: #1f2937;
 }
 
-.detail-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.detail-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 15px;
-}
-
-.detail-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  font-size: 12px;
-  color: #6b7280;
-}
-
-.detail-section {
-  margin-bottom: 25px;
-}
-
-.detail-section h4 {
-  margin: 0 0 10px 0;
-  font-size: 15px;
-  color: #1f2937;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.detail-section h4::before {
-  content: '';
-  display: inline-block;
-  width: 4px;
-  height: 16px;
-  background-color: #409eff;
-  border-radius: 2px;
-}
-
-.detail-section p {
-  margin: 0;
-  color: #4b5563;
-  line-height: 1.6;
-}
-
-.detail-section ul {
-  margin: 0;
-  padding-left: 20px;
-  color: #4b5563;
-}
-
-.detail-section li {
-  margin-bottom: 8px;
-  line-height: 1.6;
-}
-
-.detail-section li:last-child {
-  margin-bottom: 0;
-}
-
-.criteria {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.criterion-item h5 {
-  margin: 0 0 5px 0;
-  font-size: 14px;
-  color: #1f2937;
-  font-weight: 500;
-}
-
-.treatment-plan {
-  padding: 16px 0;
-}
-
-.treatment-list {
-  padding-left: 20px;
-}
-
-.treatment-list li {
-  margin: 8px 0;
-  line-height: 1.6;
-}
-
-.empty-state {
-  padding: 20px;
-  text-align: center;
-  color: #999;
-  background-color: #f9fafb;
-  border-radius: 4px;
-}
-
-.prevention-tips {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.tip-item {
+.guide-item {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  color: #4b5563;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.guide-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.guide-icon {
+  color: var(--primary-color);
+}
+
+.guide-content h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.guide-title-link {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.guide-title-link:hover {
+  color: var(--primary-color);
+}
+
+.guide-title-link a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.guide-title-link a:hover {
+  color: var(--primary-color);
+}
+
+.guide-meta a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.guide-meta a:hover {
+  color: var(--primary-color);
+}
+
+.guide-content p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: var(--text-regular);
   line-height: 1.6;
 }
 
-.tip-item .el-icon {
-  margin-top: 4px;
-  color: #10b981;
-}
-
-.back-to-top {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  background: #409eff;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.guide-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  gap: 16px;
 }
 
-.back-to-top:hover {
-  background: #66b1ff;
+.guide-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
-:deep(.el-button--icon-only.is-small) {
-  width: 32px;
-  height: 32px;
+.aggregate-page-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 24px;
 }
 
-.favorited {
-  color: #f56c6c;
+.disease-group-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 30px 0 15px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.knowledge-content {
+  line-height: 1.8;
+}
+
+.knowledge-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 24px 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.knowledge-content h4:first-child {
+  margin-top: 0;
+}
+
+.knowledge-content p {
+  font-size: 14px;
+  color: var(--text-regular);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.knowledge-content ul {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.knowledge-content li {
+  font-size: 14px;
+  color: var(--text-regular);
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.knowledge-content ul ul {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  padding-left: 20px;
+}
+
+.knowledge-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .quick-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .sidebar {
+    width: 180px;
+  }
 }
 </style>

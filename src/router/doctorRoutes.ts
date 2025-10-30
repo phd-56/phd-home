@@ -4,7 +4,12 @@ const doctorRoutes: RouteRecordRaw[] = [
   {
     path: 'ai-diagnosis',
     name: 'doctor.aiDiagnosis',
-    component: () => import('@/components/doctor/components/AIDiagnosis.vue')
+    component: () => import('@/views/doctor/AIDiagnosis.vue')
+  },
+  {
+    path: 'ai-diagnosis/process',
+    name: 'doctor.aiDiagnosisProcess',
+    component: () => import('@/views/doctor/AIDiagnosisProcess.vue')
   },
   {
     path: 'case-management',
@@ -21,6 +26,11 @@ const doctorRoutes: RouteRecordRaw[] = [
     name: 'doctor.caseDetail',
     component: () => import('@/views/case-management/CaseDetail.vue')
   },
+  {
+    path: 'case-management/change-status/:caseNumber',
+    name: 'doctor.caseStatusChange',
+    component: () => import('@/views/case-management/CaseStatusChange.vue')
+  },
 
 
   {
@@ -31,7 +41,12 @@ const doctorRoutes: RouteRecordRaw[] = [
   {
     path: 'reports/editor',
     name: 'doctor.reportEditor',
-    component: () => import('@/components/MedicalReportEditor.vue')
+    component: () => import('@/views/reports/ReportEditor.vue')
+  },
+  {
+    path: 'reports/detail/:id',
+    name: 'doctor.reportDetail',
+    component: () => import('@/views/reports/ReportDetail.vue')
   },
   {
     path: 'knowledge-base',
@@ -41,12 +56,17 @@ const doctorRoutes: RouteRecordRaw[] = [
   {
     path: 'feedback',
     name: 'doctor.feedbackHistory',
-    component: () => import('@/views/doctor/FeedbackHistory.vue')
+    component: () => import('@/views/feedback/FeedbackCenter.vue')
+  },
+  {
+    path: 'help',
+    name: 'doctor.help',
+    component: () => import('@/views/doctor/DoctorHelp.vue')
   },
   {
     path: 'statistics',
     name: 'doctor.statistics',
-    component: () => import('@/views/ReportPreview.vue') // 暂时使用报告预览页
+    component: () => import('@/views/doctor/DoctorStatistics.vue')
   }
 ]
 
