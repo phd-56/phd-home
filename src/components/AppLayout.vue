@@ -25,62 +25,7 @@
   <div class="app-layout-container" :class="{ 'no-navbar': shouldHideLayout }">
     <!-- 侧边栏 - 根据路由动态显示 -->
     <AdminSidebar v-if="isAdminRoute && !shouldHideLayout" />
-    <div v-else-if="!shouldHideLayout" class="sidebar">
-      <div class="sidebar-section">
-        <div class="sidebar-title">主导航</div>
-        <router-link class="sidebar-item" to="/dashboard/doctor" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">
-            <span>工作台</span>
-            <span></span>
-          </a>
-        </router-link>
-        <router-link class="sidebar-item" to="/dashboard/doctor/ai-diagnosis" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">
-            <span>影像诊断</span>
-            <span></span>
-          </a>
-        </router-link>
-        <router-link class="sidebar-item" to="/dashboard/doctor/case-management" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">
-            <span>病例管理</span>
-            <span class="sidebar-badge">12</span>
-          </a>
-        </router-link>
-        <router-link class="sidebar-item" to="/dashboard/doctor/knowledge-base" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">
-            <span>知识库</span>
-            <span></span>
-          </a>
-        </router-link>
-        <router-link class="sidebar-item" to="/dashboard/doctor/reports" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">
-            <span>报告中心</span>
-            <span></span>
-          </a>
-        </router-link>
-      </div>
-      <div class="sidebar-section">
-        <div class="sidebar-title">辅助功能</div>
-        <router-link class="sidebar-item" to="/dashboard/doctor/statistics" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">
-            <span>数据统计</span>
-            <span></span>
-          </a>
-        </router-link>
-        <router-link class="sidebar-item" to="/dashboard/doctor/feedback" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">
-            <span>反馈中心</span>
-            <span></span>
-          </a>
-        </router-link>
-        <router-link class="sidebar-item" to="/dashboard/doctor/help" custom v-slot="{ href, navigate, isActive }">
-          <a :href="href" @click="navigate" :class="{ active: isActive }">
-            <span>帮助文档</span>
-            <span></span>
-          </a>
-        </router-link>
-      </div>
-    </div>
+    <DoctorSidebar v-else-if="isDoctorRoute && !shouldHideLayout" />
 
     <!-- 主内容区域 -->
     <div class="main-content">
@@ -94,6 +39,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import AdminSidebar from '@/components/admin/AdminSidebar.vue'
+import DoctorSidebar from '@/components/doctor/DoctorSidebar.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -101,6 +47,10 @@ const authStore = useAuthStore()
 
 const isAdminRoute = computed(() => {
   return route.path.startsWith('/dashboard/admin') || route.path.startsWith('/admin')
+})
+
+const isDoctorRoute = computed(() => {
+  return route.path.startsWith('/dashboard/doctor')
 })
 
 const shouldHideLayout = computed(() => {

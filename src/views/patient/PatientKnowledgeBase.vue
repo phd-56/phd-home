@@ -609,189 +609,79 @@
           </div>
         </div>
 
-        <!-- 骨折与创伤内容 -->
-        <div v-else-if="activeDisease === 'trauma'" class="content-page is-active">
-          <div class="content-section">
-            <div class="section-header">
-              <h3>科普资料 (骨折与创伤)</h3>
-              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="guide-list">
-              <div class="guide-item">
-                <i class="fas fa-file-medical guide-icon"></i>
-                <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('trauma-guide')">骨折与创伤诊疗指南</h4>
-                  <p>本指南详细介绍了骨折的分类、诊断方法、治疗原则和康复计划...</p>
-                  <div class="guide-meta">
-                    <span><i class="fas fa-calendar"></i> 2023-09-10</span>
-                    <span><i class="fas fa-eye"></i> 2,345 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <div v-if="currentGuideId === 'trauma-guide' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="qa-section">
-            <h3>简易疾病QA (骨折与创伤)</h3>
-            <div class="qa-item">
-              <div class="qa-question">
-                <span class="qa-icon q">Q:</span>
-                <p>骨折后多久能愈合？</p>
-              </div>
-              <div class="qa-answer">
-                <span class="qa-icon a">A:</span>
-                <p>一般成人骨折愈合时间：上肢骨折4-8周，下肢骨折8-12周。愈合速度受年龄、骨折部位、严重程度、营养状况等多种因素影响。</p>
-              </div>
-            </div>
-            <div class="qa-item">
-              <div class="qa-question">
-                <span class="qa-icon q">Q:</span>
-                <p>骨折需要手术吗？</p>
-              </div>
-              <div class="qa-answer">
-                <span class="qa-icon a">A:</span>
-                <p>稳定性骨折、无明显移位者可保守治疗（石膏、支具固定）。不稳定骨折、明显移位、开放性骨折、或保守治疗失败者需要手术内固定。</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 骨肿瘤内容 -->
-        <div v-else-if="activeDisease === 'bone-tumor'" class="content-page is-active">
-          <div class="content-section">
-            <div class="section-header">
-              <h3>科普资料 (骨肿瘤)</h3>
-              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="guide-list">
-              <div class="guide-item">
-                <i class="fas fa-file-medical guide-icon"></i>
-                <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('bone-tumor-guide')">骨肿瘤诊疗指南</h4>
-                  <p>本指南系统阐述了良性骨肿瘤和恶性骨肿瘤的诊断、分期、治疗和预后评估...</p>
-                  <div class="guide-meta">
-                    <span><i class="fas fa-calendar"></i> 2023-10-05</span>
-                    <span><i class="fas fa-eye"></i> 1,567 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <div v-if="currentGuideId === 'bone-tumor-guide' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="qa-section">
-            <h3>简易疾病QA (骨肿瘤)</h3>
-            <div class="qa-item">
-              <div class="qa-question">
-                <span class="qa-icon q">Q:</span>
-                <p>骨肿瘤都是恶性的吗？</p>
-              </div>
-              <div class="qa-answer">
-                <span class="qa-icon a">A:</span>
-                <p>不是。骨肿瘤分为良性和恶性。良性骨肿瘤较常见，如骨软骨瘤、骨囊肿等，治疗效果好。恶性骨肿瘤如骨肉瘤、Ewing肉瘤等较少见但严重。</p>
-              </div>
-            </div>
-            <div class="qa-item">
-              <div class="qa-question">
-                <span class="qa-icon q">Q:</span>
-                <p>如何区别良恶性骨肿瘤？</p>
-              </div>
-              <div class="qa-answer">
-                <span class="qa-icon a">A:</span>
-                <p>主要通过影像学检查（X线、CT、MRI）和活检病理确诊。恶性骨肿瘤通常生长快、疼痛明显、边界不清、可侵犯周围软组织。</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 代谢性骨病内容 -->
-        <div v-else-if="activeDisease === 'metabolic'" class="content-page is-active">
-          <div class="content-section">
-            <div class="section-header">
-              <h3>科普资料 (代谢性骨病)</h3>
-              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="guide-list">
-              <div class="guide-item">
-                <i class="fas fa-file-medical guide-icon"></i>
-                <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('metabolic-guide')">代谢性骨病诊疗指南</h4>
-                  <p>本指南涵盖骨质疏松症、佝偻病、甲状旁腺功能亢进等代谢性骨病的诊断与防治...</p>
-                  <div class="guide-meta">
-                    <span><i class="fas fa-calendar"></i> 2023-11-15</span>
-                    <span><i class="fas fa-eye"></i> 1,234 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <div v-if="currentGuideId === 'metabolic-guide' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="qa-section">
-            <h3>简易疾病QA (代谢性骨病)</h3>
-            <div class="qa-item">
-              <div class="qa-question">
-                <span class="qa-icon q">Q:</span>
-                <p>什么是骨质疏松症？</p>
-              </div>
-              <div class="qa-answer">
-                <span class="qa-icon a">A:</span>
-                <p>骨质疏松症是一种以骨密度降低、骨微结构破坏为特征的代谢性骨病，导致骨折风险增加。常见于绝经后女性和老年男性。</p>
-              </div>
-            </div>
-            <div class="qa-item">
-              <div class="qa-question">
-                <span class="qa-icon q">Q:</span>
-                <p>如何预防骨质疏松？</p>
-              </div>
-              <div class="qa-answer">
-                <span class="qa-icon a">A:</span>
-                <p>增加钙和维生素D的摄入、适量运动（尤其是负重运动）、戒烟限酒、避免长期使用激素类药物、预防跌倒。</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- 股骨颈骨折内容 -->
         <div v-else-if="activeDisease === 'femoral-neck-fracture'" class="content-page is-active">
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (股骨颈骨折)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>股骨颈骨折是一种常见的老年性骨折，多见于65岁以上的老年人...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openFemoralNeckFractureGuide()">成人股骨颈骨折诊治指南</h4>
+                  <p>权威的骨科专业指南。重点在于治疗方式的选择：根据患者年龄（如以65岁为界）、骨折类型、移位程度来决定采用保守治疗、内固定还是髋关节置换。</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (股骨颈骨折)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>股骨颈骨折X线诊断图谱</h4>
+                <p>详细介绍股骨颈骨折在X线上的表现，包括Garden分型、骨折线走向、移位程度等诊断要点...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>股骨颈</span>
+                  <span>骨折</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>股骨颈骨折CT三维重建诊断</h4>
+                <p>通过CT三维重建技术评估股骨颈骨折的立体结构，判断骨折类型和手术入路选择...</p>
+                <div class="tag-list">
+                  <span>CT</span>
+                  <span>三维重建</span>
+                  <span>股骨颈</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (股骨颈骨折)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：老年股骨颈骨折的人工髋关节置换术治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                72岁女性，跌倒后右髋部疼痛、活动受限。X线显示右股骨颈基底部骨折，Garden III型。入院后完善检查，排除手术禁忌症，行右侧人工髋关节置换术...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：王教授 (关节外科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-09-10</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-09-25</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (股骨颈骨折)</h3>
             <div class="qa-item">
@@ -822,10 +712,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (桡骨远端骨折)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>桡骨远端骨折是指发生在桡骨远端2-3cm范围内的骨折，是上肢最常见的骨折之一...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openDistalRadiusFractureGuide()">桡骨远端骨折中西医结合诊疗指南</h4>
+                  <p>本提供了中西医结合的方案。西医治疗包括闭合复位、外固定、手术等；中医治疗根据早、中、后期进行辨证施治（如早期活血化瘀、中期接骨续筋、后期补益肝肾），并包含康复指导。</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (桡骨远端骨折)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>桡骨远端骨折X线诊断图谱</h4>
+                <p>详细介绍Colles骨折、Smith骨折、Barton骨折等桡骨远端骨折类型在X线上的特征表现...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>桡骨远端</span>
+                  <span>骨折</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>桡骨远端骨折CT三维重建诊断</h4>
+                <p>通过CT三维重建评估关节面平整度、骨折块移位情况，指导手术治疗方案...</p>
+                <div class="tag-list">
+                  <span>CT</span>
+                  <span>三维重建</span>
+                  <span>关节面</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (桡骨远端骨折)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：老年桡骨远端骨折的手法复位与内固定治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                68岁女性，跌倒后右腕部疼痛、肿胀、畸形。X线显示右桡骨远端骨折，关节面受累。入院后行手法复位，复位后复查X线显示关节面不平整，改为手术治疗...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：张教授 (创伤骨科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-09-15</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-09-28</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (桡骨远端骨折)</h3>
             <div class="qa-item">
@@ -856,10 +809,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (脊柱压缩性骨折)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>脊柱压缩性骨折是指椎体在垂直方向受到压缩力导致的骨折，常见于胸腰椎...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openSpinalCompressionFractureGuide()">脊柱压缩性骨折默沙东诊疗指南</h4>
+                  <p>提供了清晰的诊疗路径。包括诊断（X线、DXA骨密度测量）、治疗（镇痛、支具、理疗）以及两种微创手术的详细介绍（椎体成形术和椎体后凸成形术，即注入骨水泥）。</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (脊柱压缩性骨折)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>脊柱压缩性骨折X线诊断图谱</h4>
+                <p>详细介绍脊柱压缩性骨折在X线上的表现，包括压缩程度、椎体高度变化、骨折线走向等诊断要点...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>脊柱</span>
+                  <span>压缩性骨折</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>脊柱压缩性骨折MRI诊断图谱</h4>
+                <p>通过MRI评估椎体新鲜或陈旧骨折、骨髓水肿程度、神经压迫情况，指导治疗方案选择...</p>
+                <div class="tag-list">
+                  <span>MRI</span>
+                  <span>脊柱</span>
+                  <span>骨髓水肿</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (脊柱压缩性骨折)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：老年骨质疏松性脊柱压缩性骨折的椎体成形术治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                75岁女性，轻微外伤后腰背部疼痛，活动受限。X线和MRI显示L2椎体压缩性骨折，压缩高度约30%，骨髓水肿明显。入院后完善检查，行L2椎体成形术治疗...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：刘教授 (脊柱外科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-09-20</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-10-01</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (脊柱压缩性骨折)</h3>
             <div class="qa-item">
@@ -890,10 +906,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (踝关节骨折)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>踝关节骨折是指涉及踝关节的胫骨远端、腓骨远端或距骨的骨折...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openAnkleFractureGuide()">亚洲专科医生患者教育踝关节骨折常见问题</h4>
+                  <p>这份资料清晰地区分了治疗方案：无移位骨折（裂缝）采用石膏固定；移位性骨折则必须进行开放式手术（使用螺丝钉和钢板）来复位固定。</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (踝关节骨折)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>踝关节骨折X线诊断图谱</h4>
+                <p>详细介绍踝关节骨折在X线上的表现，包括内踝、外踝、后踝骨折的诊断要点，韧带联合分离的评估...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>踝关节</span>
+                  <span>骨折</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>踝关节骨折CT三维重建诊断</h4>
+                <p>通过CT三维重建评估关节面平整度、骨折块大小和移位程度，指导手术治疗方案...</p>
+                <div class="tag-list">
+                  <span>CT</span>
+                  <span>三维重建</span>
+                  <span>关节面</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (踝关节骨折)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：踝关节三踝骨折的手术治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                45岁男性，运动时扭伤左踝部，疼痛、肿胀、活动受限。X线显示左踝关节三踝骨折，韧带联合分离。入院后完善检查，行踝关节骨折切开复位内固定术...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：陈教授 (创伤骨科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-09-25</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-10-05</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (踝关节骨折)</h3>
             <div class="qa-item">
@@ -924,10 +1003,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (肱骨外科颈骨折)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>肱骨外科颈骨折是指发生在肱骨解剖颈下方2-3cm处的骨折...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openSurgicalNeckFractureGuide()">肱骨外科颈骨折求医宝典</h4>
+                  <p>提供了该骨折的经典治疗方案。根据骨折类型（无移位、外展型、内收型）选择不同的固定方式（三角巾悬吊、贴胸固定、肩人字石膏）或手术治疗（开放复位内固定）。</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (肱骨外科颈骨折)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>肱骨外科颈骨折X线诊断图谱</h4>
+                <p>详细介绍肱骨外科颈骨折在X线上的表现，包括Neer分型、骨折块移位情况等诊断要点...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>肱骨</span>
+                  <span>骨折</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>肱骨外科颈骨折CT三维重建诊断</h4>
+                <p>通过CT三维重建评估骨折块数量和移位程度，判断是否需要手术治疗...</p>
+                <div class="tag-list">
+                  <span>CT</span>
+                  <span>三维重建</span>
+                  <span>Neer分型</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (肱骨外科颈骨折)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：肱骨外科颈四部分骨折的手术治疗与康复</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                55岁男性，跌倒后右肩部疼痛、活动受限。X线和CT显示右肱骨外科颈四部分骨折，Neer IV型。入院后完善检查，行肱骨外科颈骨折切开复位内固定术...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：赵教授 (创伤骨科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-09-30</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-10-08</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (肱骨外科颈骨折)</h3>
             <div class="qa-item">
@@ -958,10 +1100,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (骨肉瘤)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>骨肉瘤是最常见的原发性恶性骨肿瘤，好发于青少年，多见于长骨干骺端...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openOsteosarcomaCACAGuide()">中国肿瘤整合诊治指南（CACA） 骨肉瘤</h4>
+                  <p>这是由中国抗癌协会发布的整合诊治指南（CACA指南），由骨肿瘤和骨转移瘤专业委员会编写，代表了国内的权威观点。</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (骨肉瘤)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>骨肉瘤X线诊断图谱</h4>
+                <p>详细介绍骨肉瘤在X线上的表现，包括骨质破坏、骨膜反应、Codman三角、日光射线征等特征性影像学表现...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>骨肉瘤</span>
+                  <span>恶性骨肿瘤</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>骨肉瘤MRI诊断图谱</h4>
+                <p>通过MRI评估肿瘤范围、软组织侵犯、骨髓受累情况，指导手术方案设计和预后评估...</p>
+                <div class="tag-list">
+                  <span>MRI</span>
+                  <span>骨肉瘤</span>
+                  <span>肿瘤分期</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (骨肉瘤)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：青少年股骨干骨肉瘤的新辅助化疗与保肢手术</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                16岁男性，右大腿疼痛3个月，夜间痛明显。X线和MRI显示右股骨远端骨肉瘤，Enneking IIB期。术前完成3周期新辅助化疗，肿瘤明显缩小，行保肢手术...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：周教授 (骨肿瘤科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-10-05</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-10-15</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (骨肉瘤)</h3>
             <div class="qa-item">
@@ -992,10 +1197,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (骨软骨瘤)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>骨软骨瘤是最常见的良性骨肿瘤，约占良性骨肿瘤的50%...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openOsteochondromaPMPHGuide()">人卫临床助手 - 疾病知识库</h4>
+                  <p>这份资料详细描述了骨软骨瘤的病理特征（如软骨帽）。</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (骨软骨瘤)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>骨软骨瘤X线诊断图谱</h4>
+                <p>详细介绍骨软骨瘤在X线上的特征性表现，包括带蒂型、宽基底型，以及与骨表面的连接方式...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>骨软骨瘤</span>
+                  <span>良性骨肿瘤</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>骨软骨瘤CT三维重建诊断</h4>
+                <p>通过CT三维重建评估骨软骨瘤的立体形态、软骨帽厚度，判断是否需要手术切除...</p>
+                <div class="tag-list">
+                  <span>CT</span>
+                  <span>三维重建</span>
+                  <span>软骨帽</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (骨软骨瘤)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：股骨远端骨软骨瘤的手术切除治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                25岁男性，右膝外侧触及骨性包块，活动时疼痛。X线和CT显示股骨远端骨软骨瘤，软骨帽增厚。考虑恶变可能，行手术完整切除...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：吴教授 (骨肿瘤科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-10-10</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-10-18</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (骨软骨瘤)</h3>
             <div class="qa-item">
@@ -1026,10 +1294,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (骨巨细胞瘤)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>骨巨细胞瘤是一种具有局部侵袭性的骨肿瘤，好发于长骨干骺端...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('giant-cell-tumor-guide')">骨巨细胞瘤诊疗指南</h4>
+                  <p>本指南详细介绍了骨巨细胞瘤的诊断、Campanacci分级、手术方式选择（刮除vs切除）和术后辅助治疗，特别强调了降低复发率的策略...</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (骨巨细胞瘤)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>骨巨细胞瘤X线诊断图谱</h4>
+                <p>详细介绍骨巨细胞瘤在X线上的特征性表现，包括偏心性溶骨性破坏、皂泡样改变、皮质变薄等...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>骨巨细胞瘤</span>
+                  <span>溶骨性破坏</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>骨巨细胞瘤MRI诊断图谱</h4>
+                <p>通过MRI评估肿瘤范围、软组织侵犯、关节面受累情况，指导手术方案设计...</p>
+                <div class="tag-list">
+                  <span>MRI</span>
+                  <span>骨巨细胞瘤</span>
+                  <span>肿瘤范围</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (骨巨细胞瘤)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：桡骨远端骨巨细胞瘤的刮除植骨术治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                32岁女性，左腕部疼痛、肿胀2个月。X线和MRI显示左桡骨远端骨巨细胞瘤，Campanacci II级。行病灶刮除植骨术，术后配合辅助治疗...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：孙教授 (骨肿瘤科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-10-15</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-10-22</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (骨巨细胞瘤)</h3>
             <div class="qa-item">
@@ -1060,10 +1391,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (转移性骨肿瘤)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>转移性骨肿瘤是其他部位的恶性肿瘤转移到骨骼形成的肿瘤...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('metastatic-bone-tumor-guide')">转移性骨肿瘤诊疗指南</h4>
+                  <p>本指南详细介绍了转移性骨肿瘤的诊断、常见原发部位、综合治疗方案，特别强调了病理性骨折的预防和处理...</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (转移性骨肿瘤)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>转移性骨肿瘤X线诊断图谱</h4>
+                <p>详细介绍转移性骨肿瘤在X线上的表现，包括溶骨性、成骨性和混合性转移的特征性影像学表现...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>转移性骨肿瘤</span>
+                  <span>骨转移</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>转移性骨肿瘤PET-CT诊断</h4>
+                <p>通过PET-CT全面评估骨转移灶分布、原发肿瘤定位，指导综合治疗方案制定...</p>
+                <div class="tag-list">
+                  <span>PET-CT</span>
+                  <span>骨转移</span>
+                  <span>肿瘤分期</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (转移性骨肿瘤)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：乳腺癌骨转移的综合治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                58岁女性，乳腺癌术后3年，腰背部疼痛。PET-CT显示多发骨转移，包括椎体、骨盆。制定综合治疗方案，包括化疗、放疗、双膦酸盐治疗和手术预防病理性骨折...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：郑教授 (骨肿瘤科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-10-20</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-10-28</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (转移性骨肿瘤)</h3>
             <div class="qa-item">
@@ -1094,10 +1488,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (软骨肉瘤)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>软骨肉瘤是起源于软骨组织的恶性肿瘤，是第二常见的原发性恶性骨肿瘤...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('chondrosarcoma-guide')">软骨肉瘤诊疗指南</h4>
+                  <p>本指南详细介绍了软骨肉瘤的诊断、分级、手术治疗策略，特别强调了完整切除的重要性和辅助放疗的作用...</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (软骨肉瘤)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>软骨肉瘤X线诊断图谱</h4>
+                <p>详细介绍软骨肉瘤在X线上的表现，包括溶骨性破坏、软骨钙化、骨膜反应等特征性影像学表现...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>软骨肉瘤</span>
+                  <span>恶性骨肿瘤</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>软骨肉瘤MRI诊断图谱</h4>
+                <p>通过MRI评估软骨肉瘤的范围、软组织侵犯、肿瘤分级，指导手术方案设计...</p>
+                <div class="tag-list">
+                  <span>MRI</span>
+                  <span>软骨肉瘤</span>
+                  <span>肿瘤分级</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (软骨肉瘤)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：骨盆软骨肉瘤的完整切除与重建</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                48岁男性，左髋部疼痛、肿胀半年。X线和MRI显示左髂骨软骨肉瘤，Enneking IB期。行肿瘤完整切除，髋关节重建术，术后辅助放疗...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：钱教授 (骨肿瘤科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-10-25</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-11-02</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (软骨肉瘤)</h3>
             <div class="qa-item">
@@ -1128,10 +1585,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (骨质疏松症)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>骨质疏松症是一种以骨密度降低、骨微结构破坏为特征的代谢性骨病...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('osteoporosis-guide')">骨质疏松症诊疗指南</h4>
+                  <p>本指南详细介绍了骨质疏松症的诊断标准、风险评估、药物治疗和非药物治疗方案，特别强调了骨折风险的评估和预防策略...</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (骨质疏松症)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>骨密度检测（DXA）诊断标准</h4>
+                <p>详细介绍双能X线吸收测定法（DXA）的检测方法、T值和Z值的意义，骨质疏松症的诊断标准和分级...</p>
+                <div class="tag-list">
+                  <span>DXA</span>
+                  <span>骨密度</span>
+                  <span>骨质疏松</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>骨质疏松症的影像学表现</h4>
+                <p>通过X线、CT、MRI评估骨密度降低、骨小梁稀疏、椎体压缩性骨折等影像学表现...</p>
+                <div class="tag-list">
+                  <span>影像学</span>
+                  <span>骨小梁</span>
+                  <span>压缩性骨折</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (骨质疏松症)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：绝经后女性骨质疏松症的综合治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                65岁女性，绝经15年，腰背部疼痛2年。DXA显示腰椎T值-2.8，髋部T值-2.5，诊断为骨质疏松症。制定综合治疗方案，包括钙剂、维生素D、双膦酸盐治疗和康复锻炼...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：冯教授 (内分泌科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-10-28</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-11-05</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (骨质疏松症)</h3>
             <div class="qa-item">
@@ -1162,10 +1682,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (痛风)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>痛风是由于尿酸盐晶体沉积在关节及其周围组织引起的炎症性疾病...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('gout-guide')">痛风诊疗指南</h4>
+                  <p>本指南详细介绍了痛风的诊断标准、急性期和缓解期的治疗方案，特别强调了降尿酸治疗的目标和注意事项...</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (痛风)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>痛风性关节炎X线诊断图谱</h4>
+                <p>详细介绍痛风性关节炎在X线上的表现，包括关节周围软组织肿胀、骨质侵蚀、痛风石形成等特征性影像学表现...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>痛风</span>
+                  <span>痛风石</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>双能CT诊断痛风石</h4>
+                <p>通过双能CT准确检测尿酸盐晶体沉积，评估痛风石的大小和分布，指导治疗方案...</p>
+                <div class="tag-list">
+                  <span>双能CT</span>
+                  <span>尿酸盐</span>
+                  <span>痛风石</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (痛风)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：反复发作痛风的规范化降尿酸治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                52岁男性，反复发作第一跖趾关节疼痛5年，血尿酸持续升高。双能CT显示多关节尿酸盐沉积，痛风石形成。制定规范化降尿酸治疗方案，包括饮食控制、药物治疗和定期监测...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：马教授 (风湿免疫科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-11-01</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-11-08</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (痛风)</h3>
             <div class="qa-item">
@@ -1196,10 +1779,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (骨软化症)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>骨软化症是成人的佝偻病，由于维生素D缺乏导致骨基质矿化障碍...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('osteomalacia-guide')">骨软化症诊疗指南</h4>
+                  <p>本指南详细介绍了骨软化症的病因、诊断、维生素D和钙剂的补充方案，特别强调了病因诊断的重要性...</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (骨软化症)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>骨软化症X线诊断图谱</h4>
+                <p>详细介绍骨软化症在X线上的表现，包括骨质密度降低、Looser线（假性骨折）、骨小梁模糊等特征性影像学表现...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>骨软化症</span>
+                  <span>Looser线</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>骨软化症实验室检查</h4>
+                <p>通过检测血清25(OH)D、1,25(OH)2D、血钙、血磷、碱性磷酸酶等指标，评估维生素D缺乏程度和代谢状态...</p>
+                <div class="tag-list">
+                  <span>实验室检查</span>
+                  <span>维生素D</span>
+                  <span>血钙血磷</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (骨软化症)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：成人维生素D缺乏性骨软化症的诊断与治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                45岁女性，长期室内工作，腰背部疼痛、肌无力1年。X线显示Looser线，实验室检查显示严重维生素D缺乏。制定维生素D和钙剂补充方案，配合日晒和康复锻炼...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：秦教授 (内分泌科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-11-05</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-11-12</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (骨软化症)</h3>
             <div class="qa-item">
@@ -1230,10 +1876,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (佝偻病)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>佝偻病是儿童因缺乏维生素D导致骨骼生长发育障碍的疾病...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('rickets-guide')">佝偻病诊疗指南</h4>
+                  <p>本指南详细介绍了佝偻病的病因、诊断、预防和治疗方案，特别强调了早期诊断和预防的重要性...</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (佝偻病)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>佝偻病X线诊断图谱</h4>
+                <p>详细介绍佝偻病在X线上的表现，包括干骺端增宽、毛刷样改变、杯口状变形、骨骺线增宽等特征性影像学表现...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>佝偻病</span>
+                  <span>干骺端</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>佝偻病的临床诊断要点</h4>
+                <p>通过临床体征（方颅、鸡胸、O型腿、X型腿）和实验室检查（25(OH)D、血钙、血磷、碱性磷酸酶）综合诊断...</p>
+                <div class="tag-list">
+                  <span>临床诊断</span>
+                  <span>骨骼畸形</span>
+                  <span>实验室检查</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (佝偻病)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：婴幼儿维生素D缺乏性佝偻病的早期诊断与治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                1岁男婴，多汗、烦躁不安、夜间哭闹3个月。X线显示桡骨远端干骺端增宽、毛刷样改变，实验室检查显示维生素D缺乏。制定维生素D和钙剂补充方案，指导日晒和喂养...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：何教授 (儿科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-11-08</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-11-15</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (佝偻病)</h3>
             <div class="qa-item">
@@ -1264,10 +1973,73 @@
           <div class="content-section">
             <div class="section-header">
               <h3>科普资料 (畸形性骨炎)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
-            <p>畸形性骨炎(Paget病)是一种慢性进行性骨重建异常疾病...</p>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('paget-disease-guide')">畸形性骨炎（Paget病）诊疗指南</h4>
+                  <p>本指南详细介绍了Paget病的病因、诊断、治疗适应症和药物治疗方案，特别强调了双膦酸盐类药物的应用...</p>
+                  
+                </div>
+              </div>
+            </div>
           </div>
 
+          <div class="content-section">
+            <div class="section-header">
+              <h3>骨骼系统影像诊断 (畸形性骨炎)</h3>
+              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="article-grid">
+              <div class="article-card">
+                <h4>Paget病X线诊断图谱</h4>
+                <p>详细介绍Paget病在X线上的特征性表现，包括骨质增厚、骨小梁粗大、骨皮质增厚、骨骼畸形等影像学表现...</p>
+                <div class="tag-list">
+                  <span>X线</span>
+                  <span>Paget病</span>
+                  <span>骨重建异常</span>
+                </div>
+              </div>
+              <div class="article-card">
+                <h4>Paget病骨扫描诊断</h4>
+                <p>通过骨扫描评估Paget病的活动程度、多骨受累情况，指导治疗方案制定和疗效评估...</p>
+                <div class="tag-list">
+                  <span>骨扫描</span>
+                  <span>Paget病</span>
+                  <span>骨代谢</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-section">
+            <div class="section-header">
+              <h3>经典病例讨论 (畸形性骨炎)</h3>
+              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="case-study-card">
+              <div class="case-study-header">
+                <h4>案例：多骨受累Paget病的双膦酸盐治疗</h4>
+                <span class="tag-hot">热议</span>
+              </div>
+              <div class="case-study-body">
+                68岁男性，骨痛、下肢弯曲2年。X线和骨扫描显示骨盆、股骨、胫骨多处Paget病，碱性磷酸酶显著升高。制定双膦酸盐治疗方案，定期监测疗效...
+              </div>
+              <div class="case-study-footer">
+                <span><i class="fas fa-user-md"></i> 主持专家：宋教授 (内分泌科)</span>
+                <span><i class="fas fa-clock"></i> 发表时间: 2023-11-12</span>
+              </div>
+              <div class="case-study-actions">
+                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
+                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
+                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
+                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-11-20</span>
+              </div>
+            </div>
+          </div>
+          
           <div class="qa-section">
             <h3>简易疾病QA (畸形性骨炎)</h3>
             <div class="qa-item">
@@ -1572,9 +2344,57 @@ const openPDF2 = (pdfName: string) => {
 }
 
 const openPDF3 = (pdfName: string) => {
-  // 腰椎间盘突出症中医循证实践指南的PDF链接
-  const pdfUrl = 'https://www.cacm.org.cn/wp-content/uploads/2023/01/%E8%85%B0%E6%A4%8E%E9%97%B4%E7%9B%98%E7%AA%81%E5%87%BA%E7%97%87%E4%B8%AD%E5%8C%BB%E5%BE%AA%E8%AF%81%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97%E8%8D%89%E6%A1%88.pdf'
-  window.open(pdfUrl, '_blank')
+  try {
+    // 腰椎间盘突出症中医循证实践指南的PDF链接
+    // 备用链接（如果主链接失效，可以尝试这个）
+    const pdfUrl = 'https://www.cacm.org.cn/wp-content/uploads/2023/01/%E8%85%B0%E6%A4%8E%E9%97%B4%E7%9B%98%E7%AA%81%E5%87%BA%E7%97%87%E4%B8%AD%E5%8C%BB%E5%BE%AA%E8%AF%81%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97%E8%8D%89%E6%A1%88.pdf'
+    
+    // 尝试在新窗口打开PDF
+    const newWindow = window.open(pdfUrl, '_blank', 'noopener,noreferrer')
+    
+    // 检查新窗口是否被阻止（浏览器弹窗阻止器）
+    if (!newWindow || newWindow.closed) {
+      ElMessageBox.confirm(
+        '浏览器阻止了弹窗打开。您可以：\n1. 允许浏览器弹窗\n2. 复制链接手动打开\n\n链接：' + pdfUrl,
+        'PDF打开失败',
+        {
+          confirmButtonText: '复制链接',
+          cancelButtonText: '取消',
+          type: 'warning',
+          dangerouslyUseHTMLString: false
+        }
+      ).then(() => {
+        // 尝试复制链接到剪贴板
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(pdfUrl).then(() => {
+            ElMessage.success('链接已复制到剪贴板，您可以粘贴到浏览器地址栏打开')
+          }).catch(() => {
+            ElMessage.warning('无法复制链接，请手动复制：' + pdfUrl)
+          })
+        } else {
+          // 备用方案：使用旧的复制方法
+          const textArea = document.createElement('textarea')
+          textArea.value = pdfUrl
+          textArea.style.position = 'fixed'
+          textArea.style.left = '-999999px'
+          document.body.appendChild(textArea)
+          textArea.select()
+          try {
+            document.execCommand('copy')
+            ElMessage.success('链接已复制到剪贴板')
+          } catch (err) {
+            ElMessage.warning('无法复制链接，请手动复制：' + pdfUrl)
+          }
+          document.body.removeChild(textArea)
+        }
+      }).catch(() => {
+        // 用户取消
+      })
+    }
+  } catch (error) {
+    console.error('打开PDF失败:', error)
+    ElMessage.error('打开PDF文件时发生错误：' + (error instanceof Error ? error.message : '未知错误'))
+  }
 }
 
 const openPDF4 = (pdfName: string) => {
@@ -1616,6 +2436,48 @@ const openPDF8 = (pdfName: string) => {
 const openWebPage2 = (pageName: string) => {
   // 中国成人股骨头坏死临床诊疗指南（2020）的网页链接
   const webUrl = 'https://cmab.yiigle.com/uploads/guide_html/%E4%B8%AD%E5%9B%BD%E6%88%90%E4%BA%BA%E8%82%A1%E9%AA%A8%E5%A4%B4%E5%9D%8F%E6%AD%BB%E4%B8%B4%E5%BA%8A%E8%AF%8A%E7%96%97%E6%8C%87%E5%8D%97%EF%BC%882020%EF%BC%89.html'
+  window.open(webUrl, '_blank')
+}
+
+const openFemoralNeckFractureGuide = () => {
+  // 成人股骨颈骨折诊治指南的网页链接
+  const webUrl = 'https://seleguide.yiigle.com/uploads/guide_html/%E6%88%90%E4%BA%BA%E8%82%A1%E9%AA%A8%E9%A2%88%E9%AA%A8%E6%8A%98%E8%AF%8A%E6%B2%BB%E6%8C%87%E5%8D%97.html'
+  window.open(webUrl, '_blank')
+}
+
+const openDistalRadiusFractureGuide = () => {
+  // 桡骨远端骨折中西医结合诊疗指南的PDF链接
+  const pdfUrl = 'https://www.cacm.org.cn/wp-content/uploads/2024/08/%E6%A1%A1%E9%AA%A8%E8%BF%9C%E7%AB%AF%E9%AA%A8%E6%8A%98%E4%B8%AD%E8%A5%BF%E5%8C%BB%E7%BB%93%E5%90%88%E8%AF%8A%E7%96%97%E6%8C%87%E5%8D%97-%E5%85%AC%E7%A4%BA%E7%A8%BF.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openSpinalCompressionFractureGuide = () => {
+  // 脊柱压缩性骨折默沙东诊疗指南的网页链接
+  const webUrl = 'https://www.msdmanuals.cn/home/injuries-and-poisoning/fractures/compression-fractures-of-the-spine'
+  window.open(webUrl, '_blank')
+}
+
+const openAnkleFractureGuide = () => {
+  // 亚洲专科医生患者教育踝关节骨折常见问题的PDF链接
+  const pdfUrl = 'https://asiamedicalspecialists.hk/download/article/69/sc/Ankle_fracture_SC_SW_20201204.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openSurgicalNeckFractureGuide = () => {
+  // 肱骨外科颈骨折求医宝典的网页链接
+  const webUrl = 'https://www.xqhospital.com.cn/dictionary/dictionary0202.asp?filename=1501004&keyword=%EB%C5%B9%C7%CD%E2%BF%C6%BE%B1%B9%C7%D5%DB%A3%BB%C1%D1%B7%EC%B9%C7%D5%DB'
+  window.open(webUrl, '_blank')
+}
+
+const openOsteosarcomaCACAGuide = () => {
+  // 中国肿瘤整合诊治指南（CACA）骨肉瘤的网页链接
+  const webUrl = 'https://cacaguidelines.cacakp.com/pdflist/detail?id=48'
+  window.open(webUrl, '_blank')
+}
+
+const openOsteochondromaPMPHGuide = () => {
+  // 人卫临床助手 - 疾病知识库的网页链接
+  const webUrl = 'https://ccdas.pmphai.com/appdisease/toPcDetail?sessionId=&knowledgeLibPrefix=disease&id=24697'
   window.open(webUrl, '_blank')
 }
 
