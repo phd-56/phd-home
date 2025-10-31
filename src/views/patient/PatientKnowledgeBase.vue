@@ -144,7 +144,6 @@
                 <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'osteochondroma' }]" @click.prevent="selectDisease('osteochondroma')">骨软骨瘤</a></li>
                 <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'giant-cell-tumor' }]" @click.prevent="selectDisease('giant-cell-tumor')">骨巨细胞瘤</a></li>
                 <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'metastatic-bone-tumor' }]" @click.prevent="selectDisease('metastatic-bone-tumor')">转移性骨肿瘤</a></li>
-                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'chondrosarcoma' }]" @click.prevent="selectDisease('chondrosarcoma')">软骨肉瘤</a></li>
               </ul>
             </li>
             <li class="nav-item" :class="{ 'is-expanded': expandedItems.includes('metabolic') }">
@@ -1300,8 +1299,8 @@
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('giant-cell-tumor-guide')">骨巨细胞瘤诊疗指南</h4>
-                  <p>本指南详细介绍了骨巨细胞瘤的诊断、Campanacci分级、手术方式选择（刮除vs切除）和术后辅助治疗，特别强调了降低复发率的策略...</p>
+                  <h4 class="guide-title-link" @click="openGiantCellTumorGuide()">骨巨细胞瘤诊疗指南(CSCO, 2021版)</h4>
+                  <p>本指南详细提供了标准的诊断步骤（X线、CT、MRI、胸部CT平扫以排查肺转移）和分期。.</p>
                   
                 </div>
               </div>
@@ -1397,8 +1396,8 @@
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('metastatic-bone-tumor-guide')">转移性骨肿瘤诊疗指南</h4>
-                  <p>本指南详细介绍了转移性骨肿瘤的诊断、常见原发部位、综合治疗方案，特别强调了病理性骨折的预防和处理...</p>
+                  <h4 class="guide-title-link" @click="openMetastaticBoneTumorGuide()">骨转移瘤外科治疗专家共识</h4>
+                  <p>本共识重点关注骨转移的外科治疗。目的是防止或固定病理性骨折，恢复肢体功能。强调使用髓内钉、人工假体和骨水泥进行重建。</p>
                   
                 </div>
               </div>
@@ -1482,104 +1481,6 @@
             </div>
           </div>
         </div>
-
-        <!-- 软骨肉瘤内容 -->
-        <div v-else-if="activeDisease === 'chondrosarcoma'" class="content-page is-active">
-          <div class="content-section">
-            <div class="section-header">
-              <h3>科普资料 (软骨肉瘤)</h3>
-              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="guide-list">
-              <div class="guide-item">
-                <i class="fas fa-file-medical guide-icon"></i>
-                <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('chondrosarcoma-guide')">软骨肉瘤诊疗指南</h4>
-                  <p>本指南详细介绍了软骨肉瘤的诊断、分级、手术治疗策略，特别强调了完整切除的重要性和辅助放疗的作用...</p>
-                  
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="content-section">
-            <div class="section-header">
-              <h3>骨骼系统影像诊断 (软骨肉瘤)</h3>
-              <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="article-grid">
-              <div class="article-card">
-                <h4>软骨肉瘤X线诊断图谱</h4>
-                <p>详细介绍软骨肉瘤在X线上的表现，包括溶骨性破坏、软骨钙化、骨膜反应等特征性影像学表现...</p>
-                <div class="tag-list">
-                  <span>X线</span>
-                  <span>软骨肉瘤</span>
-                  <span>恶性骨肿瘤</span>
-                </div>
-              </div>
-              <div class="article-card">
-                <h4>软骨肉瘤MRI诊断图谱</h4>
-                <p>通过MRI评估软骨肉瘤的范围、软组织侵犯、肿瘤分级，指导手术方案设计...</p>
-                <div class="tag-list">
-                  <span>MRI</span>
-                  <span>软骨肉瘤</span>
-                  <span>肿瘤分级</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="content-section">
-            <div class="section-header">
-              <h3>经典病例讨论 (软骨肉瘤)</h3>
-              <a href="#" class="see-all">查看全部案例 <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="case-study-card">
-              <div class="case-study-header">
-                <h4>案例：骨盆软骨肉瘤的完整切除与重建</h4>
-                <span class="tag-hot">热议</span>
-              </div>
-              <div class="case-study-body">
-                48岁男性，左髋部疼痛、肿胀半年。X线和MRI显示左髂骨软骨肉瘤，Enneking IB期。行肿瘤完整切除，髋关节重建术，术后辅助放疗...
-              </div>
-              <div class="case-study-footer">
-                <span><i class="fas fa-user-md"></i> 主持专家：钱教授 (骨肿瘤科)</span>
-                <span><i class="fas fa-clock"></i> 发表时间: 2023-10-25</span>
-              </div>
-              <div class="case-study-actions">
-                <a href="#"><i class="fas fa-eye"></i> 交流详情</a>
-                <a href="#"><i class="fas fa-comments"></i> 参与讨论</a>
-                <a href="#"><i class="fas fa-bookmark"></i> 收藏案例</a>
-                <span style="margin-left: auto; color: #aaa; font-size: 12px;">最后更新: 2023-11-02</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="qa-section">
-            <h3>简易疾病QA (软骨肉瘤)</h3>
-            <div class="qa-item">
-              <div class="qa-question">
-                <span class="qa-icon q">Q:</span>
-                <p>软骨肉瘤有什么症状？</p>
-              </div>
-              <div class="qa-answer">
-                <span class="qa-icon a">A:</span>
-                <p>主要表现为局部疼痛和肿胀，生长缓慢，病程较长。疼痛多为隐痛或钝痛，夜间可加重。</p>
-              </div>
-            </div>
-            <div class="qa-item">
-              <div class="qa-question">
-                <span class="qa-icon q">Q:</span>
-                <p>软骨肉瘤能治愈吗？</p>
-              </div>
-              <div class="qa-answer">
-                <span class="qa-icon a">A:</span>
-                <p>早期软骨肉瘤预后较好，5年生存率可达70%以上。治疗以手术切除为主，配合辅助放疗。分化差的软骨肉瘤预后较差。</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- 骨质疏松症内容 -->
         <div v-else-if="activeDisease === 'osteoporosis'" class="content-page is-active">
           <div class="content-section">
@@ -1591,8 +1492,8 @@
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('osteoporosis-guide')">骨质疏松症诊疗指南</h4>
-                  <p>本指南详细介绍了骨质疏松症的诊断标准、风险评估、药物治疗和非药物治疗方案，特别强调了骨折风险的评估和预防策略...</p>
+                  <h4 class="guide-title-link" @click="openOsteoporosisGuide()">《原发性骨质疏松症诊疗指南（2022）》 要点解读</h4>
+                  <p>这是国内最权威的指南。内容涵盖了诊断标准、风险分层，并提供了详细的药物治疗方案以及中成药的应用。</p>
                   
                 </div>
               </div>
@@ -2252,7 +2153,7 @@ const guideData = {
     views: '1,567',
     content: `
       <h3>1. 分类</h3>
-      <p>骨肿瘤分为良性（骨软骨瘤、骨囊肿、骨纤维结构不良等）和恶性（骨肉瘤、软骨肉瘤、Ewing肉瘤等）。</p>
+      <p>骨肿瘤分为良性（骨软骨瘤、骨囊肿、骨纤维结构不良等）和恶性（骨肉瘤、Ewing肉瘤等）。</p>
       <h3>2. 临床表现</h3>
       <p>局部疼痛、肿块、病理性骨折。恶性骨肿瘤进展快，可伴发热、体重下降。血清碱性磷酸酶(ALP)升高提示恶性可能。</p>
       <h3>3. 诊断与治疗</h3>
@@ -2479,6 +2380,24 @@ const openOsteochondromaPMPHGuide = () => {
   // 人卫临床助手 - 疾病知识库的网页链接
   const webUrl = 'https://ccdas.pmphai.com/appdisease/toPcDetail?sessionId=&knowledgeLibPrefix=disease&id=24697'
   window.open(webUrl, '_blank')
+}
+
+const openGiantCellTumorGuide = () => {
+  // 骨巨细胞瘤诊疗指南(CSCO, 2021版)的PDF链接
+  const pdfUrl = 'https://njguloulib.yuntsg.com/ueditor/jsp/upload/file/20210608/1623115691687055113.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openMetastaticBoneTumorGuide = () => {
+  // 骨转移瘤外科治疗专家共识的PDF链接
+  const pdfUrl = 'http://medi-guide.meditool.cn/ymtpdf/AC24A6B8-972C-F060-3960-C7CF2926CF38.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openOsteoporosisGuide = () => {
+  // 《原发性骨质疏松症诊疗指南（2022）》 要点解读的PDF链接
+  const pdfUrl = 'https://xhyxzz.pumch.cn/cn/article/pdf/preview/10.12290/xhyxzz.2023-0364.pdf'
+  window.open(pdfUrl, '_blank')
 }
 
 const openGuideDetail = (guideId: string) => {
