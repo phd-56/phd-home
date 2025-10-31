@@ -105,7 +105,7 @@
               <ul class="sub-nav" v-show="expandedItems.includes('spine')">
                 <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'herniation' }]" @click.prevent="selectDisease('herniation')">腰椎间盘突出症</a></li>
                 <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'spondylosis' }]" @click.prevent="selectDisease('spondylosis')">颈椎病</a></li>
-                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'spinal-fracture' }]" @click.prevent="selectDisease('spinal-fracture')">脊柱骨折</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'spinal-fracture' }]" @click.prevent="selectDisease('spinal-fracture')">脊柱骨狭窄</a></li>
                 <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'spinal-deformity' }]" @click.prevent="selectDisease('spinal-deformity')">脊柱侧弯</a></li>
               </ul>
             </li>
@@ -121,23 +121,44 @@
                 <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'anfh' }]" @click.prevent="selectDisease('anfh')">股骨头坏死</a></li>
               </ul>
             </li>
-            <li class="nav-item">
-              <a href="#" :class="['nav-link', 'nav-parent-link', { 'is-active': activeDisease === 'trauma' }]" @click.prevent="selectDisease('trauma')">
-                <i class="fas fa-chevron-right"></i>
+            <li class="nav-item" :class="{ 'is-expanded': expandedItems.includes('trauma') }">
+              <div class="nav-item-title" @click="toggleExpanded('trauma')">
+                <i class="fas fa-chevron-right" :class="{ 'rotated': expandedItems.includes('trauma') }"></i>
                 骨折与创伤
-              </a>
+              </div>
+              <ul class="sub-nav" v-show="expandedItems.includes('trauma')">
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'femoral-neck-fracture' }]" @click.prevent="selectDisease('femoral-neck-fracture')">股骨颈骨折</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'distal-radius-fracture' }]" @click.prevent="selectDisease('distal-radius-fracture')">桡骨远端骨折</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'spinal-compression-fracture' }]" @click.prevent="selectDisease('spinal-compression-fracture')">脊柱压缩性骨折</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'ankle-fracture' }]" @click.prevent="selectDisease('ankle-fracture')">踝关节骨折</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'surgical-neck-fracture' }]" @click.prevent="selectDisease('surgical-neck-fracture')">肱骨外科颈骨折</a></li>
+              </ul>
             </li>
-            <li class="nav-item">
-              <a href="#" :class="['nav-link', 'nav-parent-link', { 'is-active': activeDisease === 'bone-tumor' }]" @click.prevent="selectDisease('bone-tumor')">
-                <i class="fas fa-chevron-right"></i>
+            <li class="nav-item" :class="{ 'is-expanded': expandedItems.includes('bone-tumor') }">
+              <div class="nav-item-title" @click="toggleExpanded('bone-tumor')">
+                <i class="fas fa-chevron-right" :class="{ 'rotated': expandedItems.includes('bone-tumor') }"></i>
                 骨肿瘤
-              </a>
+              </div>
+              <ul class="sub-nav" v-show="expandedItems.includes('bone-tumor')">
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'osteosarcoma' }]" @click.prevent="selectDisease('osteosarcoma')">骨肉瘤</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'osteochondroma' }]" @click.prevent="selectDisease('osteochondroma')">骨软骨瘤</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'giant-cell-tumor' }]" @click.prevent="selectDisease('giant-cell-tumor')">骨巨细胞瘤</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'metastatic-bone-tumor' }]" @click.prevent="selectDisease('metastatic-bone-tumor')">转移性骨肿瘤</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'chondrosarcoma' }]" @click.prevent="selectDisease('chondrosarcoma')">软骨肉瘤</a></li>
+              </ul>
             </li>
-            <li class="nav-item">
-              <a href="#" :class="['nav-link', 'nav-parent-link', { 'is-active': activeDisease === 'metabolic' }]" @click.prevent="selectDisease('metabolic')">
-                <i class="fas fa-chevron-right"></i>
+            <li class="nav-item" :class="{ 'is-expanded': expandedItems.includes('metabolic') }">
+              <div class="nav-item-title" @click="toggleExpanded('metabolic')">
+                <i class="fas fa-chevron-right" :class="{ 'rotated': expandedItems.includes('metabolic') }"></i>
                 代谢性骨病
-              </a>
+              </div>
+              <ul class="sub-nav" v-show="expandedItems.includes('metabolic')">
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'osteoporosis' }]" @click.prevent="selectDisease('osteoporosis')">骨质疏松症</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'gout' }]" @click.prevent="selectDisease('gout')">痛风</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'osteomalacia' }]" @click.prevent="selectDisease('osteomalacia')">骨软化症</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'rickets' }]" @click.prevent="selectDisease('rickets')">佝偻病</a></li>
+                <li><a href="#" :class="['nav-link', { 'is-active': activeDisease === 'paget-disease' }]" @click.prevent="selectDisease('paget-disease')">畸形性骨炎 (Paget病)</a></li>
+              </ul>
             </li>
           </ul>
           <div class="sidebar-footer">
@@ -151,43 +172,24 @@
           <div v-if="activeDisease === 'herniation'" class="content-page is-active">
             <div class="content-section">
               <div class="section-header">
-                <h3>推荐的专业指南 (腰椎)</h3>
+                <h3>科普资料 (腰椎)</h3>
                 <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
               </div>
               <div class="guide-list">
                 <div class="guide-item">
                   <i class="fas fa-file-medical guide-icon"></i>
                   <div class="guide-content">
-                    <h4 class="guide-title-link" @click="openGuideDetail('herniation-2023')">腰椎间盘突出症诊疗指南 (2023版)</h4>
-                    <p>本指南由中华医学会骨科学分会编写。系统阐述了腰椎间盘突出症的流行病学、发病机制、临床表现、影像学诊断...</p>
-                    <div class="guide-meta">
-                      <span><i class="fas fa-calendar"></i> 2023-01-10</span>
-                      <span><i class="fas fa-eye"></i> 1,893 查看</span>
-                      <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                    </div>
-                    <!-- 原地展开的详情 -->
-                    <div v-if="currentGuideId === 'herniation-2023' && showGuideDetail" class="guide-detail-expanded">
-                      <div class="guide-detail-content">
-                        <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                        <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                          <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                          <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                        </div>
-                        <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                      </div>
-                    </div>
+                    <h4 class="guide-title-link" @click="openPDF3('腰椎间盘突出症中医循证实践指南.pdf')">腰椎间盘突出症中医循证实践指南</h4>
+                    <p>基于循证医学证据的中医诊疗指南。</p>
+                  
                   </div>
                 </div>
                 <div class="guide-item">
                   <i class="fas fa-file-medical guide-icon"></i>
                   <div class="guide-content">
-                    <h4 class="guide-title-link" @click="openGuideDetail('meniscus-2023')">中国半月板损伤诊疗指南 (2023版)</h4>
-                    <p>本指南由中华医学会骨科学分会关节镜学组组织编写。系统阐述了半月板损伤的诊断标准、影像学表现、治疗方案...</p>
-                    <div class="guide-meta">
-                      <span><i class="fas fa-calendar"></i> 2023-03-15</span>
-                      <span><i class="fas fa-eye"></i> 3,452 查看</span>
-                      <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                    </div>
+                    <h4 class="guide-title-link" @click="openPDF4('腰椎间盘突出症诊疗指南.pdf')">腰椎间盘突出症诊疗指南</h4>
+                    <p>指南从腰椎间盘突出症的定义、自然病程、症状和体征、辅助检查、诊断标准、保守治疗、手术治疗、手术疗效评估、手术效果的影响因素等方面阐述了腰椎间盘突出症的诊疗措施，以期为腰椎间盘突出症的诊断和治疗提供可靠的临床理论依据。</p>
+                   
                   </div>
                 </div>
               </div>
@@ -209,7 +211,7 @@
                   </div>
                 </div>
                 <div class="article-card">
-                  <h4>脊柱骨折X线诊断图谱</h4>
+                  <h4>脊柱骨狭窄X线诊断图谱</h4>
                   <p>对比稳定性骨折、不稳定性骨折、Chance骨折等常见类型的X线表现...</p>
                   <div class="tag-list">
                     <span>X线</span>
@@ -278,54 +280,24 @@
         <div v-else-if="activeDisease === 'spondylosis'" class="content-page is-active">
           <div class="content-section">
             <div class="section-header">
-              <h3>推荐的专业指南 (颈椎)</h3>
+              <h3>科普资料 (颈椎)</h3>
               <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="guide-list">
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('spondylosis-2022')">颈椎病诊疗指南 (2022版)</h4>
-                  <p>本指南由中华医学会骨科学分会发布，涵盖了脊髓型、神经根型颈椎病的诊断标准、阶梯治疗和手术时机...</p>
-                  <div class="guide-meta">
-                    <span><i class="fas fa-calendar"></i> 2022-10-18</span>
-                    <span><i class="fas fa-eye"></i> 6,210 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <!-- 原地展开的详情 -->
-                  <div v-if="currentGuideId === 'spondylosis-2022' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
-                  </div>
+                  <h4 class="guide-title-link" @click="openPDF2('颈椎病中西医结合诊疗专家共识.pdf')">颈椎病中西医结合诊疗专家共识</h4>
+                  <p>本共识综合中西医领域专家观点，就颈椎病的诊断与治疗形成了中西医结合的共识性意见，旨在为临床工作提供参考。</p>
+                  
                 </div>
               </div>
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('csm-consensus')">脊髓型颈椎病(CSM)诊断与治疗专家共识</h4>
-                  <p>针对脊髓型颈椎病的早期识别、影像学评估（T2高信号）、手术入路选择（前路ACDF/ACCF，后路）提供了详细建议...</p>
-                  <div class="guide-meta">
-                    <span><i class="fas fa-calendar"></i> 2023-02-05</span>
-                    <span><i class="fas fa-eye"></i> 4,119 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <!-- 原地展开的详情 -->
-                  <div v-if="currentGuideId === 'csm-consensus' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
-                  </div>
+                  <h4 class="guide-title-link" @click="openPDF('脊髓型颈椎病中西医结合诊疗指南.pdf')">脊髓型颈椎病中西医结合诊疗指南</h4>
+                  <p>由中国中西医结合学会骨伤科专业委员会制定，包含诊断要点、病情评估、中医辨证、手术指征与时机、中西医结合治疗及术后康复等内容。</p>
+                  
                 </div>
               </div>
             </div>
@@ -409,35 +381,19 @@
           </div>
         </div>
 
-        <!-- 脊柱骨折内容 -->
+        <!-- 脊柱骨狭窄内容 -->
         <div v-else-if="activeDisease === 'spinal-fracture'" class="content-page is-active">
           <div class="content-section">
             <div class="section-header">
-              <h3>推荐的专业指南 (脊柱骨折)</h3>
+              <h3>科普资料 (脊柱骨狭窄)</h3>
               <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="guide-list">
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('spinal-fracture-2023')">脊柱骨折诊疗指南 (2023版)</h4>
-                  <p>本指南详细介绍了脊柱骨折的分类、诊断标准、保守治疗和手术治疗的适应症，特别强调了稳定性评估的重要性...</p>
-                  <div class="guide-meta">
-                    <span><i class="fas fa-calendar"></i> 2023-04-20</span>
-                    <span><i class="fas fa-eye"></i> 2,856 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <!-- 原地展开的详情 -->
-                  <div v-if="currentGuideId === 'spinal-fracture-2023' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
-                  </div>
+                  <h4 class="guide-title-link" @click="openPDF5('腰椎管狭窄症中西医结合诊疗指南.pdf')">腰椎管狭窄症中西医结合诊疗指南</h4>
+                  <p>本指南详细提供了腰椎管狭窄症的诊断、中医证候、治疗（非手术、手术）等中西医结合的指导意见。</p>
                 </div>
               </div>
             </div>
@@ -445,41 +401,41 @@
 
           <div class="content-section">
             <div class="section-header">
-              <h3>骨骼系统影像诊断 (脊柱骨折)</h3>
+              <h3>骨骼系统影像诊断 (脊柱骨狭窄)</h3>
               <a href="#" class="see-all">查看全部指南 <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="article-grid">
               <div class="article-card">
-                <h4>脊柱骨折CT三维重建诊断图谱</h4>
-                <p>包含压缩性骨折、爆裂性骨折、Chance骨折等常见类型的CT三维重建影像表现...</p>
+                <h4>脊柱骨狭窄CT三维重建诊断图谱</h4>
+                <p>包含先天性狭窄、退变性狭窄、椎间盘突出性狭窄等常见类型的CT三维重建影像表现...</p>
                 <div class="tag-list">
                   <span>CT</span>
                   <span>脊柱</span>
-                  <span>骨折</span>
+                  <span>骨狭窄</span>
                 </div>
               </div>
               <div class="article-card">
-                <h4>脊柱骨折MRI信号分析图谱</h4>
-                <p>详细介绍脊柱骨折在MRI上的信号变化，包括急性期、亚急性期和慢性期的特征...</p>
+                <h4>脊柱骨狭窄MRI信号分析图谱</h4>
+                <p>详细介绍脊柱骨狭窄在MRI上的信号变化，包括椎管矢状径测量和神经受压情况...</p>
                 <div class="tag-list">
                   <span>MRI</span>
                   <span>脊柱</span>
-                  <span>信号</span>
+                  <span>骨狭窄</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="qa-section">
-            <h3>简易疾病QA (脊柱骨折)</h3>
+            <h3>简易疾病QA (脊柱骨狭窄)</h3>
             <div class="qa-item">
               <div class="qa-question">
                 <span class="qa-icon q">Q:</span>
-                <p>脊柱骨折后多久可以下床活动？</p>
+                <p>脊柱骨狭窄的手术指征是什么？</p>
               </div>
               <div class="qa-answer">
                 <span class="qa-icon a">A:</span>
-                <p>这取决于骨折的类型和严重程度。稳定性骨折通常4-6周后可逐渐下床，不稳定性骨折需要更长时间，甚至需要手术治疗。</p>
+                <p>手术指征包括：保守治疗无效、出现进行性神经功能障碍、马尾综合征、椎管严重狭窄（矢状径小于10mm）。手术方式包括椎板减压术、椎体融合术等。</p>
               </div>
             </div>
           </div>
@@ -489,30 +445,17 @@
         <div v-else-if="activeDisease === 'spinal-deformity'" class="content-page is-active">
           <div class="content-section">
             <div class="section-header">
-              <h3>推荐的专业指南 (脊柱畸形)</h3>
+              <h3>科普资料 (脊柱畸形)</h3>
               <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="guide-list">
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('scoliosis-guide')">青少年特发性脊柱侧弯诊疗指南</h4>
-                  <p>本指南针对青少年特发性脊柱侧弯的诊断、Cobb角测量、支具治疗和手术指征提供了详细指导...</p>
+                  <h4 class="guide-title-link" @click="openPDF6('青少年特发性脊柱侧凸治未病干预指南.pdf')">青少年特发性脊柱侧凸治未病干预指南</h4>
+                  <p>这份指南提供了中医药在脊柱侧凸干预方面的指导意见。它包括了中医的手法治疗、运动功能锻炼以及营养指导等。.</p>
                   <div class="guide-meta">
                     <span><i class="fas fa-calendar"></i> 2023-05-15</span>
-                    <span><i class="fas fa-eye"></i> 3,124 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <!-- 原地展开的详情 -->
-                  <div v-if="currentGuideId === 'scoliosis-guide' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -538,31 +481,15 @@
         <div v-else-if="activeDisease === 'arthritis'" class="content-page is-active">
           <div class="content-section">
             <div class="section-header">
-              <h3>推荐的专业指南 (膝关节)</h3>
+              <h3>科普资料 (膝关节)</h3>
               <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="guide-list">
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('oa-2023')">膝关节骨关节炎诊疗指南 (2023版)</h4>
-                  <p>本指南详细介绍了膝关节骨关节炎的病理机制、临床表现、影像学分级和阶梯治疗方案...</p>
-                  <div class="guide-meta">
-                    <span><i class="fas fa-calendar"></i> 2023-06-10</span>
-                    <span><i class="fas fa-eye"></i> 4,567 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <!-- 原地展开的详情 -->
-                  <div v-if="currentGuideId === 'oa-2023' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
-                  </div>
+                  <h4 class="guide-title-link" @click="openPDF7('膝骨关节炎中西医结合诊疗指南.pdf')">膝骨关节炎中西医结合诊疗指南</h4>
+                  <p>本指南介绍了膝骨关节炎的诊断、分期、评估以及中西医结合治疗（健康教育、手法、针灸、理疗、药物等）。</p>
                 </div>
               </div>
             </div>
@@ -587,31 +514,15 @@
         <div v-else-if="activeDisease === 'meniscus-injury'" class="content-page is-active">
           <div class="content-section">
             <div class="section-header">
-              <h3>推荐的专业指南 (半月板)</h3>
+              <h3>科普资料 (半月板)</h3>
               <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="guide-list">
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('meniscus-2023-2')">半月板损伤诊疗指南 (2023版)</h4>
-                  <p>本指南详细介绍了半月板损伤的解剖、分型、MRI诊断标准和关节镜手术指征...</p>
-                  <div class="guide-meta">
-                    <span><i class="fas fa-calendar"></i> 2023-03-15</span>
-                    <span><i class="fas fa-eye"></i> 3,452 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <!-- 原地展开的详情 -->
-                  <div v-if="currentGuideId === 'meniscus-2023-2' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
-                  </div>
+                  <h4 class="guide-title-link" @click="openWebPage('膝关节半月板损伤科普')">膝关节半月板损伤科普</h4>
+                  <p>本科普简要介绍了膝关节半月板的症状、病因、诊断、治疗和预防等方面的知识。...</p>
                 </div>
               </div>
             </div>
@@ -636,31 +547,15 @@
         <div v-else-if="activeDisease === 'ligament-injury'" class="content-page is-active">
           <div class="content-section">
             <div class="section-header">
-              <h3>推荐的专业指南 (韧带损伤)</h3>
+              <h3>科普资料 (韧带损伤)</h3>
               <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="guide-list">
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('ligament-guide')">膝关节韧带损伤诊疗指南</h4>
-                  <p>本指南详细介绍了前交叉韧带、后交叉韧带、内侧副韧带等损伤的诊断和治疗方案...</p>
-                  <div class="guide-meta">
-                    <span><i class="fas fa-calendar"></i> 2023-07-20</span>
-                    <span><i class="fas fa-eye"></i> 2,789 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <!-- 原地展开的详情 -->
-                  <div v-if="currentGuideId === 'ligament-guide' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
-                  </div>
+                  <h4 class="guide-title-link" @click="openPDF8('前交叉韧带损伤临床诊疗循证指南.pdf')">前交叉韧带损伤临床诊疗循证指南</h4>
+                  <p>这是目前国内针对ACL损伤最权威的循证指南。它详细涵盖了ACL损伤的诊断、治疗方法选择、手术方案以及术后康复计划。</p>
                 </div>
               </div>
             </div>
@@ -685,31 +580,15 @@
         <div v-else-if="activeDisease === 'anfh'" class="content-page is-active">
           <div class="content-section">
             <div class="section-header">
-              <h3>推荐的专业指南 (股骨头坏死)</h3>
+              <h3>科普资料 (股骨头坏死)</h3>
               <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="guide-list">
               <div class="guide-item">
                 <i class="fas fa-file-medical guide-icon"></i>
                 <div class="guide-content">
-                  <h4 class="guide-title-link" @click="openGuideDetail('anfh-2023')">股骨头坏死诊疗指南 (2023版)</h4>
-                  <p>本指南详细介绍了股骨头坏死的病因、分期、影像学诊断和保髋手术的适应症...</p>
-                  <div class="guide-meta">
-                    <span><i class="fas fa-calendar"></i> 2023-08-15</span>
-                    <span><i class="fas fa-eye"></i> 1,956 查看</span>
-                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
-                  </div>
-                  <!-- 原地展开的详情 -->
-                  <div v-if="currentGuideId === 'anfh-2023' && showGuideDetail" class="guide-detail-expanded">
-                    <div class="guide-detail-content">
-                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
-                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
-                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
-                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
-                      </div>
-                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
-                    </div>
-                  </div>
+                  <h4 class="guide-title-link" @click="openWebPage2('中国成人股骨头坏死临床诊疗指南（2020）')">中国成人股骨头坏死临床诊疗指南（2020）</h4>
+                  <p>这是国内针对成人股骨头坏死（ONFH）的权威指南。内容涵盖了诊断、鉴别诊断以及详细的治疗原则。</p>
                 </div>
               </div>
             </div>
@@ -725,6 +604,690 @@
               <div class="qa-answer">
                 <span class="qa-icon a">A:</span>
                 <p>早期症状包括髋关节疼痛，特别是夜间痛和负重时疼痛加重。疼痛可放射到大腿内侧或膝关节，活动受限。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 骨折与创伤内容 -->
+        <div v-else-if="activeDisease === 'trauma'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (骨折与创伤)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('trauma-guide')">骨折与创伤诊疗指南</h4>
+                  <p>本指南详细介绍了骨折的分类、诊断方法、治疗原则和康复计划...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2023-09-10</span>
+                    <span><i class="fas fa-eye"></i> 2,345 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                  <div v-if="currentGuideId === 'trauma-guide' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (骨折与创伤)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨折后多久能愈合？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>一般成人骨折愈合时间：上肢骨折4-8周，下肢骨折8-12周。愈合速度受年龄、骨折部位、严重程度、营养状况等多种因素影响。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨折需要手术吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>稳定性骨折、无明显移位者可保守治疗（石膏、支具固定）。不稳定骨折、明显移位、开放性骨折、或保守治疗失败者需要手术内固定。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 骨肿瘤内容 -->
+        <div v-else-if="activeDisease === 'bone-tumor'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (骨肿瘤)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('bone-tumor-guide')">骨肿瘤诊疗指南</h4>
+                  <p>本指南系统阐述了良性骨肿瘤和恶性骨肿瘤的诊断、分期、治疗和预后评估...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2023-10-05</span>
+                    <span><i class="fas fa-eye"></i> 1,567 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                  <div v-if="currentGuideId === 'bone-tumor-guide' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (骨肿瘤)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨肿瘤都是恶性的吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>不是。骨肿瘤分为良性和恶性。良性骨肿瘤较常见，如骨软骨瘤、骨囊肿等，治疗效果好。恶性骨肿瘤如骨肉瘤、Ewing肉瘤等较少见但严重。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>如何区别良恶性骨肿瘤？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>主要通过影像学检查（X线、CT、MRI）和活检病理确诊。恶性骨肿瘤通常生长快、疼痛明显、边界不清、可侵犯周围软组织。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 代谢性骨病内容 -->
+        <div v-else-if="activeDisease === 'metabolic'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (代谢性骨病)</h3>
+              <a href="#" class="see-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="guide-list">
+              <div class="guide-item">
+                <i class="fas fa-file-medical guide-icon"></i>
+                <div class="guide-content">
+                  <h4 class="guide-title-link" @click="openGuideDetail('metabolic-guide')">代谢性骨病诊疗指南</h4>
+                  <p>本指南涵盖骨质疏松症、佝偻病、甲状旁腺功能亢进等代谢性骨病的诊断与防治...</p>
+                  <div class="guide-meta">
+                    <span><i class="fas fa-calendar"></i> 2023-11-15</span>
+                    <span><i class="fas fa-eye"></i> 1,234 查看</span>
+                    <span><i class="fas fa-file-pdf"></i> PDF 下载</span>
+                  </div>
+                  <div v-if="currentGuideId === 'metabolic-guide' && showGuideDetail" class="guide-detail-expanded">
+                    <div class="guide-detail-content">
+                      <h2 style="margin-bottom: 20px;">{{ currentGuide.title }}</h2>
+                      <div class="guide-meta" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+                        <span><i class="fas fa-calendar"></i> {{ currentGuide.date }}</span>
+                        <span><i class="fas fa-eye"></i> {{ currentGuide.views }} 查看</span>
+                      </div>
+                      <div class="guide-detail-body" v-html="currentGuide.content"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (代谢性骨病)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>什么是骨质疏松症？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>骨质疏松症是一种以骨密度降低、骨微结构破坏为特征的代谢性骨病，导致骨折风险增加。常见于绝经后女性和老年男性。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>如何预防骨质疏松？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>增加钙和维生素D的摄入、适量运动（尤其是负重运动）、戒烟限酒、避免长期使用激素类药物、预防跌倒。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 股骨颈骨折内容 -->
+        <div v-else-if="activeDisease === 'femoral-neck-fracture'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (股骨颈骨折)</h3>
+            </div>
+            <p>股骨颈骨折是一种常见的老年性骨折，多见于65岁以上的老年人...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (股骨颈骨折)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>股骨颈骨折怎么治疗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>年轻患者多采用手术内固定治疗；老年患者如果身体状况良好，多采用人工髋关节置换术。年龄大、身体状况差的患者可能需要保守治疗。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>股骨颈骨折术后多久能下床？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>人工髋关节置换术后通常1-2天即可下床活动。内固定术后需要根据骨折愈合情况，一般6-12周后可逐渐负重。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 桡骨远端骨折内容 -->
+        <div v-else-if="activeDisease === 'distal-radius-fracture'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (桡骨远端骨折)</h3>
+            </div>
+            <p>桡骨远端骨折是指发生在桡骨远端2-3cm范围内的骨折，是上肢最常见的骨折之一...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (桡骨远端骨折)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>桡骨远端骨折需要手术吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>无移位或轻度移位的骨折可保守治疗（石膏固定6-8周）。明显移位、关节面不平整、多发骨折或保守治疗失败者需要手术治疗。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>桡骨远端骨折多久能愈合？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>一般成人愈合时间为6-8周，儿童更快。需要定期复查X线评估愈合情况。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 脊柱压缩性骨折内容 -->
+        <div v-else-if="activeDisease === 'spinal-compression-fracture'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (脊柱压缩性骨折)</h3>
+            </div>
+            <p>脊柱压缩性骨折是指椎体在垂直方向受到压缩力导致的骨折，常见于胸腰椎...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (脊柱压缩性骨折)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>脊柱压缩性骨折如何治疗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>轻度压缩（压缩高度小于1/3）可行保守治疗（卧床休息、支具固定）。严重压缩、神经损害或骨质疏松性骨折可考虑椎体成形术或椎体后凸成形术。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>脊柱压缩性骨折需要卧床多久？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>通常需要卧床休息4-8周，佩戴支具后可逐渐下床活动。期间需要注意预防并发症如压疮、血栓等。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 踝关节骨折内容 -->
+        <div v-else-if="activeDisease === 'ankle-fracture'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (踝关节骨折)</h3>
+            </div>
+            <p>踝关节骨折是指涉及踝关节的胫骨远端、腓骨远端或距骨的骨折...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (踝关节骨折)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>踝关节骨折什么时候需要手术？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>不稳定骨折（韧带联合分离、明显移位、关节面不平整）、保守治疗失败、开放性骨折或伴有脱位者需要手术治疗。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>踝关节骨折术后多久能走路？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>通常术后6-8周可开始部分负重，12周后可完全负重。具体时间需根据骨折类型和愈合情况决定。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 肱骨外科颈骨折内容 -->
+        <div v-else-if="activeDisease === 'surgical-neck-fracture'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (肱骨外科颈骨折)</h3>
+            </div>
+            <p>肱骨外科颈骨折是指发生在肱骨解剖颈下方2-3cm处的骨折...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (肱骨外科颈骨折)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>肱骨外科颈骨折如何治疗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>无移位或轻度移位的稳定骨折可保守治疗（三角巾悬吊、夹板固定）。移位明显、不稳定或合并肩关节脱位者需要手术治疗。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>肱骨外科颈骨折后会影响肩关节功能吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>如果治疗不当或过早活动，可能导致肩关节僵硬。需要尽早进行功能锻炼，但需在医生指导下进行。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 骨肉瘤内容 -->
+        <div v-else-if="activeDisease === 'osteosarcoma'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (骨肉瘤)</h3>
+            </div>
+            <p>骨肉瘤是最常见的原发性恶性骨肿瘤，好发于青少年，多见于长骨干骺端...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (骨肉瘤)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨肉瘤早期有什么症状？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>主要表现为局部疼痛，夜间痛明显，可触及肿块，部分患者伴发热。疼痛初期为间歇性，逐渐发展为持续性钝痛。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨肉瘤能治愈吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>早期诊断、规范治疗（化疗+保肢手术）的骨肉瘤5年生存率可达60-70%。治疗效果与肿瘤分期、对化疗的敏感性等因素有关。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 骨软骨瘤内容 -->
+        <div v-else-if="activeDisease === 'osteochondroma'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (骨软骨瘤)</h3>
+            </div>
+            <p>骨软骨瘤是最常见的良性骨肿瘤，约占良性骨肿瘤的50%...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (骨软骨瘤)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨软骨瘤需要手术吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>无症状、不影响功能的小骨软骨瘤可定期观察。出现疼痛、影响关节功能、有恶变可能或外观明显畸形时需要手术切除。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨软骨瘤会恶变吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>单发性骨软骨瘤恶变率低（约1%），多发性骨软骨瘤病恶变率较高（约5-10%）。如生长加速、疼痛加重应及时就医。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 骨巨细胞瘤内容 -->
+        <div v-else-if="activeDisease === 'giant-cell-tumor'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (骨巨细胞瘤)</h3>
+            </div>
+            <p>骨巨细胞瘤是一种具有局部侵袭性的骨肿瘤，好发于长骨干骺端...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (骨巨细胞瘤)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨巨细胞瘤怎么治疗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>主要治疗方式为手术切除。根据肿瘤范围可选用刮除植骨术、病灶切除术或节段切除术。术后配合化疗可降低复发率。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨巨细胞瘤会复发吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>术后有一定的复发率，单纯刮除术后复发率约10-30%。完整切除配合辅助治疗可显著降低复发率。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 转移性骨肿瘤内容 -->
+        <div v-else-if="activeDisease === 'metastatic-bone-tumor'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (转移性骨肿瘤)</h3>
+            </div>
+            <p>转移性骨肿瘤是其他部位的恶性肿瘤转移到骨骼形成的肿瘤...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (转移性骨肿瘤)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>哪些肿瘤容易转移到骨骼？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>乳腺癌、前列腺癌、肺癌、甲状腺癌、肾癌等常见。男性以肺癌、前列腺癌多见，女性以乳腺癌多见。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>转移性骨肿瘤如何治疗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>治疗原则是综合治疗，包括原发肿瘤的化疗、放疗；骨转移的治疗包括手术（预防病理性骨折）、放疗、药物（双膦酸盐）等。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 软骨肉瘤内容 -->
+        <div v-else-if="activeDisease === 'chondrosarcoma'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (软骨肉瘤)</h3>
+            </div>
+            <p>软骨肉瘤是起源于软骨组织的恶性肿瘤，是第二常见的原发性恶性骨肿瘤...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (软骨肉瘤)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>软骨肉瘤有什么症状？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>主要表现为局部疼痛和肿胀，生长缓慢，病程较长。疼痛多为隐痛或钝痛，夜间可加重。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>软骨肉瘤能治愈吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>早期软骨肉瘤预后较好，5年生存率可达70%以上。治疗以手术切除为主，配合辅助放疗。分化差的软骨肉瘤预后较差。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 骨质疏松症内容 -->
+        <div v-else-if="activeDisease === 'osteoporosis'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (骨质疏松症)</h3>
+            </div>
+            <p>骨质疏松症是一种以骨密度降低、骨微结构破坏为特征的代谢性骨病...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (骨质疏松症)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>如何诊断骨质疏松？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>主要通过骨密度检测（DXA）诊断。T值≤-2.5诊断为骨质疏松；T值在-1.0到-2.5之间诊断为骨量减少；T值≥-1.0为正常。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨质疏松如何预防？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>适量补充钙剂（每日1000-1200mg）和维生素D、规律运动（负重运动）、戒烟限酒、多晒太阳、预防跌倒。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 痛风内容 -->
+        <div v-else-if="activeDisease === 'gout'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (痛风)</h3>
+            </div>
+            <p>痛风是由于尿酸盐晶体沉积在关节及其周围组织引起的炎症性疾病...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (痛风)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>痛风急性发作怎么办？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>急性期应卧床休息、抬高患肢、局部冷敷。药物治疗包括非甾体抗炎药（如布洛芬）、秋水仙碱或糖皮质激素，需在医生指导下使用。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>痛风患者不能吃什么？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>避免高嘌呤食物：动物内脏、海鲜（贝类、虾蟹）、浓肉汤、啤酒等。多喝水（每日2000ml以上）、多吃碱性食物有助于排尿酸。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 骨软化症内容 -->
+        <div v-else-if="activeDisease === 'osteomalacia'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (骨软化症)</h3>
+            </div>
+            <p>骨软化症是成人的佝偻病，由于维生素D缺乏导致骨基质矿化障碍...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (骨软化症)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨软化症怎么治疗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>主要治疗是补充维生素D和钙剂。根据缺乏程度，可口服维生素D 1000-4000 IU/日，钙剂1000-1500mg/日。同时要多晒太阳。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>骨软化症有什么症状？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>主要表现为骨痛（腰背、髋部、下肢）、肌无力、活动受限，严重时可导致病理性骨折。儿童表现为佝偻病。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 佝偻病内容 -->
+        <div v-else-if="activeDisease === 'rickets'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (佝偻病)</h3>
+            </div>
+            <p>佝偻病是儿童因缺乏维生素D导致骨骼生长发育障碍的疾病...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (佝偻病)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>佝偻病有什么早期症状？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>早期表现为烦躁不安、夜间哭闹、多汗、枕秃。后期可出现方颅、鸡胸、O型腿或X型腿、脊柱后凸或侧凸等骨骼畸形。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>如何预防佝偻病？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>新生儿生后2周起补充维生素D 400-800 IU/日；母乳喂养或混合喂养；多晒太阳（每日1-2小时）；及时添加含钙辅食。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 畸形性骨炎内容 -->
+        <div v-else-if="activeDisease === 'paget-disease'" class="content-page is-active">
+          <div class="content-section">
+            <div class="section-header">
+              <h3>科普资料 (畸形性骨炎)</h3>
+            </div>
+            <p>畸形性骨炎(Paget病)是一种慢性进行性骨重建异常疾病...</p>
+          </div>
+
+          <div class="qa-section">
+            <h3>简易疾病QA (畸形性骨炎)</h3>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>Paget病有什么症状？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>多数患者无症状。有症状者主要表现为骨痛、骨骼畸形（下肢弯曲、头颅增大）、病理性骨折、听力下降（颞骨受累）等。</p>
+              </div>
+            </div>
+            <div class="qa-item">
+              <div class="qa-question">
+                <span class="qa-icon q">Q:</span>
+                <p>Paget病需要治疗吗？</p>
+              </div>
+              <div class="qa-answer">
+                <span class="qa-icon a">A:</span>
+                <p>无症状患者可不治疗，定期随访。有症状者可用双膦酸盐类药物（如帕米膦酸、唑来膦酸）或降钙素，可缓解骨痛、减慢病情进展。</p>
               </div>
             </div>
           </div>
@@ -793,6 +1356,149 @@ const guideData = {
       <p>治疗原则是尽可能保留半月板组织，恢复其生物力学功能。治疗方式包括保守治疗、半月板部分切除术、半月板缝合术和半月板移植术。</p>
       <p>半月板缝合术是目前的主流趋势，尤其适用于位于红区（外1/3血供区）的纵行撕裂。桶柄状撕裂一经诊断，应尽早行关节镜下复位缝合。</p>
     `
+  },
+  'spondylosis-2022': {
+    title: '颈椎病诊疗指南 (2022版)',
+    date: '2022-10-18',
+    views: '6,210',
+    content: `
+      <h3>1. 分型</h3>
+      <p>颈椎病分为四型：神经根型、脊髓型、椎动脉型和交感神经型。其中脊髓型颈椎病(CSM)最严重，可引起四肢麻木、无力、行走不稳等症状。</p>
+      <h3>2. 诊断要点</h3>
+      <p>结合症状、体征和影像学检查综合诊断。MRI显示椎间盘突出、韧带肥厚、椎管狭窄等压迫脊髓和神经根的表现。T2加权像上的脊髓高信号提示脊髓水肿或软化。</p>
+      <h3>3. 治疗</h3>
+      <p>保守治疗适用于轻度症状，包括药物、理疗和颈部制动。手术治疗适用于脊髓型颈椎病或保守治疗无效的患者。手术入路包括前路（ACDF、ACCF）和后路（椎板成型术、椎板切除术）。</p>
+    `
+  },
+  'csm-consensus': {
+    title: '脊髓型颈椎病(CSM)诊断与治疗专家共识',
+    date: '2023-02-05',
+    views: '4,119',
+    content: `
+      <h3>1. 早期识别</h3>
+      <p>早期症状包括手指精细动作笨拙、写字变小、走路踩棉感等。体征包括Hoffmann征阳性、膝踝腱反射亢进等锥体束征。</p>
+      <h3>2. 影像学评估</h3>
+      <p>MRI是评估CSM的主要方法，重点关注脊髓压迫程度和T2高信号。颈椎CT可评估骨性狭窄。</p>
+      <h3>3. 手术指征</h3>
+      <p>确诊CSM后，早期手术治疗可获得更好的神经功能恢复。手术指征包括：轻度CSM有明显症状、中度以上CSM、MRI显示脊髓T2高信号。</p>
+    `
+  },
+  'spinal-fracture-2023': {
+    title: '脊柱骨狭窄诊疗指南 (2023版)',
+    date: '2023-04-20',
+    views: '2,856',
+    content: `
+      <h3>1. 分类</h3>
+      <p>根据病因和部位将脊柱骨狭窄分为先天性狭窄、退变性狭窄、椎间盘突出性狭窄、韧带肥厚性狭窄等类型。</p>
+      <h3>2. 临床评估</h3>
+      <p>评估因素包括：临床症状严重程度、影像学椎管矢状径测量、神经功能损害、保守治疗效果等。椎管矢状径小于10mm属于重度狭窄。</p>
+      <h3>3. 治疗</h3>
+      <p>轻度狭窄可行保守治疗（药物治疗、物理治疗、康复锻炼）。中重度狭窄、保守治疗无效或出现神经功能障碍的患者需要手术治疗，包括椎板减压术、椎体融合术等。</p>
+    `
+  },
+  'scoliosis-guide': {
+    title: '青少年特发性脊柱侧弯诊疗指南',
+    date: '2023-05-15',
+    views: '3,124',
+    content: `
+      <h3>1. 诊断</h3>
+      <p>通过体格检查发现脊柱侧弯、双肩不等高、腰线不对称等体征。X线测量Cobb角确诊。</p>
+      <h3>2. Cobb角测量</h3>
+      <p>在X线片上选择侧弯弧的最高椎体和最低椎体，测量其上下终板延长线的夹角。</p>
+      <h3>3. 治疗</h3>
+      <p>Cobb角小于25度：定期随访观察；25-40度：支具治疗；超过40-45度或支具无效：手术治疗，通常采用椎弓根钉内固定矫形。</p>
+    `
+  },
+  'oa-2023': {
+    title: '膝关节骨关节炎诊疗指南 (2023版)',
+    date: '2023-06-10',
+    views: '4,567',
+    content: `
+      <h3>1. 定义与分期</h3>
+      <p>膝关节骨关节炎是关节软骨退变、软骨下骨硬化的退行性疾病。根据Kellgren-Lawrence分级分为0-IV级。</p>
+      <h3>2. 临床表现</h3>
+      <p>主要症状包括关节疼痛、晨僵、活动受限。疼痛通常与活动有关，休息后缓解。X线显示关节间隙变窄、骨赘形成、软骨下骨硬化。</p>
+      <h3>3. 阶梯治疗</h3>
+      <p>基础治疗：宣教、减肥、运动疗法；药物治疗：NSAIDs、软骨保护剂；关节镜手术；膝关节置换术(TKA)。</p>
+    `
+  },
+  'meniscus-2023-2': {
+    title: '半月板损伤诊疗指南 (2023版)',
+    date: '2023-03-15',
+    views: '3,452',
+    content: `
+      <h3>1. 解剖与分型</h3>
+      <p>半月板分为内侧和外侧半月板，具有分散压力、稳定关节、润滑关节的作用。撕裂类型包括纵行撕裂、横行撕裂、瓣状撕裂、桶柄状撕裂和退化性撕裂。</p>
+      <h3>2. MRI诊断</h3>
+      <p>Stoller分级：I级点状高信号、II级线性高信号未达关节面、III级高信号达关节面诊断为撕裂。还需评估撕裂位置、长度和稳定性。</p>
+      <h3>3. 治疗选择</h3>
+      <p>血供区（红区）撕裂：优先缝合；无血供区（白区）撕裂：部分切除术；桶柄状撕裂：紧急手术缝合；桶柄状撕裂（超过1cm）禁做部分切除。</p>
+    `
+  },
+  'ligament-guide': {
+    title: '膝关节韧带损伤诊疗指南',
+    date: '2023-07-20',
+    views: '2,789',
+    content: `
+      <h3>1. 常见韧带损伤</h3>
+      <p>前交叉韧带(ACL)、后交叉韧带(PCL)、内侧副韧带(MCL)、外侧副韧带(LCL)是膝关节的主要稳定结构。</p>
+      <h3>2. 临床检查</h3>
+      <p>Lachman试验、前抽屉试验用于评估ACL；后抽屉试验评估PCL；侧方应力试验评估副韧带。</p>
+      <h3>3. 治疗</h3>
+      <p>不完全撕裂可保守治疗（支具固定、康复锻炼）。完全撕裂、运动员或年轻患者建议重建手术。ACL重建常用自体腘绳肌腱或髌腱。</p>
+    `
+  },
+  'anfh-2023': {
+    title: '股骨头坏死诊疗指南 (2023版)',
+    date: '2023-08-15',
+    views: '1,956',
+    content: `
+      <h3>1. 病因</h3>
+      <p>股骨头坏死常见原因包括创伤、激素使用、酗酒、高脂血症等。股骨颈骨折、髋关节脱位等外伤是创伤性坏死的主要原因。</p>
+      <h3>2. 分期</h3>
+      <p>根据Ficat分期：I期X线正常、II期骨质硬化、III期软骨下塌陷、IV期关节间隙变窄骨关节炎改变。</p>
+      <h3>3. 治疗</h3>
+      <p>早期（I-II期）：保髋手术（髓芯减压、植骨、带血管蒂骨瓣移植）。晚期（III-IV期）：人工髋关节置换术(THA)。</p>
+    `
+  },
+  'trauma-guide': {
+    title: '骨折与创伤诊疗指南',
+    date: '2023-09-10',
+    views: '2,345',
+    content: `
+      <h3>1. 骨折分类</h3>
+      <p>根据骨折线走向分为横行、斜行、螺旋、粉碎性骨折。根据骨折稳定性分为稳定性骨折和不稳定性骨折。</p>
+      <h3>2. 诊断</h3>
+      <p>主要依据病史（外伤史）、症状（局部疼痛、肿胀、功能障碍）和影像学检查（X线、CT）确诊。</p>
+      <h3>3. 治疗原则</h3>
+      <p>复位（解剖复位或功能复位）、固定（保守固定或手术内固定）、功能锻炼。开放性骨折需紧急清创，防治感染。</p>
+    `
+  },
+  'bone-tumor-guide': {
+    title: '骨肿瘤诊疗指南',
+    date: '2023-10-05',
+    views: '1,567',
+    content: `
+      <h3>1. 分类</h3>
+      <p>骨肿瘤分为良性（骨软骨瘤、骨囊肿、骨纤维结构不良等）和恶性（骨肉瘤、软骨肉瘤、Ewing肉瘤等）。</p>
+      <h3>2. 临床表现</h3>
+      <p>局部疼痛、肿块、病理性骨折。恶性骨肿瘤进展快，可伴发热、体重下降。血清碱性磷酸酶(ALP)升高提示恶性可能。</p>
+      <h3>3. 诊断与治疗</h3>
+      <p>影像学检查（X线、CT、MRI、PET-CT）和活检确诊。良性肿瘤可行病灶刮除+植骨。恶性肿瘤需手术切除（保肢或截肢）联合化疗。</p>
+    `
+  },
+  'metabolic-guide': {
+    title: '代谢性骨病诊疗指南',
+    date: '2023-11-15',
+    views: '1,234',
+    content: `
+      <h3>1. 常见类型</h3>
+      <p>骨质疏松症、佝偻病/骨软化症、甲状旁腺功能亢进症、Paget骨病等。</p>
+      <h3>2. 骨质疏松症</h3>
+      <p>最常见，以骨密度降低为特征。诊断标准：T值≤-2.5。治疗包括钙剂、维生素D、双膦酸盐、特立帕肽等。</p>
+      <h3>3. 预防</h3>
+      <p>高钙饮食、适量运动、戒烟限酒、预防跌倒。绝经后女性及老年男性需定期骨密度筛查。</p>
+    `
   }
 }
 
@@ -851,6 +1557,66 @@ const selectDisease = (disease: string) => {
 
 const showPage = (page: string) => {
   ElMessage.info(`显示页面: ${page}`)
+}
+
+const openPDF = (pdfName: string) => {
+  // 脊髓型颈椎病中西医结合诊疗指南的PDF链接
+  const pdfUrl = 'https://www.cacm.org.cn/wp-content/uploads/2023/06/%E8%84%8A%E9%AB%93%E5%9E%8B%E9%A2%88%E6%A4%8E%E7%97%85%E4%B8%AD%E8%A5%BF%E5%8C%BB%E7%BB%93%E5%90%88%E8%AF%8A%E7%96%97%E6%8C%87%E5%8D%97.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openPDF2 = (pdfName: string) => {
+  // 颈椎病中西医结合诊疗专家共识的PDF链接
+  const pdfUrl = 'https://www.hnysfww.com/data/article/1684369255497909979.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openPDF3 = (pdfName: string) => {
+  // 腰椎间盘突出症中医循证实践指南的PDF链接
+  const pdfUrl = 'https://www.cacm.org.cn/wp-content/uploads/2023/01/%E8%85%B0%E6%A4%8E%E9%97%B4%E7%9B%98%E7%AA%81%E5%87%BA%E7%97%87%E4%B8%AD%E5%8C%BB%E5%BE%AA%E8%AF%81%E5%AE%9E%E8%B7%B5%E6%8C%87%E5%8D%97%E8%8D%89%E6%A1%88.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openPDF4 = (pdfName: string) => {
+  // 腰椎间盘突出症诊疗指南的PDF链接
+  const pdfUrl = 'https://www.gszyy.com/upload/history/main/lzzgxslp/2022/7/202207131740133334.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openPDF5 = (pdfName: string) => {
+  // 腰椎管狭窄症中西医结合诊疗指南的PDF链接
+  const pdfUrl = 'https://www.cacm.org.cn/wp-content/uploads/2023/06/%E8%85%B0%E6%A4%8E%E7%AE%A1%E7%8B%AD%E7%AA%84%E7%97%87%E4%B8%AD%E8%A5%BF%E5%8C%BB%E7%BB%93%E5%90%88%E8%AF%8A%E7%96%97%E6%8C%87%E5%8D%97.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openPDF6 = (pdfName: string) => {
+  // 青少年特发性脊柱侧凸治未病干预指南的PDF链接
+  const pdfUrl = 'https://www.cacm.org.cn/wp-content/uploads/2023/11/%E3%80%8A%E9%9D%92%E5%B0%91%E5%B9%B4%E7%89%B9%E5%8F%91%E6%80%A7%E8%84%8A%E6%9F%B1%E4%BE%A7%E5%87%B8%E6%B2%BB%E6%9C%AA%E7%97%85%E5%B9%B2%E9%A2%84%E6%8C%87%E5%8D%97%E3%80%8B-%E5%85%AC%E7%A4%BA%E7%A8%BF.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openPDF7 = (pdfName: string) => {
+  // 膝骨关节炎中西医结合诊疗指南的PDF链接
+  const pdfUrl = 'https://www.cacm.org.cn/wp-content/uploads/2023/01/%E8%86%9D%E9%AA%A8%E5%85%B3%E8%8A%82%E7%82%8E%E4%B8%AD%E8%A5%BF%E5%8C%BB%E7%BB%93%E5%90%88%E8%AF%8A%E7%96%97%E6%8C%87%E5%8D%97.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openWebPage = (pageName: string) => {
+  // 膝关节半月板损伤科普网页链接
+  const webUrl = 'https://dxy.com/disease/5470/detail/0'
+  window.open(webUrl, '_blank')
+}
+
+const openPDF8 = (pdfName: string) => {
+  // 前交叉韧带损伤临床诊疗循证指南的PDF链接
+  const pdfUrl = 'http://www.szsdsrmyy.com/attachment/0/52/52241/828719.pdf'
+  window.open(pdfUrl, '_blank')
+}
+
+const openWebPage2 = (pageName: string) => {
+  // 中国成人股骨头坏死临床诊疗指南（2020）的网页链接
+  const webUrl = 'https://cmab.yiigle.com/uploads/guide_html/%E4%B8%AD%E5%9B%BD%E6%88%90%E4%BA%BA%E8%82%A1%E9%AA%A8%E5%A4%B4%E5%9D%8F%E6%AD%BB%E4%B8%B4%E5%BA%8A%E8%AF%8A%E7%96%97%E6%8C%87%E5%8D%97%EF%BC%882020%EF%BC%89.html'
+  window.open(webUrl, '_blank')
 }
 
 const openGuideDetail = (guideId: string) => {
