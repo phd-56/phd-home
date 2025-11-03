@@ -1,0 +1,285 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 页面容器 */
+.page {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* 卡片包装器 */
+.cards-wrapper {
+  display: grid;
+  place-items: center; /* 替代 align-items 和 justify-content，让卡片在网格中居中 */
+  /* --- 结束 --- */
+
+  position: relative;
+  perspective: 1000px;
+  transform: scale(0.67);
+}
+
+/* 蓝色卡片容器 */
+.blue-card-container {
+  grid-area: 1 / 1;
+  position: relative;
+  z-index: 3;
+  /* transform 属性已移除，由各个页面组件自己定义 */
+}
+
+.blue-card {
+  background: linear-gradient(135deg, #40a4eb 0%, #4ba1f7 100%);
+  border-radius: 24px;
+  padding: 50px 40px;
+  width: 400px;
+  min-height: 750px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 白色卡片容器 */
+.white-card-container {
+  grid-area: 1 / 1;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1));
+}
+
+/* 白色卡片 */
+.white-card {
+  background: white;
+  border-radius: 24px;
+  padding: 60px 50px;
+  width: 1000px;
+  min-height: 400px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  
+  /* --- 修改/添加以下属性 --- */
+  display: flex;
+  flex-direction: row; /* 1. 改为水平排列 */
+  align-items: center; /* 2. 让两列垂直居中 */
+  justify-content: space-between; /* 3. 关键：将两列推向左右两端 */
+
+
+}
+
+/* 蓝色卡片表单 */
+.login-form,
+.register-form {
+  width: 100%;
+}
+
+.login-form h1,
+.register-form h1 {
+  font-size: 42px;
+  font-weight: 800;
+  color: white;
+  text-align: center;
+  margin-bottom: 50px;
+  letter-spacing: 2px;
+}
+
+/* 输入框组 */
+.input-group {
+  margin-bottom: 30px;
+}
+
+.input-group label {
+  display: block;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.input-group input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  font-size: 16px;
+  padding: 12px 0;
+  outline: none;
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.input-group input:focus {
+  border-bottom-color: white;
+}
+
+/* 提交按钮 */
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 18px;
+  margin-top: 30px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.3) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 白色卡片样式 */
+.white-card h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.white-card h3 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #0096ff;
+  margin-bottom: 40px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* 图片包装器 */
+.image-wrapper {
+  width: 100%;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  overflow: hidden;
+}
+
+.stitch-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0, 150, 255, 0.2));
+}
+
+.skeleton-wrapper {
+  background: linear-gradient(135deg, rgba(0, 150, 255, 0.1) 0%, rgba(0, 150, 255, 0.05) 100%);
+  border-radius: 20px;
+  padding: 20px;
+  display: inline-flex; /* 保持 flex 居中图片 */
+  justify-content: center;
+  align-items: center;
+
+  max-width: 60%; /* 占满其父列 (45% 的白卡宽度) */
+}
+
+.skeleton-wrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0, 150, 255, 0.3));
+}
+
+/* 文本和按钮 */
+.white-card p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 25px;
+  font-weight: 500;
+}
+
+.action-btn {
+  background: transparent;
+  border: 2px solid #0096ff;
+  color: #0096ff;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 14px 40px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  background: #0096ff;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 150, 255, 0.3);
+}
+
+/* 白色卡片内部的两列 */
+.white-card-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* 45% + 45% = 90%, 留下 10% 的中间区域给蓝色卡片遮挡 */
+  flex-basis: 45%; 
+}
+
+.white-card-column.left {
+  align-items: center; /* 左列内容靠左 */
+  text-align: center;
+}
+
+.white-card-column.right {
+  align-items: center; /* 右列内容靠右 */
+  text-align: center;
+}
+
+/* 响应式设计 */
+@media (max-width: 1000px) {
+  .cards-wrapper {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .blue-card,
+  .white-card {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .blue-card-container,
+  .white-card-container {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .blue-card {
+    padding: 40px 30px;
+    min-height: auto;
+  }
+
+  .white-card {
+    padding: 40px 30px;
+    min-height: auto;
+  }
+
+  .login-form h1,
+  .register-form h1 {
+    font-size: 32px;
+    margin-bottom: 30px;
+  }
+
+  .white-card h3 {
+    font-size: 28px;
+  }
+
+  .image-wrapper {
+    height: 180px;
+  }
+}
+

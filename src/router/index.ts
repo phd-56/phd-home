@@ -17,12 +17,26 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: LoginView
+      component: () => import('@/components/LoginLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'LoginView',
+          component: LoginView
+        }
+      ]
     },
     {
       path: '/register',
       name: 'Register',
-      component: () => import('@/views/Register.vue')
+      component: () => import('@/components/LoginLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'RegisterView',
+          component: () => import('@/views/Register.vue')
+        }
+      ]
     },
     // {      path: '/upload',      name: 'Upload',      component: () => import('@/views/Upload.vue'),      meta: { requiresAuth: true }    },
     {
